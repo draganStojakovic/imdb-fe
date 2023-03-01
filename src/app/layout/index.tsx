@@ -1,6 +1,10 @@
 import { Header } from "../common/Header";
 
-const Pages = ({ children }: any) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const Pages = ({ children }: Props) => {
   return (
     <>
       <div>
