@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
-import { ROUTES } from "../utils/static";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { ROUTES } from "app/utils/static";
+import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export const Header = () => {
   const { user, logout } = useContext(UserContext);

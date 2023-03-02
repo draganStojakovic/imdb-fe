@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { ISignIn } from "../types/IUser";
+import { ISignIn } from "app/types/IUser";
 
 class HttpService {
   httpClient: AxiosInstance;

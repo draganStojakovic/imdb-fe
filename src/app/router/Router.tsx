@@ -1,9 +1,9 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import { ROUTES } from "../utils/static";
-import { HomePage } from "../pages/HomePage";
-import { LogInPage } from "../pages/LogInPage";
-import { RegisterPage } from "../pages/RegisterPage";
-import { AuthRouteExample } from "../pages/AuthRouteExample";
+import { ROUTES } from "app/utils/static";
+import { HomePage } from "app/pages/HomePage";
+import { LogInPage } from "app/pages/LogInPage";
+import { RegisterPage } from "app/pages/RegisterPage";
+import { AuthRouteExample } from "app/pages/AuthRouteExample";
 
 type Params = {
   children: React.ReactElement;

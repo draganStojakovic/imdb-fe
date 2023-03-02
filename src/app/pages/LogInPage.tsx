@@ -1,11 +1,11 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ISignIn } from "../types/IUser";
+import { ISignIn } from "app/types/IUser";
 import { useMutation } from "react-query";
 import { Box } from "@mui/system";
 import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
-import { authService } from "../services/auth.service";
-import { notficationManager } from "../utils/NotificationManager";
+import { UserContext } from "app/context/UserContext";
+import { authService } from "app/services/auth.service";
+import { notficationManager } from "app/utils/NotificationManager";
 
 export const LogInPage = () => {
   const {

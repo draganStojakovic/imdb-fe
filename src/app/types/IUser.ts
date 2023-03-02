@@ -12,3 +12,8 @@ export interface ISignIn {
   email: string;
   password: string;
 }
+
+export interface IRegister extends IUser {
+  password: string;
+  confirmPassword: string;
+}

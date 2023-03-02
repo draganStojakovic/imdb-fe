@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IUser } from "../types/IUser";
-import { ROUTES } from "../utils/static";
-import { storageManager } from "../utils/StorageManager";
+import { IUser } from "app/types/IUser";
+import { ROUTES } from "app/utils/static";
+import { storageManager } from "app/utils/StorageManager";
 
 const userKey = "authUser";
 
@@ -23,11 +23,18 @@ const useUser = () => {
     navigate(ROUTES.LOGIN);
   };
 
+  const register = (user: IUser) => {
+    setUser(user);
+    storageManager.set(userKey, user)
+    navigate(ROUTES.HOME);
+  }
+
   return {
     user,
     login,
     logout,
     setUser,
+    register,
   };
 };
 
