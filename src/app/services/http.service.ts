@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from "axios";
-import { IUser } from "../types/user";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { IUserForm } from "../types/IUser";
 
 class HttpService {
   httpClient: AxiosInstance;
@@ -14,9 +14,14 @@ class HttpService {
     });
   }
 
-  async post(route: string, payload: IUser) {
+  async post(route: string, payload: IUserForm | null, credentials: any | null) {
+    if (payload === null)
+      return await this.httpClient.post(route, payload || null, credentials || null);
     return await this.httpClient.post(route, payload);
   }
+
+  request = <T, R = T>(requestConfig: AxiosRequestConfig): Promise<R> =>
+    this.httpClient.request(requestConfig).then(({ data }) => data);
 }
 
 export const httpService = new HttpService();

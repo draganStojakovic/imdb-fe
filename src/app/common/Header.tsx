@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { ROUTES } from "../utils/static";
-import { useContext } from "react";
-import { isAuthContext } from "../../App";
-import { isAuthContextType } from "../types/isAuthContextType";
+import { authService } from "../services/auth.service";
+import { storageManager } from "../utils/StorageManager";
+import { IUser } from "../types/IUser";
 
 export const Header = () => {
-  const isAuth = useContext(isAuthContext) as isAuthContextType;
+  const authUser = storageManager.get<IUser>("authUser") as IUser;
   return (
     <header>
-      {isAuth ? (
+      {!authUser ? (
         <nav className="navbar navbar-light bg-light shadow-sm">
           <div className="d-flex justify-content-start">
             <div style={{ color: "#f8f9fa" }}>_</div>
@@ -44,7 +44,16 @@ export const Header = () => {
             <div style={{ color: "#f8f9fa" }}>_</div>
           </div>
           <div className="d-flex justify-content-end">
-            <Button variant="text">LogOut</Button>
+            <Button
+              variant="text"
+              onClick={() => {
+                storageManager.clear("authUser");
+                authService.LogOut();
+                window.location.replace("/");
+              }}
+            >
+              LogOut
+            </Button>
             <div style={{ color: "#f8f9fa" }}>_</div>
           </div>
         </nav>

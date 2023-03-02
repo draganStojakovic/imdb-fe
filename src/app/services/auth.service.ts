@@ -1,19 +1,23 @@
 import { httpService } from "./http.service";
-import { IUser } from "../types/user";
+import { IUser, IUserForm } from "../types/IUser";
 
 class AuthService {
   private client = httpService;
 
-  async LogIn(user: IUser) {
-    const response = await this.client.post("/api/auth/login", user);
-    console.log(response);
-    return;
+  async LogIn(payload: IUserForm) {
+    return await this.client.request<IUser>({
+      url: "/api/auth/login",
+      method: "POST",
+      data: payload,
+    });
   }
 
-  // setLoginTokenAndredirect(response: IUser) {
-  //   window.localStorage.setItem("loginToken", response.data.access_token);
-  //   window.location.replace("/");
-  // }
+  async LogOut() {
+    return await this.client.request({
+      url: "/api/auth/logout",
+      method: "POST",
+    });
+  }
 }
 
 export const authService = new AuthService();
