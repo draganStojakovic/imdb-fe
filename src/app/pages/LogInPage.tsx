@@ -4,8 +4,8 @@ import { useMutation } from "react-query";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import { notify } from "../utils/NotificationManager";
 import { authService } from "../services/auth.service";
+import { notficationManager } from "../utils/NotificationManager";
 
 export const LogInPage = () => {
   const {
@@ -25,9 +25,8 @@ export const LogInPage = () => {
     onSuccess: (data) => {
       login(data);
     },
-    onError: (error) => {
-      // notify("sdkffds", "error");
-      console.log(error);
+    onError: () => {
+      notficationManager.error("Invalid credentials");
     },
   });
 
@@ -66,7 +65,6 @@ export const LogInPage = () => {
               </p>
             )}
           </div>
-          <br />
           <div className="form-group">
             <label>
               <h3>Password:</h3>

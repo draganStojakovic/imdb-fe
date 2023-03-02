@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { ROUTES } from "../utils/static";
-import { authService } from "../services/auth.service";
-import { storageManager } from "../utils/StorageManager";
-import { IUser } from "../types/IUser";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 export const Header = () => {
-  const authUser = storageManager.get<IUser>("authUser") as IUser;
+  const { user, logout } = useContext(UserContext);
+
   return (
     <header>
-      {!authUser ? (
+      {!user ? (
         <nav className="navbar navbar-light bg-light shadow-sm">
           <div className="d-flex justify-content-start">
             <div style={{ color: "#f8f9fa" }}>_</div>
@@ -47,9 +47,7 @@ export const Header = () => {
             <Button
               variant="text"
               onClick={() => {
-                storageManager.clear("authUser");
-                authService.LogOut();
-                window.location.replace("/");
+                logout();
               }}
             >
               LogOut
