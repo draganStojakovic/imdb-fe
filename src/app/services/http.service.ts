@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { IUserForm } from "../types/IUser";
+import { ISignIn } from "../types/IUser";
 
 class HttpService {
   httpClient: AxiosInstance;
@@ -14,7 +14,7 @@ class HttpService {
     });
   }
 
-  async post(route: string, payload: IUserForm | null, credentials: any | null) {
+  async post(route: string, payload: ISignIn | null, credentials: any | null) {
     if (payload === null)
       return await this.httpClient.post(route, payload || null, credentials || null);
     return await this.httpClient.post(route, payload);

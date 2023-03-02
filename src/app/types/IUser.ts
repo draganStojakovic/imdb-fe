@@ -8,7 +8,7 @@ export interface IUserDraft extends IUser {
   password: string;
 }
 
-export interface IUserForm {
+export interface ISignIn {
   email: string;
   password: string;
 }

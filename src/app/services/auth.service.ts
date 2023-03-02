@@ -1,11 +1,9 @@
 import { httpService } from "./http.service";
-import { IUser, IUserForm } from "../types/IUser";
+import { IUser, ISignIn } from "../types/IUser";
 
 class AuthService {
-  private client = httpService;
-
-  async LogIn(payload: IUserForm) {
-    return await this.client.request<IUser>({
+  async LogIn(payload: ISignIn) {
+    return await httpService.request<IUser>({
       url: "/api/auth/login",
       method: "POST",
       data: payload,
@@ -13,7 +11,7 @@ class AuthService {
   }
 
   async LogOut() {
-    return await this.client.request({
+    return await httpService.request({
       url: "/api/auth/logout",
       method: "POST",
     });
