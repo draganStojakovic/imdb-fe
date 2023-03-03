@@ -1,4 +1,5 @@
 import { Header } from "app/common/Header";
+import { Box } from "@mui/system";
 
 interface Props {
   children: React.ReactNode;
@@ -7,12 +8,11 @@ interface Props {
 const Pages = ({ children }: Props) => {
   return (
     <>
-      <div>
-        <Header />
-        <br />
-        <br />
-        <div className="mx-5">{children}</div>
-      </div>
+      <Header />
+      <br />
+      <br />
+      <br />
+      <Box sx={{ mx: "auto", width: 1200 }}>{children}</Box>
     </>
   );
 };
