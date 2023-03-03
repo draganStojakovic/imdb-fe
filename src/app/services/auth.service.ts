@@ -18,8 +18,8 @@ class AuthService {
     });
   }
 
-  async register(payload: IRegister) {
-    return await httpService.request({
+  async Register(payload: IRegister) {
+    return await httpService.request<AxiosResponse<IUser | IError>>({
       url: "/api/auth/register",
       method: "POST",
       data: payload,

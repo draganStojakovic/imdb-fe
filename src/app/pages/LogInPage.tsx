@@ -6,18 +6,20 @@ import { useContext } from "react";
 import { UserContext } from "app/context/UserContext";
 import { authService } from "app/services/auth.service";
 import { notficationManager } from "app/utils/NotificationManager";
-import { IUser } from "app/types/IUser";
-import { IError } from "app/types/IUser";
+// import { IUser } from "app/types/IUser";
+import { isAnUser } from "app/utils/typeCheckers";
+import { useNavigate } from "react-router-dom";
 
-function isAnUser(obj: any): obj is IUser {
-  return obj;
-}
-
-function isAnError(obj: any): obj is IError {
-  return obj;
-}
+import { Link } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import { TextField } from "@mui/material";
+import { Button } from "@mui/material";
+import { ROUTES } from "app/utils/static";
+import useAuthGuard from "app/hooks/useAuthGuard";
 
 export const LogInPage = () => {
+  useAuthGuard(false);
   const {
     register,
     handleSubmit,
@@ -29,11 +31,14 @@ export const LogInPage = () => {
     },
   });
 
+  const navigate = useNavigate();
+
   const { login } = useContext(UserContext); // kontekst poziva hook
 
   const { mutate } = useMutation(authService.LogIn, {
     onSuccess: (data) => {
-      if (isAnUser(data)) {                 // kontekst poziva hook
+      if (isAnUser(data)) {
+        // kontekst poziva hook
         login(data);
       }
     },
@@ -58,50 +63,47 @@ export const LogInPage = () => {
         alignItems: "center",
       }}
     >
-      <div className="p-5 mb-5 bg-light rounded">
-        <h1>Log In</h1>
-        <br />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-group">
-            <label>
-              <h3>Email:</h3>
-            </label>
-            <br />
-            <input
-              type="email"
-              className="form-control form-control-lg"
-              {...register("email", { required: "The email is required" })}
-              placeholder="name@example.com"
+      <Typography variant="h4" gutterBottom>
+        Log In
+      </Typography>
+      <br />
+      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Email Address"
+              {...register("email", {
+                required: "Email is required",
+              })}
+              helperText={errors.email ? errors.email.message : ""}
+              error={errors.email ? true : false}
             />
-            <br />
-            {errors.email && (
-              <p className="alert alert-danger" role="alert">
-                {errors.email?.message}
-              </p>
-            )}
-          </div>
-          <div className="form-group">
-            <label>
-              <h3>Password:</h3>
-            </label>
-            <br />
-            <input
-              className="form-control form-control-lg"
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Password"
               type="password"
-              {...register("password", { required: "The password is required" })}
-              placeholder="password"
+              {...register("password", {
+                required: "Password is required",
+              })}
+              helperText={errors.password ? errors.password.message : ""}
+              error={errors.password ? true : false}
             />
-            <br />
-            {errors.password && (
-              <p className="alert alert-danger" role="alert">
-                {errors.password?.message}
-              </p>
-            )}
-          </div>
-          <br />
-          <input className="btn btn-primary" type="submit" />
-        </form>
-      </div>
+          </Grid>
+        </Grid>
+        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+          Submit
+        </Button>
+      </Box>
+      <Grid container justifyContent="flex-end">
+        <Grid item>
+          <Link variant="body2" onClick={() => navigate(ROUTES.REGISTER)}>
+            Dont have account? Register
+          </Link>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

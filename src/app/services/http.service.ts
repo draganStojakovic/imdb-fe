@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { ISignIn } from "app/types/IUser";
 
 class HttpService {
   httpClient: AxiosInstance;
@@ -12,12 +11,6 @@ class HttpService {
         XMLHttpRequest: "HMLHttpRequest",
       },
     });
-  }
-
-  async post(route: string, payload: ISignIn | null, credentials: any | null) {
-    if (payload === null)
-      return await this.httpClient.post(route, payload || null, credentials || null);
-    return await this.httpClient.post(route, payload);
   }
 
   request = <T, R = T>(requestConfig: AxiosRequestConfig): Promise<R> =>
