@@ -6,7 +6,7 @@ interface Props {
 }
 
 const UserProvider = ({ children }: Props) => {
-  const { user, setUser, login, logout, register } = useUser();
+  const { user, setUser, login, logout } = useUser();
 
   return (
     <UserContext.Provider
@@ -15,7 +15,6 @@ const UserProvider = ({ children }: Props) => {
         setUser,
         login,
         logout,
-        register,
       }}
     >
       {children}

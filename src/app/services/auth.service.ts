@@ -1,9 +1,10 @@
 import { httpService } from "./http.service";
-import { IUser, ISignIn, IRegister } from "app/types/IUser";
+import { IUser, ISignIn, IRegister, IError } from "app/types/IUser";
+import { AxiosResponse } from "axios";
 
 class AuthService {
   async LogIn(payload: ISignIn) {
-    return await httpService.request<IUser>({
+    return await httpService.request<AxiosResponse<IUser | IError>>({
       url: "/api/auth/login",
       method: "POST",
       data: payload,

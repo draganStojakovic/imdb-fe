@@ -17,3 +17,14 @@ export interface IRegister extends IUser {
   password: string;
   confirmPassword: string;
 }
+
+export interface IError {
+  success: boolean;
+  errors: [
+    {
+      message: string;
+      status: number;
+      location: string;
+    }
+  ];
+}

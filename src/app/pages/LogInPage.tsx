@@ -6,6 +6,16 @@ import { useContext } from "react";
 import { UserContext } from "app/context/UserContext";
 import { authService } from "app/services/auth.service";
 import { notficationManager } from "app/utils/NotificationManager";
+import { IUser } from "app/types/IUser";
+import { IError } from "app/types/IUser";
+
+function isAnUser(obj: any): obj is IUser {
+  return obj;
+}
+
+function isAnError(obj: any): obj is IError {
+  return obj;
+}
 
 export const LogInPage = () => {
   const {
@@ -19,13 +29,18 @@ export const LogInPage = () => {
     },
   });
 
-  const { login } = useContext(UserContext);
+  const { login } = useContext(UserContext); // kontekst poziva hook
 
   const { mutate } = useMutation(authService.LogIn, {
     onSuccess: (data) => {
-      login(data);
+      if (isAnUser(data)) {                 // kontekst poziva hook
+        login(data);
+      }
     },
     onError: () => {
+      // if (isAnError(err)) {
+      //   console.log(err.errors[1])
+      // }
       notficationManager.error("Invalid credentials");
     },
   });

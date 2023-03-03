@@ -6,7 +6,6 @@ interface IUserContext {
   setUser: (user: IUser) => void;
   login: (user: IUser) => void;
   logout: () => void;
-  register: (user: IUser) => void;
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -14,5 +13,4 @@ export const UserContext = createContext<IUserContext>({
   setUser: (_user: IUser) => Function,
   login: (_user: IUser) => Function,
   logout: () => Function,
-  register: (_user: IUser) => Function,
 });

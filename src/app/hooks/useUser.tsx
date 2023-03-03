@@ -23,18 +23,11 @@ const useUser = () => {
     navigate(ROUTES.LOGIN);
   };
 
-  const register = (user: IUser) => {
-    setUser(user);
-    storageManager.set(userKey, user)
-    navigate(ROUTES.HOME);
-  }
-
   return {
     user,
     login,
     logout,
     setUser,
-    register,
   };
 };
 
