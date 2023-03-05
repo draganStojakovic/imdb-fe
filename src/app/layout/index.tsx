@@ -9,9 +9,6 @@ const Pages = ({ children }: Props) => {
   return (
     <>
       <Header />
-      <br />
-      <br />
-      <br />
       <Box sx={{ mx: "auto", width: 1200 }}>{children}</Box>
     </>
   );

@@ -67,7 +67,6 @@ export const LogInPage = () => {
         <Typography variant="h4" gutterBottom>
           Log In
         </Typography>
-        <br />
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>

@@ -21,7 +21,7 @@ export const Header = () => {
       logout();
     },
     onError: () => {
-      notficationManager.error("Can't log out"); // privremeno
+      notficationManager.error("Can't log out");
     },
   });
 
