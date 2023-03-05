@@ -6,6 +6,7 @@ import { notficationManager } from "app/utils/NotificationManager";
 import { useContext } from "react";
 import { UserContext } from "app/context/UserContext";
 import { isAnUser } from "app/utils/typeCheckers";
+import { LoadingContext } from "app/context/LoadingContext";
 
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
@@ -35,10 +36,13 @@ export const RegisterPage = () => {
 
   const { login } = useContext(UserContext);
 
+  const { setLoading } = useContext(LoadingContext);
+
   const { mutate } = useMutation(authService.Register, {
     onSuccess: (data) => {
       if (isAnUser(data)) {
         login(data);
+        setLoading(false);
       }
     },
     onError: () => {
@@ -48,9 +52,11 @@ export const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<IRegister> = async (user) => {
     mutate(user);
+    setLoading(true);
   };
 
   return (
+    /* eslint-disable */
     <Container component="main" maxWidth="xs">
       <Box
         sx={{

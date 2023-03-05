@@ -4,6 +4,7 @@ import Router from "./app/router/Router";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material/styles";
 import { lime, yellow } from "@mui/material/colors";
+import LoadingProvider from "app/providers/LoadingProvider";
 
 const theme = createTheme({
   palette: {
@@ -14,14 +15,17 @@ const theme = createTheme({
 
 function App() {
   return (
+    /* eslint-disable */
     <ThemeProvider theme={theme}>
-      <UserProvider>
-        <main>
-          <Pages>
-            <Router />
-          </Pages>
-        </main>
-      </UserProvider>
+      <LoadingProvider>
+        <UserProvider>
+          <main>
+            <Pages>
+              <Router />
+            </Pages>
+          </main>
+        </UserProvider>
+      </LoadingProvider>
     </ThemeProvider>
   );
 }
