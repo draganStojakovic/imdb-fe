@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 
 class AuthService {
   async LogIn(payload: ISignIn) {
-    return await httpService.request<AxiosResponse<IUser | IError>>({
+    return await httpService.request<AxiosResponse<IUser, IError>>({
       url: "/api/auth/login",
       method: "POST",
       data: payload,

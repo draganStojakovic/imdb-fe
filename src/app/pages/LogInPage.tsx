@@ -1,27 +1,32 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ISignIn } from 'app/types/IUser';
+import { IError, ISignIn, IUser } from 'app/types/IUser';
 import { useMutation } from 'react-query';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { authService } from 'app/services/auth.service';
-import { notficationManager } from 'app/utils/NotificationManager';
-import { isAnError, isAnUser } from 'app/utils/typeCheckers';
+import { isAnUser } from 'app/utils/typeCheckers';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from 'app/utils/static';
+import { notficationManager } from 'app/utils/NotificationManager';
 
 import { Box } from '@mui/system';
-import { Link } from '@mui/material';
+import { AlertTitle, Link } from '@mui/material';
 import { Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { Container } from '@mui/material';
+import { Alert } from '@mui/material';
 
 import useAuthGuard from 'app/hooks/useAuthGuard';
+import { AxiosError, AxiosResponse } from 'axios';
+import useErrors from 'app/hooks/useErrors';
 
 export const LogInPage = () => {
   useAuthGuard(false);
+  const { error, setError } = useErrors();
+
   const {
     register,
     handleSubmit,
@@ -33,6 +38,10 @@ export const LogInPage = () => {
     },
   });
 
+  useEffect(() => {
+    return () => setError(null);
+  }, []);
+
   const navigate = useNavigate();
 
   const { setLoading } = useContext(LoadingContext);
@@ -40,27 +49,36 @@ export const LogInPage = () => {
   const { login } = useContext(UserContext); // kontekst poziva hook
 
   const { mutate } = useMutation(authService.LogIn, {
-    onSuccess: (data) => {
-      setLoading(false);
+    onSuccess: (data: AxiosResponse<IUser>) => {
       if (isAnUser(data)) {
         login(data);
+        notficationManager.success('Welcome');
       }
-      if (isAnError(data)) {
-        console.log(data);
-      }
+      setLoading(false);
     },
-    onError: (error) => {
+    onError: (error: AxiosError<IError>) => {
+      if (error.response?.status === 401) {
+        setError({
+          body: 'credentials',
+          msg: 'Invalid credentials',
+        });
+      }
+      if (error.response?.status === 403) {
+        setError({
+          body: 'credentials',
+          msg: 'Invalid request',
+        });
+      }
       setLoading(false);
     },
   });
 
   const onSubmit: SubmitHandler<ISignIn> = async (user) => {
+    !error || setLoading(true);
     mutate(user);
-    setLoading(true);
   };
 
   return (
-    /* eslint-disable */
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
@@ -90,6 +108,13 @@ export const LogInPage = () => {
                 error={errors.email ? true : false}
               />
             </Grid>
+            {error && (
+              <Grid item xs={12}>
+                <Alert severity="error">
+                  <AlertTitle>{error.msg}</AlertTitle>
+                </Alert>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -102,6 +127,13 @@ export const LogInPage = () => {
                 error={errors.password ? true : false}
               />
             </Grid>
+            {error && (
+              <Grid item xs={12}>
+                <Alert severity="error">
+                  <AlertTitle>{error.msg}</AlertTitle>
+                </Alert>
+              </Grid>
+            )}
           </Grid>
           <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
             Submit
@@ -110,7 +142,7 @@ export const LogInPage = () => {
         <Grid container justifyContent="flex-end">
           <Grid item>
             <Link variant="body2" onClick={() => navigate(ROUTES.REGISTER)}>
-              Don't have an account? Register
+              {"Don't have an account? Register"}
             </Link>
           </Grid>
         </Grid>

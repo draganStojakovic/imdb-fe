@@ -22,9 +22,10 @@ export interface IError {
   success: boolean;
   errors: [
     {
-      message: string;
-      status: number;
+      msg: string;
       location: string;
+      value: string;
+      param: string;
     }
   ];
 }
