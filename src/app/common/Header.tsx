@@ -1,20 +1,19 @@
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
-import { ROUTES } from "app/utils/static";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
-import { authService } from "app/services/auth.service";
-import { notficationManager } from "app/utils/NotificationManager";
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
+import { ROUTES } from 'app/utils/static';
+import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { authService } from 'app/services/auth.service';
+import { notficationManager } from 'app/utils/NotificationManager';
 
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
 export const Header = () => {
   const { user, logout } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const { mutate } = useMutation(authService.LogOut, {
     onSuccess: () => {
@@ -33,13 +32,14 @@ export const Header = () => {
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 IMDB
-                <Button
-                  color="inherit"
-                  onClick={() => {
-                    navigate(ROUTES.HOME);
-                  }}
-                >
-                  Home
+                <Button color="inherit">
+                  <Link
+                    to={ROUTES.HOME}
+                    style={{ textDecoration: 'none', color: 'black' }}
+                  >
+                    Home
+                  </Link>
+                  ;
                 </Button>
               </Typography>
               <Button
@@ -60,21 +60,21 @@ export const Header = () => {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 IMDB
               </Typography>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  navigate(ROUTES.LOGIN);
-                }}
-              >
-                Log In
+              <Button color="inherit">
+                <Link
+                  to={ROUTES.LOGIN}
+                  style={{ textDecoration: 'none', color: 'black' }}
+                >
+                  Log In
+                </Link>
               </Button>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  navigate(ROUTES.REGISTER);
-                }}
-              >
-                Register
+              <Button color="inherit">
+                <Link
+                  to={ROUTES.REGISTER}
+                  style={{ textDecoration: 'none', color: 'black' }}
+                >
+                  Register
+                </Link>
               </Button>
             </Toolbar>
           </AppBar>

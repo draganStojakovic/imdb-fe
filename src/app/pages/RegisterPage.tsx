@@ -3,12 +3,11 @@ import { IRegister, IError } from 'app/types/IUser';
 import { useMutation } from 'react-query';
 import { authService } from 'app/services/auth.service';
 import { notficationManager } from 'app/utils/NotificationManager';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { isAnUser } from 'app/utils/typeCheckers';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { AxiosError } from 'axios';
-import useErrors from 'app/hooks/useErrors';
 
 import { Box } from '@mui/system';
 import { Grid } from '@mui/material';
@@ -16,19 +15,16 @@ import { Typography } from '@mui/material';
 import { Button } from '@mui/material';
 import { TextField } from '@mui/material';
 import { Container } from '@mui/material';
-import { Alert } from '@mui/material';
-import { AlertTitle } from '@mui/material';
-
 import useAuthGuard from 'app/hooks/useAuthGuard';
 
 export const RegisterPage = () => {
   useAuthGuard(false);
-  const { error, setError } = useErrors();
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors },
+    setError,
   } = useForm<IRegister>({
     defaultValues: {
       fname: '',
@@ -39,13 +35,9 @@ export const RegisterPage = () => {
     },
   });
 
-  useEffect(() => {
-    return () => setError(null);
-  }, []);
-
   const { login } = useContext(UserContext);
 
-  const { setLoading } = useContext(LoadingContext);
+  const { setLoading, loading } = useContext(LoadingContext);
 
   const { mutate } = useMutation(authService.Register, {
     onSuccess: (data) => {
@@ -56,24 +48,22 @@ export const RegisterPage = () => {
       setLoading(false);
     },
     onError: (error: AxiosError<IError>) => {
-      if (error.response?.data?.errors[0]?.msg === 'Email already in use') {
-        setError({
-          body: 'email',
-          msg: 'Email already in use',
-        });
-      }
-      if (error.response?.data?.errors[0]?.msg === 'Password is too weak') {
-        setError({
-          body: 'password',
-          msg: 'Password is too weak',
-        });
-      }
+      error?.response?.data?.errors?.forEach((error) => {
+        if (
+          error.param === 'email' ||
+          error.param === 'password' ||
+          error.param === 'fname' ||
+          error.param === 'lname'
+        ) {
+          setError(error.param, { message: error.msg });
+        }
+      });
       setLoading(false);
     },
   });
 
   const onSubmit: SubmitHandler<IRegister> = async (user) => {
-    !error || setLoading(true);
+    setLoading(true);
     mutate(user);
   };
 
@@ -130,13 +120,6 @@ export const RegisterPage = () => {
                 error={errors.email ? true : false}
               />
             </Grid>
-            {error && error.body === 'email' && (
-              <Grid item xs={12}>
-                <Alert severity="error">
-                  <AlertTitle>{error.msg}</AlertTitle>
-                </Alert>
-              </Grid>
-            )}
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -169,15 +152,13 @@ export const RegisterPage = () => {
                 error={errors.confirmPassword ? true : false}
               />
             </Grid>
-            {error && error.body === 'password' && (
-              <Grid item xs={12}>
-                <Alert severity="error">
-                  <AlertTitle>{error.msg}</AlertTitle>
-                </Alert>
-              </Grid>
-            )}
           </Grid>
-          <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            type="submit"
+            disabled={loading}
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Submit
           </Button>
         </Box>

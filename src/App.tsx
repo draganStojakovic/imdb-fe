@@ -15,15 +15,12 @@ const theme = createTheme({
 
 function App() {
   return (
-    /* eslint-disable */
     <ThemeProvider theme={theme}>
       <LoadingProvider>
         <UserProvider>
-          <main>
             <Pages>
               <Router />
             </Pages>
-          </main>
         </UserProvider>
       </LoadingProvider>
     </ThemeProvider>
