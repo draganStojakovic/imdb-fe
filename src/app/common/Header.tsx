@@ -1,54 +1,84 @@
-import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
-import { ROUTES } from "../utils/static";
-import { useContext } from "react";
-import { isAuthContext } from "../../App";
-import { isAuthContextType } from "../types/isAuthContextType";
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
+import { ROUTES } from 'app/utils/static';
+import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { authService } from 'app/services/auth.service';
+import { notficationManager } from 'app/utils/NotificationManager';
+
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
 export const Header = () => {
-  const isAuth = useContext(isAuthContext) as isAuthContextType;
+  const { user, logout } = useContext(UserContext);
+
+  const { mutate } = useMutation(authService.LogOut, {
+    onSuccess: () => {
+      logout();
+    },
+    onError: () => {
+      notficationManager.error("Can't log out");
+    },
+  });
+
   return (
-    <header>
-      {isAuth ? (
-        <nav className="navbar navbar-light bg-light shadow-sm">
-          <div className="d-flex justify-content-start">
-            <div style={{ color: "#f8f9fa" }}>_</div>
-            <h3>IMDB</h3>
-            <div style={{ color: "#f8f9fa" }}>_</div>
-            <Button variant="text">
-              <Link to={ROUTES.HOME} style={{ textDecoration: "none" }}>
-                Home
-              </Link>
-            </Button>
-          </div>
-          <div className="d-flex justify-content-end">
-            <Button variant="text">
-              <Link to={ROUTES.LOGIN} style={{ textDecoration: "none" }}>
-                Login
-              </Link>
-            </Button>
-            <div style={{ color: "#f8f9fa" }}>_</div>
-            <Button variant="text">
-              <Link to={ROUTES.REGISTER} style={{ textDecoration: "none" }}>
-                Register
-              </Link>
-            </Button>
-            <div style={{ color: "#f8f9fa" }}>_</div>
-          </div>
-        </nav>
+    <>
+      {user ? (
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                IMDB
+                <Button color="inherit">
+                  <Link
+                    to={ROUTES.HOME}
+                    style={{ textDecoration: 'none', color: 'black' }}
+                  >
+                    Home
+                  </Link>
+                </Button>
+              </Typography>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  mutate();
+                }}
+              >
+                Log Out
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Box>
       ) : (
-        <nav className="navbar navbar-light bg-light shadow-sm">
-          <div className="d-flex justify-content-start">
-            <div style={{ color: "#f8f9fa" }}>_</div>
-            <h3>IMDB</h3>
-            <div style={{ color: "#f8f9fa" }}>_</div>
-          </div>
-          <div className="d-flex justify-content-end">
-            <Button variant="text">LogOut</Button>
-            <div style={{ color: "#f8f9fa" }}>_</div>
-          </div>
-        </nav>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                IMDB
+              </Typography>
+              <Button color="inherit">
+                <Link
+                  to={ROUTES.LOGIN}
+                  style={{ textDecoration: 'none', color: 'black' }}
+                >
+                  Log In
+                </Link>
+              </Button>
+              <Button color="inherit">
+                <Link
+                  to={ROUTES.REGISTER}
+                  style={{ textDecoration: 'none', color: 'black' }}
+                >
+                  Register
+                </Link>
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Box>
       )}
-    </header>
+    </>
   );
 };

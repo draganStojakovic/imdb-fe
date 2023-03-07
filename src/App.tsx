@@ -1,18 +1,29 @@
 import Pages from "./app/layout/index";
+import UserProvider from "./app/providers/UserProvider";
 import Router from "./app/router/Router";
-import { createContext } from "react";
-import { isAuthContextType } from "./app/types/isAuthContextType";
+import { ThemeProvider } from "@emotion/react";
+import { createTheme } from "@mui/material/styles";
+import { lime, yellow } from "@mui/material/colors";
+import LoadingProvider from "app/providers/LoadingProvider";
 
-export const isAuthContext = createContext<isAuthContextType | null>(null);
+const theme = createTheme({
+  palette: {
+    primary: lime,
+    secondary: yellow,
+  },
+});
 
 function App() {
-  const isAuth = !!window.localStorage.getItem("userId");
   return (
-    <isAuthContext.Provider value={{ isAuth }}>
-      <Pages>
-        <Router />
-      </Pages>
-    </isAuthContext.Provider>
+    <ThemeProvider theme={theme}>
+      <LoadingProvider>
+        <UserProvider>
+            <Pages>
+              <Router />
+            </Pages>
+        </UserProvider>
+      </LoadingProvider>
+    </ThemeProvider>
   );
 }
 
