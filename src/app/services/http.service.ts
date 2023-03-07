@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance } from "axios";
+import { IUser } from "../types/user";
 
 class HttpService {
   httpClient: AxiosInstance;
@@ -13,8 +14,9 @@ class HttpService {
     });
   }
 
-  request = <T, R = T>(requestConfig: AxiosRequestConfig): Promise<R> =>
-    this.httpClient.request(requestConfig).then(({ data }) => data);
+  async post(route: string, payload: IUser) {
+    return await this.httpClient.post(route, payload);
+  }
 }
 
 export const httpService = new HttpService();
