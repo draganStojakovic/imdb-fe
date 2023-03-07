@@ -39,7 +39,6 @@ export const Header = () => {
                   >
                     Home
                   </Link>
-                  ;
                 </Button>
               </Typography>
               <Button

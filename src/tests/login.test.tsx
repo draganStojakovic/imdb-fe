@@ -1,9 +1,13 @@
 import { LogInPage } from 'app/pages/LogInPage';
-import { render } from '@testing-library/react';
 import * as ReactDOM from 'react-dom';
 
 describe('LogInPage component test', () => {
-  let container: HTMLDivElement;
+  jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+  }));
+
+  let container: HTMLElement;
 
   beforeEach(() => {
     container = document.createElement('div');
@@ -17,8 +21,7 @@ describe('LogInPage component test', () => {
   });
 
   it('renders the initial document correctly', () => {
-    render(<LogInPage />);
-    const element = document.getElementsByClassName('MuiBox-root css-i9gxme');
-    expect(element).toBeInTheDocument();
+    const inputs = container.querySelectorAll('input');
+    expect(inputs).toHaveLength(2);
   });
 });
