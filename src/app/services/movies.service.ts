@@ -1,6 +1,6 @@
 import { httpService } from './http.service';
 import { AxiosResponse } from 'axios';
-import { IMovie } from 'app/types/IMovies';
+import { IMovie, IMovieCreate } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
 
 class MoviesService {
@@ -15,6 +15,14 @@ class MoviesService {
     return await httpService.request<AxiosResponse<IMovie, IError>>({
       url: `/api/movies/${payload}`,
       method: 'GET',
+    });
+  }
+
+  async CreateMovie(payload: IMovieCreate) {
+    return await httpService.request<AxiosResponse<IMovie, IError>>({
+      url: '/movies',
+      method: 'POST',
+      data: payload,
     });
   }
 }

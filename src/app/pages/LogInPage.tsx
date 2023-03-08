@@ -66,7 +66,8 @@ export const LogInPage = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 5,
+          marginTop: 10,
+          marginBottom: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

@@ -72,7 +72,8 @@ export const RegisterPage = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 5,
+          marginTop: 10,
+          marginBottom: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -81,7 +82,6 @@ export const RegisterPage = () => {
         <Typography variant="h4" gutterBottom>
           Register
         </Typography>
-        <br />
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
