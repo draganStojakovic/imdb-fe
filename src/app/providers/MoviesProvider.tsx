@@ -1,4 +1,4 @@
-import { MoviesContext } from 'app/context/MovieContext';
+import { MoviesContext } from 'app/context/MoviesContext';
 import useMovies from 'app/hooks/useMovies';
 
 interface Props {
@@ -6,23 +6,13 @@ interface Props {
 }
 
 const MoviesProvider = ({ children }: Props) => {
-  const {
-    movie,
-    movies,
-    setMoviesToState,
-    setMovieToState,
-    setMovie,
-    setMovies,
-  } = useMovies();
+  const { movies, setMoviesToState, setMovies } = useMovies();
 
   return (
     <MoviesContext.Provider
       value={{
-        movie,
         movies,
         setMoviesToState,
-        setMovieToState,
-        setMovie,
         setMovies,
       }}
     >

@@ -4,20 +4,21 @@ import { useQuery } from 'react-query';
 import { moviesService } from 'app/services/movies.service';
 import { useEffect } from 'react';
 import { isMovies } from 'app/utils/typeCheckers';
+import { useContext } from 'react';
+import { UserContext } from 'app/context/UserContext';
 
 const useMovies = () => {
   const [movies, setMovies] = useState<IMovie[] | null>(null);
-  const [movie, setMovie] = useState<IMovie | null>(null);
+
+  const { user } = useContext(UserContext);
 
   const setMoviesToState = (movies: IMovie[]) => {
     movies && setMovies(movies);
   };
 
-  const setMovieToState = (movie: IMovie) => {
-    movie && setMovie(movie);
-  };
-
-  const { data } = useQuery('movies', moviesService.GetMovies);
+  const { data } = useQuery('movies', moviesService.GetMovies, {
+    enabled: !!user,
+  });
 
   useEffect(() => {
     if (isMovies(data)) {
@@ -26,12 +27,9 @@ const useMovies = () => {
   }, [data]);
 
   return {
-    movie,
     movies,
     setMoviesToState,
-    setMovieToState,
     setMovies,
-    setMovie,
   };
 };
 
