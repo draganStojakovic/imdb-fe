@@ -5,7 +5,7 @@ import { IError } from 'app/types/IError';
 
 class MoviesService {
   async GetMovies() {
-    return await httpService.request<AxiosResponse<IMovie[], IError>>({
+    return await httpService.request<IMovie[] | IError>({
       url: '/api/movies',
       method: 'GET',
     });

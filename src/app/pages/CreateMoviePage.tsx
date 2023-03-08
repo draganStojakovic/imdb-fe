@@ -20,6 +20,8 @@ import {
   FormControl,
   FormLabel,
   FormControlLabel,
+  List,
+  ListItem,
   Button,
 } from '@mui/material';
 
@@ -129,28 +131,6 @@ export const CreateMoviePage = () => {
                   }
                   error={errors.coverImage ? true : false}
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl
-                  sx={{ m: 3 }}
-                  component="fieldset"
-                  variant="standard"
-                >
-                  <FormLabel component="legend">Genres</FormLabel>
-                  {isGenres(data) &&
-                    data.map((genre) => (
-                      <FormControlLabel
-                        key={genre.id}
-                        control={
-                          <Checkbox
-                            value={genre.name}
-                            {...register('genres')}
-                          />
-                        }
-                        label={genre.name}
-                      />
-                    ))}
-                </FormControl>
               </Grid>
             </Grid>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>

@@ -4,3 +4,7 @@ export const ROUTES = {
   MOVIES: '/movies',
   MOVIES_CREATE: '/movies/create',
 };
+
+export const QUERRY_KEYS = {
+  MOVIES: 'movies',
+};

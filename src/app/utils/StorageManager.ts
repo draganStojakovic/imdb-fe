@@ -10,6 +10,12 @@ class StorageManager {
     return null;
   }
 
+  public exists(key: string) {
+    const data = window.localStorage.getItem(key);
+    if (data) return true;
+    return false;
+  }
+
   public clear(key: string) {
     window.localStorage.removeItem(key);
   }
