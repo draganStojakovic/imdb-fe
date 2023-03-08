@@ -1,7 +1,6 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-/* eslint-disable */
 
-export const HomePage = () => {
+export const MoviesPage = () => {
   useAuthGuard(true);
   return <h1>HomePage</h1>;
 };

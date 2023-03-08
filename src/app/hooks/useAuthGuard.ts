@@ -11,7 +11,7 @@ const useAuthGuard = (auth: boolean) => {
     if (auth && !user) {
       navigate(ROUTES.LOGIN);
     } else if (!auth && user) {
-      navigate(ROUTES.HOME);
+      navigate(ROUTES.MOVIES);
     }
   });
 };

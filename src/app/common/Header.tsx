@@ -34,7 +34,7 @@ export const Header = () => {
                 IMDB
                 <Button color="inherit">
                   <Link
-                    to={ROUTES.HOME}
+                    to={ROUTES.MOVIES}
                     style={{ textDecoration: 'none', color: 'black' }}
                   >
                     Home

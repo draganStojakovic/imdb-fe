@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { IError, ISignIn, IUser } from 'app/types/IUser';
+import { ISignIn, IUser } from 'app/types/IUser';
+import { IError } from 'app/types/IError';
 import { useMutation } from 'react-query';
 import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';

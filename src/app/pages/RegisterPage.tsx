@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { IRegister, IError } from 'app/types/IUser';
+import { IRegister } from 'app/types/IUser';
+import { IError } from 'app/types/IError';
 import { useMutation } from 'react-query';
 import { authService } from 'app/services/auth.service';
 import { notficationManager } from 'app/utils/NotificationManager';
