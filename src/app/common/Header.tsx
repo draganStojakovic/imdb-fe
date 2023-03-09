@@ -4,7 +4,6 @@ import { ROUTES } from 'app/utils/static';
 import { Link } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { authService } from 'app/services/auth.service';
-import { notficationManager } from 'app/utils/NotificationManager';
 
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -20,7 +19,7 @@ export const Header = () => {
       logout();
     },
     onError: () => {
-      notficationManager.error("Can't log out");
+      logout();
     },
   });
 
@@ -34,10 +33,18 @@ export const Header = () => {
                 IMDB
                 <Button color="inherit">
                   <Link
-                    to={ROUTES.HOME}
+                    to={ROUTES.MOVIES}
                     style={{ textDecoration: 'none', color: 'black' }}
                   >
                     Home
+                  </Link>
+                </Button>
+                <Button color="inherit">
+                  <Link
+                    to={ROUTES.MOVIES_CREATE}
+                    style={{ textDecoration: 'none', color: 'black' }}
+                  >
+                    Create Movie
                   </Link>
                 </Button>
               </Typography>

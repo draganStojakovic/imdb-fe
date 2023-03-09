@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Context, createContext } from 'react';
 
 interface ILoading {

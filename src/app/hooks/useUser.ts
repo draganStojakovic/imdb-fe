@@ -14,7 +14,7 @@ const useUser = () => {
   const login = (user: IUser) => {
     setUser(user);
     storageManager.set(userKey, user);
-    navigate(ROUTES.HOME);
+    navigate(ROUTES.MOVIES);
   };
 
   const logout = () => {

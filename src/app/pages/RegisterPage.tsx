@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { IRegister, IError } from 'app/types/IUser';
+import { IRegister } from 'app/types/IUser';
+import { IError } from 'app/types/IError';
 import { useMutation } from 'react-query';
 import { authService } from 'app/services/auth.service';
 import { notficationManager } from 'app/utils/NotificationManager';
@@ -71,7 +72,8 @@ export const RegisterPage = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 5,
+          marginTop: 10,
+          marginBottom: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -80,7 +82,6 @@ export const RegisterPage = () => {
         <Typography variant="h4" gutterBottom>
           Register
         </Typography>
-        <br />
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>

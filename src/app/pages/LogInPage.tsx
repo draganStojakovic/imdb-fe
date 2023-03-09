@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { IError, ISignIn, IUser } from 'app/types/IUser';
+import { ISignIn, IUser } from 'app/types/IUser';
+import { IError } from 'app/types/IError';
 import { useMutation } from 'react-query';
 import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
@@ -65,7 +66,8 @@ export const LogInPage = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 5,
+          marginTop: 10,
+          marginBottom: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

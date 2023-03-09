@@ -1,5 +1,6 @@
 import { httpService } from "./http.service";
-import { IUser, ISignIn, IRegister, IError } from "app/types/IUser";
+import { IUser, ISignIn, IRegister } from "app/types/IUser";
+import { IError } from "app/types/IError";
 import { AxiosResponse } from "axios";
 
 class AuthService {
