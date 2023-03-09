@@ -17,7 +17,7 @@ export const MoviesPage = () => {
       const trunctated = sentences.split('.');
       return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
     }
-    return undefined;
+    return sentences;
   }
 
   return (
