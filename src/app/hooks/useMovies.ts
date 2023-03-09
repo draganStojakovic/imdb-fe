@@ -1,15 +1,23 @@
-import { useGetMoviesQuerry } from 'app/querries/movie.querry';
-import { isMovies } from 'app/utils/typeCheckers';
+import {
+  useGetMoviesQuerry,
+  useGetSingleMovieQuerry,
+} from 'app/querries/movie.querry';
+import { isMovie, isMovies } from 'app/utils/typeCheckers';
 
 const useMovies = () => {
-  const { data } = useGetMoviesQuerry();
-
   const getMovies = () => {
+    const { data } = useGetMoviesQuerry();
     if (isMovies(data)) return data;
     return undefined;
   };
 
-  return { getMovies };
+  const getSingleMovie = (id: string) => {
+    const { data } = useGetSingleMovieQuerry(id);
+    if (isMovie(data)) return data;
+    return undefined;
+  };
+
+  return { getMovies, getSingleMovie };
 };
 
 export default useMovies;

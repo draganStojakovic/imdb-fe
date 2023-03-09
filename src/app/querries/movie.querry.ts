@@ -9,3 +9,9 @@ export const useGetMoviesQuerry = () =>
     const data = await moviesService.GetMovies();
     return data;
   });
+
+export const useGetSingleMovieQuerry = (id: string) =>
+  useQuery<IMovie | IError>([QUERRY_KEYS.MOVIE], async () => {
+    const data = await moviesService.GetSingleMovie(id);
+    return data;
+  });

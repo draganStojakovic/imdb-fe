@@ -62,9 +62,7 @@ export const MoviesPage = () => {
                       component="img"
                       sx={{
                         height: 250,
-                        wordBreak: 'break-word',
                       }}
-                      alt="The house from the offer."
                       src={movie.coverImage}
                     />
                     <Box sx={{ flexDirection: 'column' }}>
