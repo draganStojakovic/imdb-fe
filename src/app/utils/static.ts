@@ -7,4 +7,5 @@ export const ROUTES = {
 
 export const QUERRY_KEYS = {
   MOVIES: 'movies',
+  GENRES: 'genres',
 };

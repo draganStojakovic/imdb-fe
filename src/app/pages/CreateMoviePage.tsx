@@ -1,14 +1,16 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { IMovie, IMovieCreate } from 'app/types/IMovies';
 import { useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { moviesService } from 'app/services/movies.service';
-import { isMovie, isGenres } from 'app/utils/typeCheckers';
+import { isMovie } from 'app/utils/typeCheckers';
 import { notficationManager } from 'app/utils/NotificationManager';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
+import useGenres from 'app/hooks/useGenres';
+import { IGenre } from 'app/types/IGenre';
 
 import {
   Container,
@@ -16,20 +18,15 @@ import {
   Typography,
   Grid,
   TextField,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  FormControlLabel,
-  List,
-  ListItem,
   Button,
+  Stack,
+  Autocomplete,
 } from '@mui/material';
-
-import { genresService } from 'app/services/genres.service';
 
 export const CreateMoviePage = () => {
   useAuthGuard(true);
 
+  const { getGenres } = useGenres();
   const { setLoading } = useContext(LoadingContext);
 
   const {
@@ -37,6 +34,8 @@ export const CreateMoviePage = () => {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
+    reset,
   } = useForm<IMovieCreate>({
     defaultValues: {
       title: '',
@@ -51,6 +50,7 @@ export const CreateMoviePage = () => {
       if (isMovie(data)) {
         setLoading(false);
         notficationManager.success('Succefully added a movie');
+        reset();
       }
     },
     onError: (error: AxiosError<IError>) => {
@@ -68,12 +68,9 @@ export const CreateMoviePage = () => {
     },
   });
 
-  const { data } = useQuery('genres', genresService.GetGenres);
-  console.log(data);
   const onSubmit: SubmitHandler<IMovieCreate> = async (movie) => {
-    // setLoading(true);
-    // mutate(movie);
-    console.log(movie);
+    setLoading(true)
+    mutate(movie)
   };
 
   return (
@@ -125,12 +122,40 @@ export const CreateMoviePage = () => {
                   label="Cover Image"
                   {...register('coverImage', {
                     required: 'Cover Image is required',
+                    // pattern: {
+                    //   value: /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|jpeg)/i,
+                    //   message: 'Invalid url',
+                    // },
                   })}
                   helperText={
                     errors.coverImage ? errors.coverImage.message : ''
                   }
                   error={errors.coverImage ? true : false}
+                  
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <Stack spacing={3} sx={{ width: 500 }}>
+                  <Autocomplete
+                    multiple
+                    options={getGenres() ? (getGenres() as IGenre[]) : []}
+                    getOptionLabel={(genres) => genres.name}
+                    onChange={(e, values) =>
+                      setValue(
+                        'genres',
+                        values.map((genre) => genre.id)
+                      )
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="standard"
+                        label="Multiple values"
+                        placeholder="Favorites"
+                      />
+                    )}
+                  />
+                </Stack>
               </Grid>
             </Grid>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>

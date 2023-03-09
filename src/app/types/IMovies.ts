@@ -1,3 +1,5 @@
+import { IGenre } from './IGenre';
+
 export interface IMovieCreate {
   title: string;
   description: string;
@@ -5,6 +7,10 @@ export interface IMovieCreate {
   genres: string[];
 }
 
-export interface IMovie extends IMovieCreate {
+export interface IMovie {
   id: string;
+  title: string;
+  description: string;
+  coverImage: string;
+  genres: IGenre[];
 }
