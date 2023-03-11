@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IGenre } from 'app/types/IGenre';
-import { IMovie } from 'app/types/IMovies';
+import { IMovie, IMoviePaginated } from 'app/types/IMovies';
 import { IUser } from 'app/types/IUser';
 
 export function isAnUser(obj: any): obj is IUser {
@@ -16,5 +16,9 @@ export function isMovie(obj: any): obj is IMovie {
 }
 
 export function isGenres(obj: any): obj is IGenre[] {
+  return obj;
+}
+
+export function isMoviesPaginated(obj: any): obj is IMoviePaginated {
   return obj;
 }

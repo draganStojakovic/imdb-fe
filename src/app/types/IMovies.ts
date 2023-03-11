@@ -1,6 +1,6 @@
 import { IGenre } from './IGenre';
 
-export interface IMovieCreate {
+export interface IMovieDraft {
   title: string;
   description: string;
   coverImage: string;
@@ -13,4 +13,10 @@ export interface IMovie {
   description: string;
   coverImage: string;
   genres: IGenre[];
+}
+
+export interface IMoviePaginated {
+  currentPage: number;
+  movies: IMovie[];
+  totalPages: number;
 }

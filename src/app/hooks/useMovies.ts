@@ -5,8 +5,8 @@ import {
 import { isMovie, isMovies } from 'app/utils/typeCheckers';
 
 const useMovies = () => {
-  const getMovies = () => {
-    const { data } = useGetMoviesQuerry();
+  const getMovies = (page = 1, limit = 10) => {
+    const { data } = useGetMoviesQuerry(page, limit);
     if (isMovies(data)) return data;
     return undefined;
   };

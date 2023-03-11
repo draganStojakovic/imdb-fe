@@ -1,13 +1,23 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import useMovies from 'app/hooks/useMovies';
-import { Container, Box, Typography, Grid, Button } from '@mui/material';
+import {
+  Container,
+  Box,
+  Typography,
+  Grid,
+  Button,
+  Pagination,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { IMovie } from 'app/types/IMovies';
+import { isMoviesPaginated } from 'app/utils/typeCheckers';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
   const { getMovies } = useMovies();
-  const movies = getMovies();
+  const response = getMovies();
+
   const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
     undefined
   );
@@ -31,8 +41,8 @@ export const MoviesPage = () => {
           alignItems: 'left',
         }}
       >
-        {movies &&
-          movies.map((movie) => (
+        {isMoviesPaginated(response) &&
+          response.movies.map((movie: IMovie) => (
             <Grid key={movie.id} container spacing={1}>
               <Box
                 sx={{
@@ -74,18 +84,26 @@ export const MoviesPage = () => {
                         {showMoreDesc == movie.id
                           ? movie.description
                           : trunctate(movie.description)}
-                        <Button
-                          color="inherit"
-                          onClick={() => {
-                            if (showMoreDesc) {
-                              setShowMoreDesc(undefined);
-                            } else {
-                              setShowMoreDesc(movie.id);
-                            }
+                        <Typography
+                          sx={{
+                            marginBottom: 5,
                           }}
                         >
-                          {showMoreDesc == movie.id ? 'Show Less' : 'Show More'}
-                        </Button>
+                          <Button
+                            color="inherit"
+                            onClick={() => {
+                              if (showMoreDesc) {
+                                setShowMoreDesc(undefined);
+                              } else {
+                                setShowMoreDesc(movie.id);
+                              }
+                            }}
+                          >
+                            {showMoreDesc == movie.id
+                              ? 'Show Less'
+                              : 'Show More'}
+                          </Button>
+                        </Typography>
                       </Typography>
                     </Box>
                   </Box>
@@ -93,6 +111,9 @@ export const MoviesPage = () => {
               </Box>
             </Grid>
           ))}
+        {isMoviesPaginated(response) && response.movies.length !== 0 && (
+          <Pagination page={2} count={response.totalPages} />
+        )}
       </Box>
     </Container>
   );
