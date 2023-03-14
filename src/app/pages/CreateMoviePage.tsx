@@ -1,7 +1,7 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { IMovie, IMovieCreate } from 'app/types/IMovies';
+import { IMovie, IMovieDraft } from 'app/types/IMovies';
 import { useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { moviesService } from 'app/services/movies.service';
@@ -36,7 +36,7 @@ export const CreateMoviePage = () => {
     setError,
     setValue,
     reset,
-  } = useForm<IMovieCreate>({
+  } = useForm<IMovieDraft>({
     defaultValues: {
       title: '',
       description: '',
@@ -68,7 +68,7 @@ export const CreateMoviePage = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<IMovieCreate> = async (movie) => {
+  const onSubmit: SubmitHandler<IMovieDraft> = async (movie) => {
     setLoading(true)
     mutate(movie)
   };
@@ -122,10 +122,6 @@ export const CreateMoviePage = () => {
                   label="Cover Image"
                   {...register('coverImage', {
                     required: 'Cover Image is required',
-                    // pattern: {
-                    //   value: /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|jpeg)/i,
-                    //   message: 'Invalid url',
-                    // },
                   })}
                   helperText={
                     errors.coverImage ? errors.coverImage.message : ''
@@ -151,7 +147,7 @@ export const CreateMoviePage = () => {
                         {...params}
                         variant="standard"
                         label="Multiple values"
-                        placeholder="Favorites"
+                        placeholder="Genres"
                       />
                     )}
                   />

@@ -1,13 +1,40 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-import useMovies from 'app/hooks/useMovies';
-import { Container, Box, Typography, Grid, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { useCallback, useState, useEffect, useContext } from 'react';
+import { LoadingContext } from 'app/context/LoadingContext';
+import { useGetMoviesQuerry } from 'app/querries/movie.querry';
+import { PaginationComponent } from 'app/components/PaginationComponent';
+import { isMoviesPaginated } from 'app/utils/typeCheckers';
+import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
-  const { getMovies } = useMovies();
-  const movies = getMovies();
+  const location = useLocation();
+  const getPage = useCallback(() => {
+    return Number(location.search.replace('?page=', '')) || 1;
+  }, [location.search]);
+  const [currentPage, setCurrentPage] = useState<number>(getPage());
+
+  const { setLoading } = useContext(LoadingContext);
+
+  const {
+    data: moviesPaginated,
+    isLoading,
+    refetch: reloadProducts,
+  } = useGetMoviesQuerry(currentPage);
+
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
+    setCurrentPage(getPage());
+  }, [getPage, location]);
+
+  useEffect(() => {
+    reloadProducts();
+  }, [currentPage, reloadProducts]);
+
   const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
     undefined
   );
@@ -31,68 +58,74 @@ export const MoviesPage = () => {
           alignItems: 'left',
         }}
       >
-        {movies &&
-          movies.map((movie) => (
-            <Grid key={movie.id} container spacing={1}>
-              <Box
+        {isMoviesPaginated(moviesPaginated) &&
+          moviesPaginated.movies.map((movie, i) => (
+            <Grid item sm={12} key={i}>
+              <Typography
+                variant="h3"
+                gutterBottom
                 sx={{
-                  marginBottom: 5,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'left',
+                  marginBottom: '1rem',
                 }}
               >
-                <Grid item sm={12}>
-                  <Typography
-                    variant="h3"
-                    gutterBottom
-                    sx={{
-                      marginBottom: 5,
+                <Link
+                  to={`/movies/${movie.id}`}
+                  style={{ textDecoration: 'none', color: 'black' }}
+                >
+                  {movie.title}
+                </Link>
+              </Typography>
+              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+                {movie &&
+                  movie.genres.map((genre, i) => (
+                    <Typography
+                      sx={{
+                        marginBottom: '1rem',
+                      }}
+                      variant="button"
+                      display="block"
+                      gutterBottom
+                      key={i}
+                    >
+                      {genre.name}
+                    </Typography>
+                  ))}
+              </Box>
+              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+                <Box
+                  component="img"
+                  sx={{
+                    height: 350,
+                    marginBottom: 5,
+                  }}
+                  src={movie.coverImage}
+                />
+                <Stack spacing={2}>
+                  {showMoreDesc == movie.id
+                    ? movie.description
+                    : trunctate(movie.description)}
+
+                  <Button
+                    color="inherit"
+                    onClick={() => {
+                      if (showMoreDesc && showMoreDesc === movie.id) {
+                        setShowMoreDesc(undefined);
+                      } else if (!showMoreDesc) {
+                        setShowMoreDesc(movie.id);
+                      }
                     }}
                   >
-                    <Link
-                      style={{ textDecoration: 'none', color: 'black' }}
-                      to={`/movies/${movie.id}`}
-                    >
-                      {movie.title}
-                    </Link>
-                  </Typography>
-                  <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-                    <Box
-                      component="img"
-                      sx={{
-                        height: 250,
-                      }}
-                      src={movie.coverImage}
-                    />
-                    <Box sx={{ flexDirection: 'column' }}>
-                      <Typography
-                        sx={{
-                          marginBottom: 5,
-                        }}
-                      >
-                        {showMoreDesc == movie.id
-                          ? movie.description
-                          : trunctate(movie.description)}
-                        <Button
-                          color="inherit"
-                          onClick={() => {
-                            if (showMoreDesc) {
-                              setShowMoreDesc(undefined);
-                            } else {
-                              setShowMoreDesc(movie.id);
-                            }
-                          }}
-                        >
-                          {showMoreDesc == movie.id ? 'Show Less' : 'Show More'}
-                        </Button>
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
+                    {showMoreDesc == movie.id ? 'Show Less' : 'Show More'}
+                  </Button>
+                </Stack>
               </Box>
             </Grid>
           ))}
+        <Grid container spacing={1}>
+          {isMoviesPaginated(moviesPaginated) && (
+            <PaginationComponent count={moviesPaginated?.totalPages} />
+          )}
+        </Grid>
       </Box>
     </Container>
   );

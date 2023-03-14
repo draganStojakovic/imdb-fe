@@ -1,12 +1,12 @@
 import { httpService } from './http.service';
-import { IMovie, IMovieCreate } from 'app/types/IMovies';
+import { IMovie, IMovieDraft, IMoviePaginated } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
 
 class MoviesService {
-  async GetMovies() {
-    return await httpService.request<IMovie[] | IError>({
-      url: '/api/movies',
+  async GetMovies(page = 1, limit = 10) {
+    return await httpService.request<IMoviePaginated | IError>({
+      url: `/api/movies?page=${page}&limit=${limit}`,
       method: 'GET',
     });
   }
@@ -18,7 +18,7 @@ class MoviesService {
     });
   }
 
-  async CreateMovie(payload: IMovieCreate) {
+  async CreateMovie(payload: IMovieDraft) {
     return await httpService.request<AxiosResponse<IMovie, IError>>({
       url: '/api/movies',
       method: 'POST',
