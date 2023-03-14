@@ -12,7 +12,7 @@ import useQueryParams from 'app/hooks/useQueryParams';
 export const MoviesPage = () => {
   useAuthGuard(true);
   const location = useLocation();
-  const { getPage, getSearch } = useQueryParams();
+  const { getPage, getSearch, setPage } = useQueryParams();
 
   const [currentPage, setCurrentPage] = useState<number>(getPage());
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
@@ -26,13 +26,21 @@ export const MoviesPage = () => {
   } = useGetMoviesQuerry(currentPage, searchTerm);
 
   useEffect(() => {
+    setPage();
+  }, []);
+
+  useEffect(() => {
     setLoading(isLoading);
   }, [isLoading]);
 
   useEffect(() => {
     setCurrentPage(getPage());
     const search = getSearch();
-    if (search) setSearchTerm(search);
+    if (search) {
+      const pageQuery = setPage();
+      setCurrentPage(pageQuery);
+      setSearchTerm(search);
+    }
   }, [location.search]);
 
   useEffect(() => {
