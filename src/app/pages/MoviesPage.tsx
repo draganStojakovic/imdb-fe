@@ -1,19 +1,21 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useLocation, Link } from 'react-router-dom';
-import { useCallback, useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 import { PaginationComponent } from 'app/components/PaginationComponent';
 import { isMoviesPaginated } from 'app/utils/typeCheckers';
 import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
+import { SearchMoviesComponent } from 'app/components/SearchMoviesComponent';
+import useQueryParams from 'app/hooks/useQueryParams';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
   const location = useLocation();
-  const getPage = useCallback(() => {
-    return Number(location.search.replace('?page=', '')) || 1;
-  }, [location.search]);
+  const { getPage, getSearch } = useQueryParams();
+
   const [currentPage, setCurrentPage] = useState<number>(getPage());
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
 
   const { setLoading } = useContext(LoadingContext);
 
@@ -21,7 +23,7 @@ export const MoviesPage = () => {
     data: moviesPaginated,
     isLoading,
     refetch: reloadMovies,
-  } = useGetMoviesQuerry(currentPage);
+  } = useGetMoviesQuerry(currentPage, searchTerm);
 
   useEffect(() => {
     setLoading(isLoading);
@@ -29,11 +31,13 @@ export const MoviesPage = () => {
 
   useEffect(() => {
     setCurrentPage(getPage());
-  }, [location]);
+    const search = getSearch();
+    if (search) setSearchTerm(search);
+  }, [location.search]);
 
   useEffect(() => {
     reloadMovies();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
   const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
     undefined
@@ -58,6 +62,7 @@ export const MoviesPage = () => {
           alignItems: 'left',
         }}
       >
+        <SearchMoviesComponent />
         {isMoviesPaginated(moviesPaginated) &&
           moviesPaginated.movies.map((movie, i) => (
             <Grid item sm={12} key={i}>
@@ -104,11 +109,10 @@ export const MoviesPage = () => {
                   {showMoreDesc == movie.id
                     ? movie.description
                     : trunctate(movie.description)}
-
                   <Button
                     color="inherit"
                     onClick={() => {
-                      if (showMoreDesc && showMoreDesc === movie.id) {
+                      if (showMoreDesc === movie.id) {
                         setShowMoreDesc(undefined);
                       } else if (!showMoreDesc) {
                         setShowMoreDesc(movie.id);

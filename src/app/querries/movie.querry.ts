@@ -4,9 +4,9 @@ import { IMovie, IMoviePaginated } from 'app/types/IMovies';
 import { QUERRY_KEYS } from 'app/utils/static';
 import { useQuery } from 'react-query';
 
-export const useGetMoviesQuerry = (page = 1, limit = 10) =>
+export const useGetMoviesQuerry = (page = 1, search: string | undefined, limit = 10) =>
   useQuery<IMoviePaginated | IError>([QUERRY_KEYS.MOVIES], async () => {
-    const data = await moviesService.GetMovies(page, limit);
+    const data = await moviesService.GetMovies(page, search, limit);
     return data;
   });
 
