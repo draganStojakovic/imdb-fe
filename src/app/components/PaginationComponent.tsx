@@ -17,7 +17,7 @@ export const PaginationComponent = ({ count }: Props) => {
 
   useEffect(() => {
     setCurrentPage(getPage);
-  }, [getPage, location]);
+  }, [location]);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     navigate(`${ROUTES.MOVIES}/?page=${value}`);

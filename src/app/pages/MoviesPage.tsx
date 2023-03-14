@@ -20,20 +20,20 @@ export const MoviesPage = () => {
   const {
     data: moviesPaginated,
     isLoading,
-    refetch: reloadProducts,
+    refetch: reloadMovies,
   } = useGetMoviesQuerry(currentPage);
 
   useEffect(() => {
     setLoading(isLoading);
-  }, [isLoading, setLoading]);
+  }, [isLoading]);
 
   useEffect(() => {
     setCurrentPage(getPage());
-  }, [getPage, location]);
+  }, [location]);
 
   useEffect(() => {
-    reloadProducts();
-  }, [currentPage, reloadProducts]);
+    reloadMovies();
+  }, [currentPage]);
 
   const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
     undefined
