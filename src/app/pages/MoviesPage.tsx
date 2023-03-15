@@ -12,7 +12,7 @@ import useQueryParams from 'app/hooks/useQueryParams';
 export const MoviesPage = () => {
   useAuthGuard(true);
   const location = useLocation();
-  const { getPage, getSearch, setPage } = useQueryParams();
+  const { getPage, getSearch, setPage, checkIfQueryExists } = useQueryParams();
 
   const [currentPage, setCurrentPage] = useState<number>(getPage());
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
@@ -30,18 +30,21 @@ export const MoviesPage = () => {
   }, []);
 
   useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
     setCurrentPage(getPage());
-    const search = getSearch();
-    if (search) {
-      const pageQuery = setPage();
-      setCurrentPage(pageQuery);
-      setSearchTerm(search);
+    if (checkIfQueryExists('search')) {
+      setSearchTerm(getSearch());
+    } else {
+      setSearchTerm(undefined);
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (typeof searchTerm === 'string') setCurrentPage(setPage());
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
 
   useEffect(() => {
     reloadMovies();
@@ -72,6 +75,30 @@ export const MoviesPage = () => {
       >
         <SearchMoviesComponent />
         {isMoviesPaginated(moviesPaginated) &&
+          moviesPaginated.movies.length === 0 && (
+            <Grid
+              container
+              justifyContent="flex-start"
+              maxWidth="sm"
+              sx={{
+                marginBottom: 5,
+              }}
+            >
+              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  sx={{
+                    marginBottom: '1rem',
+                  }}
+                >
+                  No movies found
+                </Typography>
+              </Box>
+            </Grid>
+          )}
+        {isMoviesPaginated(moviesPaginated) &&
+          moviesPaginated.currentPage === currentPage &&
           moviesPaginated.movies.map((movie, i) => (
             <Grid item sm={12} key={i}>
               <Typography
@@ -134,9 +161,10 @@ export const MoviesPage = () => {
             </Grid>
           ))}
         <Grid container spacing={1}>
-          {isMoviesPaginated(moviesPaginated) && (
-            <PaginationComponent count={moviesPaginated?.totalPages} />
-          )}
+          {isMoviesPaginated(moviesPaginated) &&
+            moviesPaginated.movies.length > 0 && (
+              <PaginationComponent count={moviesPaginated?.totalPages} />
+            )}
         </Grid>
       </Box>
     </Container>

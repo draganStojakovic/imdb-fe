@@ -23,7 +23,7 @@ const useQueryParams = () => {
 
   const setPage = useCallback(
     (value = 1) => {
-      const pageQuery = new URLSearchParams(window.location.search);
+      const pageQuery = getQueryParams();
       pageQuery.set('page', String(value));
       const newRelativePathQuery =
         window.location.pathname + '?' + pageQuery.toString();
@@ -33,7 +33,20 @@ const useQueryParams = () => {
     [query]
   );
 
-  return { getPage, getSearch, setPage };
+  const getQueryParams = () => {
+    return new URLSearchParams(window.location.search);
+  };
+
+  const checkIfQueryExists = (value: string) => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has(value)) {
+      return true;
+    }
+
+    return false;
+  };
+
+  return { getPage, getSearch, setPage, getQueryParams, checkIfQueryExists };
 };
 
 export default useQueryParams;
