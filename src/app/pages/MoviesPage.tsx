@@ -1,19 +1,21 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useLocation, Link } from 'react-router-dom';
-import { useCallback, useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 import { PaginationComponent } from 'app/components/PaginationComponent';
 import { isMoviesPaginated } from 'app/utils/typeCheckers';
 import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
+import { SearchMoviesComponent } from 'app/components/SearchMoviesComponent';
+import useQueryParams from 'app/hooks/useQueryParams';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
   const location = useLocation();
-  const getPage = useCallback(() => {
-    return Number(location.search.replace('?page=', '')) || 1;
-  }, [location.search]);
+  const { getPage, getSearch, setPage, checkIfQueryExists } = useQueryParams();
+
   const [currentPage, setCurrentPage] = useState<number>(getPage());
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
 
   const { setLoading } = useContext(LoadingContext);
 
@@ -21,19 +23,32 @@ export const MoviesPage = () => {
     data: moviesPaginated,
     isLoading,
     refetch: reloadMovies,
-  } = useGetMoviesQuerry(currentPage);
+  } = useGetMoviesQuerry(currentPage, searchTerm);
+
+  useEffect(() => {
+    setPage();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(getPage());
+    if (checkIfQueryExists('search')) {
+      setSearchTerm(getSearch());
+    } else {
+      setSearchTerm(undefined);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    if (typeof searchTerm === 'string') setCurrentPage(setPage());
+  }, [searchTerm]);
 
   useEffect(() => {
     setLoading(isLoading);
   }, [isLoading]);
 
   useEffect(() => {
-    setCurrentPage(getPage());
-  }, [location]);
-
-  useEffect(() => {
     reloadMovies();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
   const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
     undefined
@@ -58,7 +73,32 @@ export const MoviesPage = () => {
           alignItems: 'left',
         }}
       >
+        <SearchMoviesComponent />
         {isMoviesPaginated(moviesPaginated) &&
+          moviesPaginated.movies.length === 0 && (
+            <Grid
+              container
+              justifyContent="flex-start"
+              maxWidth="sm"
+              sx={{
+                marginBottom: 5,
+              }}
+            >
+              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  sx={{
+                    marginBottom: '1rem',
+                  }}
+                >
+                  No movies found
+                </Typography>
+              </Box>
+            </Grid>
+          )}
+        {isMoviesPaginated(moviesPaginated) &&
+          moviesPaginated.currentPage === currentPage &&
           moviesPaginated.movies.map((movie, i) => (
             <Grid item sm={12} key={i}>
               <Typography
@@ -104,11 +144,10 @@ export const MoviesPage = () => {
                   {showMoreDesc == movie.id
                     ? movie.description
                     : trunctate(movie.description)}
-
                   <Button
                     color="inherit"
                     onClick={() => {
-                      if (showMoreDesc && showMoreDesc === movie.id) {
+                      if (showMoreDesc === movie.id) {
                         setShowMoreDesc(undefined);
                       } else if (!showMoreDesc) {
                         setShowMoreDesc(movie.id);
@@ -122,9 +161,10 @@ export const MoviesPage = () => {
             </Grid>
           ))}
         <Grid container spacing={1}>
-          {isMoviesPaginated(moviesPaginated) && (
-            <PaginationComponent count={moviesPaginated?.totalPages} />
-          )}
+          {isMoviesPaginated(moviesPaginated) &&
+            moviesPaginated.movies.length > 0 && (
+              <PaginationComponent count={moviesPaginated?.totalPages} />
+            )}
         </Grid>
       </Box>
     </Container>

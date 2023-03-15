@@ -1,7 +1,8 @@
 import { Pagination, Stack } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
-import { ROUTES } from 'app/utils/static';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import useQueryParams from 'app/hooks/useQueryParams';
+
 type Props = {
   count: number;
 };
@@ -9,18 +10,19 @@ type Props = {
 export const PaginationComponent = ({ count }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { getPage } = useQueryParams();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const getPage = useCallback(() => {
-    return Number(location.search.replace('?page=', '')) || 1;
+  useEffect(() => {
+    setCurrentPage(getPage());
   }, [location.search]);
 
-  useEffect(() => {
-    setCurrentPage(getPage);
-  }, [location]);
-
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    navigate(`${ROUTES.MOVIES}/?page=${value}`);
+    const pageQuery = new URLSearchParams(window.location.search);
+    pageQuery.set('page', String(value));
+    const newRelativePathQuery =
+      window.location.pathname + '?' + pageQuery.toString();
+    navigate(newRelativePathQuery);
     window.scrollTo({
       top: 0,
       left: 0,
