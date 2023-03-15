@@ -10,7 +10,7 @@ export const SearchMoviesComponent = () => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (search === '') {
+      if (search?.length === 0) {
         const searchQuery = getQueryParams();
         searchQuery.delete('search');
         const newRelativePathQuery =

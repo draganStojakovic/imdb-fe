@@ -61,7 +61,7 @@ export const MoviesPage = () => {
     }
     return sentences;
   }
-
+  console.log(moviesPaginated)
   return (
     <Container component="main" maxWidth="xl">
       <Box
