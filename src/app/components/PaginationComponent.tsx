@@ -1,33 +1,16 @@
 import { Pagination, Stack } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import useQueryParams from 'app/hooks/useQueryParams';
+import { useContext } from 'react';
+import { MovieParamsContext } from 'app/context/MovieParamsContext';
 
 type Props = {
   count: number;
 };
 
 export const PaginationComponent = ({ count }: Props) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { getPage } = useQueryParams();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
-  useEffect(() => {
-    setCurrentPage(getPage());
-  }, [location.search]);
+  const { page, setPage } = useContext(MovieParamsContext);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    const pageQuery = new URLSearchParams(window.location.search);
-    pageQuery.set('page', String(value));
-    const newRelativePathQuery =
-      window.location.pathname + '?' + pageQuery.toString();
-    navigate(newRelativePathQuery);
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+    setPage(value);
   };
 
   return (
@@ -41,7 +24,7 @@ export const PaginationComponent = ({ count }: Props) => {
         marginBottom: '1rem',
       }}
     >
-      <Pagination count={count} page={currentPage} onChange={handleChange} />
+      <Pagination count={count} page={page} onChange={handleChange} />
     </Stack>
   );
 };
