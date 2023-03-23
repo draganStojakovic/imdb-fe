@@ -5,6 +5,7 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
 import { lime, yellow } from '@mui/material/colors';
 import LoadingProvider from 'app/providers/LoadingProvider';
+import MovieParamsProvider from 'app/providers/MovieParamsProvider';
 
 const theme = createTheme({
   palette: {
@@ -18,9 +19,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <LoadingProvider>
         <UserProvider>
-          <Pages>
-            <Router />
-          </Pages>
+          <MovieParamsProvider>
+            <Pages>
+              <Router />
+            </Pages>
+          </MovieParamsProvider>
         </UserProvider>
       </LoadingProvider>
     </ThemeProvider>

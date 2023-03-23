@@ -4,15 +4,9 @@ import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
 
 class MoviesService {
-  async GetMovies(page = 1, search: string | undefined, limit = 10) {
-    if (search) {
-      return await httpService.request<IMoviePaginated | IError>({
-        url: `/api/movies?page=${page}&limit=${limit}&search=${search}`,
-        method: 'GET',
-      });
-    }
+  async GetMovies(page = 1, limit = 10, search?: string, genres?: string) {
     return await httpService.request<IMoviePaginated | IError>({
-      url: `/api/movies?page=${page}&limit=${limit}`,
+      url: `/api/movies?page=${page}&limit=${limit}&search=${search}&genres=${genres}`,
       method: 'GET',
     });
   }

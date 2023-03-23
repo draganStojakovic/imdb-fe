@@ -1,58 +1,37 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 import { PaginationComponent } from 'app/components/PaginationComponent';
 import { isMoviesPaginated } from 'app/utils/typeCheckers';
 import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
-import { SearchMoviesComponent } from 'app/components/SearchMoviesComponent';
-import useQueryParams from 'app/hooks/useQueryParams';
+import { SearchComponent } from 'app/components/SearchComponent';
+import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
+import { MovieParamsContext } from 'app/context/MovieParamsContext';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
-  const location = useLocation();
-  const { getPage, getSearch, setPage, checkIfQueryExists } = useQueryParams();
 
-  const [currentPage, setCurrentPage] = useState<number>(getPage());
-  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
-
+  const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
+  const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
+    undefined
+  );
 
   const {
     data: moviesPaginated,
     isLoading,
     refetch: reloadMovies,
-  } = useGetMoviesQuerry(currentPage, searchTerm);
+  } = useGetMoviesQuerry(page, 10, search, genres);
 
   useEffect(() => {
-    setPage();
-  }, []);
-
-  useEffect(() => {
-    setCurrentPage(getPage());
-    if (checkIfQueryExists('search')) {
-      setSearchTerm(getSearch());
-    } else {
-      setSearchTerm(undefined);
-    }
-  }, [location.search]);
-
-  useEffect(() => {
-    if (typeof searchTerm === 'string') setCurrentPage(setPage());
-  }, [searchTerm]);
+    reloadMovies();
+  }, [page, search, genres]);
 
   useEffect(() => {
     setLoading(isLoading);
   }, [isLoading]);
-
-  useEffect(() => {
-    reloadMovies();
-  }, [currentPage, searchTerm]);
-
-  const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
-    undefined
-  );
 
   function trunctate(sentences: string) {
     if (sentences.length > 40) {
@@ -66,39 +45,51 @@ export const MoviesPage = () => {
     <Container component="main" maxWidth="xl">
       <Box
         sx={{
-          marginTop: 10,
+          marginTop: 8,
           marginBottom: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'left',
         }}
       >
-        <SearchMoviesComponent />
+        <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+          <SearchComponent />
+          <FilterGenresComponent />
+        </Box>
+        <Box
+          sx={{
+            marginBottom: 5,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'left',
+          }}
+        >
+          {isMoviesPaginated(moviesPaginated) &&
+            moviesPaginated.movies.length === 0 && (
+              <Grid
+                container
+                justifyContent="flex-start"
+                maxWidth="sm"
+                sx={{
+                  marginBottom: 5,
+                }}
+              >
+                <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+                  <Typography
+                    variant="h3"
+                    gutterBottom
+                    sx={{
+                      marginBottom: '1rem',
+                    }}
+                  >
+                    No movies found
+                  </Typography>
+                </Box>
+              </Grid>
+            )}
+        </Box>
         {isMoviesPaginated(moviesPaginated) &&
-          moviesPaginated.movies.length === 0 && (
-            <Grid
-              container
-              justifyContent="flex-start"
-              maxWidth="sm"
-              sx={{
-                marginBottom: 5,
-              }}
-            >
-              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-                <Typography
-                  variant="h3"
-                  gutterBottom
-                  sx={{
-                    marginBottom: '1rem',
-                  }}
-                >
-                  No movies found
-                </Typography>
-              </Box>
-            </Grid>
-          )}
-        {isMoviesPaginated(moviesPaginated) &&
-          moviesPaginated.currentPage === currentPage &&
+          moviesPaginated.currentPage === page &&
           moviesPaginated.movies.map((movie, i) => (
             <Grid item sm={12} key={i}>
               <Typography
