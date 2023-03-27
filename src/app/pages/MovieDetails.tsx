@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import useMovies from 'app/hooks/useMovies';
 import { Container, Box, Typography, Grid } from '@mui/material';
+import { VoteMovieComponent } from 'app/components/VoteMovieComponent';
 
 export const MovieDetails = () => {
   useAuthGuard(true);
@@ -33,16 +34,25 @@ export const MovieDetails = () => {
               {movie && movie.title}
             </Typography>
             <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+              {movie && (
+                <VoteMovieComponent
+                  likes={movie?.likes}
+                  dislikes={movie?.dislikes}
+                  movieId={movie?.id}
+                />
+              )}
               {movie &&
                 movie.genres.map((genre, i) => (
                   <Typography
                     sx={{
                       marginBottom: '1rem',
                     }}
-                    variant="button"
-                    display="block"
-                    gutterBottom
                     key={i}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                    }}
                   >
                     {genre.name}
                   </Typography>

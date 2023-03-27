@@ -112,10 +112,12 @@ export const MoviesPage = () => {
                       sx={{
                         marginBottom: '1rem',
                       }}
-                      variant="button"
-                      display="block"
-                      gutterBottom
                       key={i}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                      }}
                     >
                       {genre.name}
                     </Typography>
