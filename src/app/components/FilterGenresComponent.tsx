@@ -15,7 +15,7 @@ export const FilterGenresComponent = () => {
   function handleAddGenre(e: React.ChangeEvent<unknown>) {
     const value = (e.target as HTMLButtonElement).value;
     setPage(1);
-    
+
     if (genres === '') {
       setGenres(value);
       return;
@@ -58,31 +58,23 @@ export const FilterGenresComponent = () => {
         {getGenres() &&
           getGenres()?.map((genre) => (
             <ListItem key={genre.id}>
-              {isButtonClicked(genres, genre.id) ? (
-                <Button
-                  type="button"
-                  variant="contained"
-                  size="small"
-                  color="success"
-                  sx={{ borderRadius: 10 }}
-                  value={genre.id}
-                  onClick={handleRemoveGenre}
-                >
-                  {genre.name}
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  sx={{ borderRadius: 10 }}
-                  value={genre.id}
-                  onClick={handleAddGenre}
-                >
-                  {genre.name}
-                </Button>
-              )}
+              <Button
+                type="button"
+                variant="contained"
+                size="small"
+                color={
+                  isButtonClicked(genres, genre.id) ? 'success' : 'primary'
+                }
+                sx={{ borderRadius: 10 }}
+                value={genre.id}
+                onClick={
+                  isButtonClicked(genres, genre.id)
+                    ? handleRemoveGenre
+                    : handleAddGenre
+                }
+              >
+                {genre.name}
+              </Button>
             </ListItem>
           ))}
       </List>

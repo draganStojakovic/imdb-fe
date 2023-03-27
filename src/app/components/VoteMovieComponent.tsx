@@ -110,6 +110,7 @@ export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
             type="button"
             sx={{ borderRadius: 20 }}
             variant={checkIfVoted(likes) ? 'contained' : 'outlined'}
+            color={checkIfVoted(likes) && 'success'}
             size="large"
             onClick={() =>
               user &&
