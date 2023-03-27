@@ -2,6 +2,7 @@
 import { IGenre } from 'app/types/IGenre';
 import { IMovie, IMoviePaginated } from 'app/types/IMovies';
 import { IUser } from 'app/types/IUser';
+import { IVotes } from 'app/types/IVotes';
 
 export function isAnUser(obj: any): obj is IUser {
   return obj;
@@ -21,4 +22,8 @@ export function isGenres(obj: any): obj is IGenre[] {
 
 export function isMoviesPaginated(obj: any): obj is IMoviePaginated {
   return obj;
+}
+
+export function isVotes(obj: any): obj is IVotes {
+  return true;
 }

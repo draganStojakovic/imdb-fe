@@ -1,7 +1,13 @@
 import { httpService } from './http.service';
-import { IMovie, IMovieDraft, IMoviePaginated } from 'app/types/IMovies';
+import {
+  IMovie,
+  IMovieDraft,
+  IMoviePaginated,
+  IVoteMoviePayload,
+} from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
+import { IVotes } from 'app/types/IVotes';
 
 class MoviesService {
   async GetMovies(page = 1, limit = 10, search?: string, genres?: string) {
@@ -23,6 +29,13 @@ class MoviesService {
       url: '/api/movies',
       method: 'POST',
       data: payload,
+    });
+  }
+
+  async VoteMovie(payload: IVoteMoviePayload) {
+    return await httpService.request<AxiosResponse<IVotes, IError>>({
+      url: `/api/votes?movieId=${payload.movieId}&userId=${payload.userId}&button=${payload.button}`,
+      method: 'PUT',
     });
   }
 }
