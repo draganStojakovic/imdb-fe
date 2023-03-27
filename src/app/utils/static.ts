@@ -10,4 +10,5 @@ export const QUERRY_KEYS = {
   MOVIES: 'movies',
   MOVIE: 'movie',
   GENRES: 'genres',
+  VOTE: 'vote',
 };

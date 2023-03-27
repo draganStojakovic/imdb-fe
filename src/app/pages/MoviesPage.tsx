@@ -9,6 +9,7 @@ import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
 import { SearchComponent } from 'app/components/SearchComponent';
 import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
+import { VoteMovieComponent } from 'app/components/VoteMovieComponent';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
@@ -46,7 +47,6 @@ export const MoviesPage = () => {
       <Box
         sx={{
           marginTop: 8,
-          marginBottom: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'left',
@@ -92,13 +92,7 @@ export const MoviesPage = () => {
           moviesPaginated.currentPage === page &&
           moviesPaginated.movies.map((movie, i) => (
             <Grid item sm={12} key={i}>
-              <Typography
-                variant="h3"
-                gutterBottom
-                sx={{
-                  marginBottom: '1rem',
-                }}
-              >
+              <Typography variant="h3" gutterBottom>
                 <Link
                   to={`/movies/${movie.id}`}
                   style={{ textDecoration: 'none', color: 'black' }}
@@ -107,16 +101,23 @@ export const MoviesPage = () => {
                 </Link>
               </Typography>
               <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+                <VoteMovieComponent
+                  likes={movie.likes}
+                  dislikes={movie.dislikes}
+                  movieId={movie.id}
+                />
                 {movie &&
                   movie.genres.map((genre, i) => (
                     <Typography
                       sx={{
                         marginBottom: '1rem',
                       }}
-                      variant="button"
-                      display="block"
-                      gutterBottom
                       key={i}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                      }}
                     >
                       {genre.name}
                     </Typography>

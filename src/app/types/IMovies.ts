@@ -13,10 +13,18 @@ export interface IMovie {
   description: string;
   coverImage: string;
   genres: IGenre[];
+  likes: string[];
+  dislikes: string[];
 }
 
 export interface IMoviePaginated {
   currentPage: number;
   movies: IMovie[];
   totalPages: number;
+}
+
+export interface IVoteMoviePayload {
+  movieId: string;
+  userId: string;
+  button: string;
 }
