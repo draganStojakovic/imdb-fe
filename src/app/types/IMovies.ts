@@ -15,6 +15,7 @@ export interface IMovie {
   genres: IGenre[];
   likes: string[];
   dislikes: string[];
+  views: string;
 }
 
 export interface IMoviePaginated {
