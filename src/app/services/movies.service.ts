@@ -8,6 +8,7 @@ import {
 import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
 import { IVotes } from 'app/types/IVotes';
+import { IViews } from 'app/types/IViews';
 
 class MoviesService {
   async GetMovies(page = 1, limit = 10, search?: string, genres?: string) {
@@ -35,6 +36,13 @@ class MoviesService {
   async VoteMovie(payload: IVoteMoviePayload) {
     return await httpService.request<AxiosResponse<IVotes, IError>>({
       url: `/api/votes?movieId=${payload.movieId}&userId=${payload.userId}&button=${payload.button}`,
+      method: 'PUT',
+    });
+  }
+
+  async IncrementMovieViews(payload: string) {
+    return await httpService.request<AxiosResponse<IViews, IError>>({
+      url: `/api/views/${payload}`,
       method: 'PUT',
     });
   }

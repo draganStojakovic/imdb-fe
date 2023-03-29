@@ -10,6 +10,7 @@ import { SearchComponent } from 'app/components/SearchComponent';
 import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { VoteMovieComponent } from 'app/components/VoteMovieComponent';
+import { MovieViewsComponent } from 'app/components/MovieViewsComponent';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
@@ -106,6 +107,7 @@ export const MoviesPage = () => {
                   dislikes={movie.dislikes}
                   movieId={movie.id}
                 />
+                <MovieViewsComponent movieId={movie.id} views={movie.views} />
                 {movie &&
                   movie.genres.map((genre, i) => (
                     <Typography

@@ -3,6 +3,7 @@ import useAuthGuard from 'app/hooks/useAuthGuard';
 import useMovies from 'app/hooks/useMovies';
 import { Container, Box, Typography, Grid } from '@mui/material';
 import { VoteMovieComponent } from 'app/components/VoteMovieComponent';
+import { MovieViewsComponent } from 'app/components/MovieViewsComponent';
 
 export const MovieDetails = () => {
   useAuthGuard(true);
@@ -41,6 +42,7 @@ export const MovieDetails = () => {
                   movieId={movie?.id}
                 />
               )}
+              <MovieViewsComponent movieId={id} views={movie?.views} />
               {movie &&
                 movie.genres.map((genre, i) => (
                   <Typography
