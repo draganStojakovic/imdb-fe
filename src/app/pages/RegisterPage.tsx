@@ -1,22 +1,24 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { IRegister } from 'app/types/IUser';
+import useAuthGuard from 'app/hooks/useAuthGuard';
+import { IRegister, IUser } from 'app/types/IUser';
 import { IError } from 'app/types/IError';
 import { useMutation } from 'react-query';
 import { authService } from 'app/services/auth.service';
 import { notficationManager } from 'app/utils/NotificationManager';
 import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
-import { isAnUser } from 'app/utils/typeCheckers';
+import { isObjOfType } from 'app/utils/typeCheckers';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { AxiosError } from 'axios';
 
-import { Box } from '@mui/system';
-import { Grid } from '@mui/material';
-import { Typography } from '@mui/material';
-import { Button } from '@mui/material';
-import { TextField } from '@mui/material';
-import { Container } from '@mui/material';
-import useAuthGuard from 'app/hooks/useAuthGuard';
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  TextField,
+  Container,
+} from '@mui/material';
 
 export const RegisterPage = () => {
   useAuthGuard(false);
@@ -42,7 +44,7 @@ export const RegisterPage = () => {
 
   const { mutate } = useMutation(authService.Register, {
     onSuccess: (data) => {
-      if (isAnUser(data)) {
+      if (isObjOfType<IUser>(data)) {
         login(data);
         notficationManager.success('Welcome');
       }

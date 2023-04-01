@@ -1,4 +1,4 @@
-export interface IVotes {
+export interface IVote {
   like: string | null;
   dislike: string | null;
 }

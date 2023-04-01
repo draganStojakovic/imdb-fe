@@ -4,13 +4,15 @@ import { useState, useEffect, useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 import { PaginationComponent } from 'app/components/PaginationComponent';
-import { isMoviesPaginated } from 'app/utils/typeCheckers';
 import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
 import { SearchComponent } from 'app/components/SearchComponent';
 import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { VoteMovieComponent } from 'app/components/VoteMovieComponent';
 import { MovieViewsComponent } from 'app/components/MovieViewsComponent';
+import { NoContentFoundComponent } from 'app/components/NoContentFoundComponent';
+import { returnObject, isObjOfType } from 'app/utils/typeCheckers';
+import { IMoviePaginated } from 'app/types/IMovies';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
@@ -57,39 +59,13 @@ export const MoviesPage = () => {
           <SearchComponent />
           <FilterGenresComponent />
         </Box>
-        <Box
-          sx={{
-            marginBottom: 5,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-          }}
-        >
-          {isMoviesPaginated(moviesPaginated) &&
-            moviesPaginated.movies.length === 0 && (
-              <Grid
-                container
-                justifyContent="flex-start"
-                maxWidth="sm"
-                sx={{
-                  marginBottom: 5,
-                }}
-              >
-                <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-                  <Typography
-                    variant="h3"
-                    gutterBottom
-                    sx={{
-                      marginBottom: '1rem',
-                    }}
-                  >
-                    No movies found
-                  </Typography>
-                </Box>
-              </Grid>
-            )}
-        </Box>
-        {isMoviesPaginated(moviesPaginated) &&
+        {isObjOfType<IMoviePaginated>(moviesPaginated) &&
+          returnObject<IMoviePaginated>(moviesPaginated) &&
+          moviesPaginated.movies.length === 0 && (
+            <NoContentFoundComponent message="No movies found" />
+          )}
+        {isObjOfType<IMoviePaginated>(moviesPaginated) &&
+          returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.currentPage === page &&
           moviesPaginated.movies.map((movie, i) => (
             <Grid item sm={12} key={i}>
@@ -155,7 +131,8 @@ export const MoviesPage = () => {
             </Grid>
           ))}
         <Grid container spacing={1}>
-          {isMoviesPaginated(moviesPaginated) &&
+          {isObjOfType<IMoviePaginated>(moviesPaginated) &&
+            returnObject<IMoviePaginated>(moviesPaginated) &&
             moviesPaginated.movies.length > 0 && (
               <PaginationComponent count={moviesPaginated?.totalPages} />
             )}

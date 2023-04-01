@@ -6,8 +6,8 @@ import { moviesService } from 'app/services/movies.service';
 import { AxiosError, AxiosResponse } from 'axios';
 import { IVoteMoviePayload } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
-import { IVotes } from 'app/types/IVotes';
-import { isVotes } from 'app/utils/typeCheckers';
+import { isObjOfType } from 'app/utils/typeCheckers';
+import { IVote } from 'app/types/IVote';
 
 type Props = {
   likes: string[];
@@ -36,7 +36,7 @@ export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
     });
   }
 
-  function handleVotes(data: IVotes) {
+  function handleVotes(data: IVote) {
     const { like, dislike } = data;
 
     if (like === 'added' && dislike === null) {
@@ -77,8 +77,8 @@ export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
   }
 
   const { mutate } = useMutation(moviesService.VoteMovie, {
-    onSuccess: (data: AxiosResponse<IVotes>) => {
-      isVotes(data) && handleVotes(data);
+    onSuccess: (data: AxiosResponse<IVote>) => {
+      isObjOfType<IVote>(data) && handleVotes(data);
     },
     onError: (error: AxiosError<IError>) => {
       console.log(error);

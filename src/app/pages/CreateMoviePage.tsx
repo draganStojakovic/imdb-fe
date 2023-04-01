@@ -5,12 +5,12 @@ import { IMovie, IMovieDraft } from 'app/types/IMovies';
 import { useContext } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { moviesService } from 'app/services/movies.service';
-import { isMovie } from 'app/utils/typeCheckers';
 import { notficationManager } from 'app/utils/NotificationManager';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
 import useGenres from 'app/hooks/useGenres';
 import { IGenre } from 'app/types/IGenre';
+import { isObjOfType } from 'app/utils/typeCheckers';
 
 import {
   Container,
@@ -47,7 +47,7 @@ export const CreateMoviePage = () => {
 
   const { mutate } = useMutation(moviesService.CreateMovie, {
     onSuccess: (data: AxiosResponse<IMovie>) => {
-      if (isMovie(data)) {
+      if (isObjOfType<IMovie>(data)) {
         setLoading(false);
         notficationManager.success('Succefully added a movie');
         reset();

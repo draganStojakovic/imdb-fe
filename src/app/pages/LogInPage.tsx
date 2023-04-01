@@ -1,4 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { AxiosError, AxiosResponse } from 'axios';
+import useAuthGuard from 'app/hooks/useAuthGuard';
 import { ISignIn, IUser } from 'app/types/IUser';
 import { IError } from 'app/types/IError';
 import { useMutation } from 'react-query';
@@ -6,20 +8,19 @@ import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { authService } from 'app/services/auth.service';
-import { isAnUser } from 'app/utils/typeCheckers';
 import { ROUTES } from 'app/utils/static';
 import { notficationManager } from 'app/utils/NotificationManager';
 import { Link } from 'react-router-dom';
+import { isObjOfType } from 'app/utils/typeCheckers';
 
-import { Box } from '@mui/system';
-import { Typography } from '@mui/material';
-import { Grid } from '@mui/material';
-import { TextField } from '@mui/material';
-import { Button } from '@mui/material';
-import { Container } from '@mui/material';
-
-import useAuthGuard from 'app/hooks/useAuthGuard';
-import { AxiosError, AxiosResponse } from 'axios';
+import {
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  Button,
+  Container,
+} from '@mui/material';
 
 export const LogInPage = () => {
   useAuthGuard(false);
@@ -42,7 +43,7 @@ export const LogInPage = () => {
 
   const { mutate } = useMutation(authService.LogIn, {
     onSuccess: (data: AxiosResponse<IUser>) => {
-      if (isAnUser(data)) {
+      if (isObjOfType<IUser>(data)) {
         login(data);
         notficationManager.success('Welcome');
       }

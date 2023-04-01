@@ -1,11 +1,12 @@
 import { useGetGenresQuerry } from 'app/querries/genre.querry';
-import { isGenres } from 'app/utils/typeCheckers';
+import { IGenre } from 'app/types/IGenre';
+import { isObjOfType } from 'app/utils/typeCheckers';
 
 const useGenres = () => {
   const { data } = useGetGenresQuerry();
 
   const getGenres = () => {
-    if (isGenres(data)) return data;
+    if (isObjOfType<IGenre[]>(data)) return data;
     return undefined;
   };
 
