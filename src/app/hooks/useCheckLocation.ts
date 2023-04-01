@@ -1,8 +1,8 @@
 import { useLocation } from 'react-router-dom';
 
-function useCheckLocation(location: string) {
-  const currentPath = useLocation();
-  if (location === currentPath.pathname) return true;
+function useCheckLocation(path: string) {
+  const location = useLocation();
+  if (path === location.pathname) return true;
   return false;
 }
 
