@@ -69,8 +69,8 @@ export const CreateMoviePage = () => {
   });
 
   const onSubmit: SubmitHandler<IMovieDraft> = async (movie) => {
-    setLoading(true)
-    mutate(movie)
+    setLoading(true);
+    mutate(movie);
   };
 
   return (
@@ -127,7 +127,6 @@ export const CreateMoviePage = () => {
                     errors.coverImage ? errors.coverImage.message : ''
                   }
                   error={errors.coverImage ? true : false}
-                  
                 />
               </Grid>
               <Grid item xs={12}>

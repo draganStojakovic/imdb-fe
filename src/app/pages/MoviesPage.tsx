@@ -1,27 +1,23 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-import { Link } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 import { PaginationComponent } from 'app/components/PaginationComponent';
-import { Container, Box, Typography, Grid, Stack, Button } from '@mui/material';
+import { Container, Box, Grid } from '@mui/material';
 import { SearchComponent } from 'app/components/SearchComponent';
 import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
-import { VoteMovieComponent } from 'app/components/VoteMovieComponent';
-import { MovieViewsComponent } from 'app/components/MovieViewsComponent';
 import { NoContentFoundComponent } from 'app/components/NoContentFoundComponent';
 import { returnObject, isObjOfType } from 'app/utils/typeCheckers';
 import { IMoviePaginated } from 'app/types/IMovies';
+import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
 
   const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
-  const [showMoreDesc, setShowMoreDesc] = useState<string | undefined>(
-    undefined
-  );
+  const [showDesc, setShowDesc] = useState<string[]>([]);
 
   const {
     data: moviesPaginated,
@@ -38,11 +34,30 @@ export const MoviesPage = () => {
   }, [isLoading]);
 
   function trunctate(sentences: string) {
-    if (sentences.length > 40) {
+    if (sentences.length > 30) {
       const trunctated = sentences.split('.');
       return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
     }
     return sentences;
+  }
+
+  function checkIfDescShow(movieId: string) {
+    for (let i = 0; i < showDesc.length; i++) {
+      if (showDesc[i] === movieId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function showMovieDesc(movieId: string) {
+    const isShown = checkIfDescShow(movieId);
+    if (isShown) {
+      const newListOfShowDescs = showDesc.filter((id) => id !== movieId);
+      setShowDesc(newListOfShowDescs);
+      return;
+    }
+    setShowDesc([...showDesc, movieId]);
   }
 
   return (
@@ -52,91 +67,47 @@ export const MoviesPage = () => {
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'left',
         }}
       >
-        <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-          <SearchComponent />
-          <FilterGenresComponent />
-        </Box>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <SearchComponent />
+          </Grid>
+          <Grid item xs={8}>
+            <FilterGenresComponent />
+          </Grid>
+        </Grid>
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.movies.length === 0 && (
-            <NoContentFoundComponent message="No movies found" />
+            <NoContentFoundComponent message="no movies found" />
           )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.currentPage === page &&
           moviesPaginated.movies.map((movie, i) => (
-            <Grid item sm={12} key={i}>
-              <Typography variant="h3" gutterBottom>
-                <Link
-                  to={`/movies/${movie.id}`}
-                  style={{ textDecoration: 'none', color: 'black' }}
-                >
-                  {movie.title}
-                </Link>
-              </Typography>
-              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-                <VoteMovieComponent
-                  likes={movie.likes}
-                  dislikes={movie.dislikes}
-                  movieId={movie.id}
-                />
-                <MovieViewsComponent movieId={movie.id} views={movie.views} />
-                {movie &&
-                  movie.genres.map((genre, i) => (
-                    <Typography
-                      sx={{
-                        marginBottom: '1rem',
-                      }}
-                      key={i}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                      }}
-                    >
-                      {genre.name}
-                    </Typography>
-                  ))}
-              </Box>
-              <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-                <Box
-                  component="img"
-                  sx={{
-                    height: 350,
-                    marginBottom: 5,
-                  }}
-                  src={movie.coverImage}
-                />
-                <Stack spacing={2}>
-                  {showMoreDesc == movie.id
-                    ? movie.description
-                    : trunctate(movie.description)}
-                  <Button
-                    color="inherit"
-                    onClick={() => {
-                      if (showMoreDesc === movie.id) {
-                        setShowMoreDesc(undefined);
-                      } else if (!showMoreDesc) {
-                        setShowMoreDesc(movie.id);
-                      }
-                    }}
-                  >
-                    {showMoreDesc == movie.id ? 'Show Less' : 'Show More'}
-                  </Button>
-                </Stack>
-              </Box>
-            </Grid>
+            <MovieDetailsComponent
+              key={i}
+              movieId={movie.id}
+              title={movie.title}
+              description={movie.description}
+              coverImage={movie.coverImage}
+              genres={movie.genres}
+              likes={movie.likes}
+              dislikes={movie.dislikes}
+              views={movie.views}
+              multiView={true}
+              trunctate={trunctate}
+              showMovieDesc={showMovieDesc}
+              checkIfDescShow={checkIfDescShow}
+            />
           ))}
-        <Grid container spacing={1}>
-          {isObjOfType<IMoviePaginated>(moviesPaginated) &&
-            returnObject<IMoviePaginated>(moviesPaginated) &&
-            moviesPaginated.movies.length > 0 && (
-              <PaginationComponent count={moviesPaginated?.totalPages} />
-            )}
-        </Grid>
+
+        {isObjOfType<IMoviePaginated>(moviesPaginated) &&
+          returnObject<IMoviePaginated>(moviesPaginated) &&
+          moviesPaginated.movies.length > 0 && (
+            <PaginationComponent count={moviesPaginated?.totalPages} />
+          )}
       </Box>
     </Container>
   );

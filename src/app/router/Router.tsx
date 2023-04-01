@@ -4,13 +4,13 @@ import { MoviesPage } from 'app/pages/MoviesPage';
 import { LogInPage } from 'app/pages/LogInPage';
 import { RegisterPage } from 'app/pages/RegisterPage';
 import { CreateMoviePage } from 'app/pages/CreateMoviePage';
-import { MovieDetails } from 'app/pages/MovieDetails';
+import { SingleMoviePage } from 'app/pages/SingleMoviePage';
 
 const Router = () => {
   return (
     <Routes>
       <Route path={ROUTES.MOVIES} element={<MoviesPage />} />
-      <Route path={ROUTES.MOVIE_DETAILS} element={<MovieDetails />} />
+      <Route path={ROUTES.MOVIE_DETAILS} element={<SingleMoviePage />} />
       <Route path={ROUTES.MOVIES_CREATE} element={<CreateMoviePage />} />
       <Route path={ROUTES.LOGIN} element={<LogInPage />} />
       <Route path={ROUTES.REGISTER} element={<RegisterPage />} />

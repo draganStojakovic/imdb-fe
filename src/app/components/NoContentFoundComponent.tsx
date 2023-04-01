@@ -1,4 +1,4 @@
-import { Container, Typography, Card, CardContent } from '@mui/material';
+import { Typography, Card, CardContent, Box } from '@mui/material';
 
 type Props = {
   message: string;
@@ -6,17 +6,21 @@ type Props = {
 
 export const NoContentFoundComponent = ({ message }: Props) => {
   return (
-    <Container component="main" maxWidth="xl">
-      <Card
-        sx={{ minWidth: 275, maxWidth: 500 }}
-        style={{ backgroundColor: '#fbfbfb' }}
-      >
+    <Box
+      sx={{
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Card sx={{ maxWidth: 800 }} style={{ backgroundColor: '#fbfbfb' }}>
         <CardContent>
           <Typography variant="h4" align="center">
-            {message.toUpperCase()}
+            {message}
           </Typography>
         </CardContent>
       </Card>
-    </Container>
+    </Box>
   );
 };

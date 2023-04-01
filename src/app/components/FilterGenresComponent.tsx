@@ -1,5 +1,5 @@
 import useGenres from 'app/hooks/useGenres';
-import { List, ListItem, Grid, Button } from '@mui/material';
+import { List, ListItem, Button } from '@mui/material';
 import { useContext } from 'react';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 
@@ -45,39 +45,35 @@ export const FilterGenresComponent = () => {
   }
 
   return (
-    <Grid container justifyContent="flex-start" maxWidth="sm">
-      <List
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          padding: 0,
-          maxHeight: '70%',
-          overflow: 'auto',
-        }}
-      >
-        {getGenres() &&
-          getGenres()?.map((genre) => (
-            <ListItem key={genre.id}>
-              <Button
-                type="button"
-                variant="contained"
-                size="small"
-                color={
-                  isButtonClicked(genres, genre.id) ? 'success' : 'primary'
-                }
-                sx={{ borderRadius: 10 }}
-                value={genre.id}
-                onClick={
-                  isButtonClicked(genres, genre.id)
-                    ? handleRemoveGenre
-                    : handleAddGenre
-                }
-              >
-                {genre.name}
-              </Button>
-            </ListItem>
-          ))}
-      </List>
-    </Grid>
+    <List
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        padding: 0,
+        maxHeight: '70%',
+        overflow: 'auto',
+      }}
+    >
+      {getGenres() &&
+        getGenres()?.map((genre) => (
+          <ListItem key={genre.id}>
+            <Button
+              type="button"
+              variant="contained"
+              size="small"
+              color={isButtonClicked(genres, genre.id) ? 'success' : 'primary'}
+              sx={{ borderRadius: 10 }}
+              value={genre.id}
+              onClick={
+                isButtonClicked(genres, genre.id)
+                  ? handleRemoveGenre
+                  : handleAddGenre
+              }
+            >
+              {genre.name}
+            </Button>
+          </ListItem>
+        ))}
+    </List>
   );
 };

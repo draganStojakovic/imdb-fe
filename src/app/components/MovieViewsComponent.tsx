@@ -1,4 +1,4 @@
-import { Button, Box } from '@mui/material';
+import { Button } from '@mui/material';
 import { useMutation } from 'react-query';
 import { moviesService } from 'app/services/movies.service';
 import { useEffect } from 'react';
@@ -22,23 +22,14 @@ export const MovieViewsComponent = ({ movieId, views }: Props) => {
   }, [movieId]);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'right',
-        flexWrap: 'wrap',
-      }}
+    <Button
+      type="button"
+      variant="outlined"
+      size="small"
+      disableRipple
+      sx={{ borderRadius: 20, color: '#6C6C6C' }}
     >
-      <Button
-        type="button"
-        variant="contained"
-        size="medium"
-        disableRipple
-        sx={{ borderRadius: 20 }}
-      >
-        {views} | views
-      </Button>
-    </Box>
+      {views} | views
+    </Button>
   );
 };

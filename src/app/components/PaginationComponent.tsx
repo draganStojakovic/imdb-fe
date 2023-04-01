@@ -19,9 +19,9 @@ export const PaginationComponent = ({ count }: Props) => {
       sx={{
         justifyContent: 'center',
         display: 'flex',
-        alignItems: 'center',
-        marginTop: '5rem',
-        marginBottom: '1rem',
+        alignItems: 'left',
+        marginBottom: '2rem',
+        marginTop: '3rem',
       }}
     >
       <Pagination count={count} page={page} onChange={handleChange} />
