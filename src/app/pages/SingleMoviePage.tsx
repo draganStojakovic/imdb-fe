@@ -8,13 +8,21 @@ import { MessageComponent } from 'app/components/MessageComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import { IComment } from 'app/types/IComment';
 import { IMovieWithComments } from 'app/types/IMovies';
+import { useEffect, useContext } from 'react';
+import { MovieParamsContext } from 'app/context/MovieParamsContext';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
   const { getSingleMovie } = useMovies();
   const { id } = useParams();
-
   const movie = getSingleMovie(id as string);
+  const { search, setSearch, genres, setGenres } =
+    useContext(MovieParamsContext);
+
+  useEffect(() => {
+    if (search.length > 0) setSearch('');
+    if (genres.length > 0) setGenres('');
+  }, []);
 
   return (
     <Container component="main" maxWidth="xl">
