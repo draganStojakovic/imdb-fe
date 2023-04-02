@@ -1,4 +1,5 @@
 import { IGenre } from './IGenre';
+import { IComment } from './IComment';
 
 export interface IMovieDraft {
   title: string;
@@ -16,6 +17,10 @@ export interface IMovie {
   likes: string[];
   dislikes: string[];
   views: string;
+}
+
+export interface IMovieWithComments extends IMovie {
+  comments: IComment[];
 }
 
 export interface IMoviePaginated {

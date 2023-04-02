@@ -3,7 +3,7 @@ import {
   useGetSingleMovieQuerry,
 } from 'app/querries/movie.querry';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import { IMovie } from 'app/types/IMovies';
+import { IMovie, IMovieWithComments } from 'app/types/IMovies';
 
 const useMovies = () => {
   const getMovies = (
@@ -18,7 +18,7 @@ const useMovies = () => {
 
   const getSingleMovie = (id: string) => {
     const { data } = useGetSingleMovieQuerry(id);
-    if (isObjOfType<IMovie>(data)) return data;
+    if (isObjOfType<IMovieWithComments>(data)) return data;
   };
 
   return { getMovies, getSingleMovie };

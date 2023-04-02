@@ -3,6 +3,11 @@ import useAuthGuard from 'app/hooks/useAuthGuard';
 import useMovies from 'app/hooks/useMovies';
 import { Container, Box } from '@mui/material';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
+import { CommentDetailsComponent } from 'app/components/CommentDetailsComponent';
+import { MessageComponent } from 'app/components/MessageComponent';
+import { isObjOfType } from 'app/utils/typeCheckers';
+import { IComment } from 'app/types/IComment';
+import { IMovieWithComments } from 'app/types/IMovies';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
@@ -16,9 +21,10 @@ export const SingleMoviePage = () => {
       <Box
         sx={{
           marginTop: 8,
+          marginBottom: 5,
         }}
       >
-        {movie && (
+        {movie && isObjOfType<IMovieWithComments>(movie) && (
           <MovieDetailsComponent
             movieId={movie.id}
             title={movie.title}
@@ -33,6 +39,15 @@ export const SingleMoviePage = () => {
             showMovieDesc={undefined}
             checkIfDescShow={undefined}
           />
+        )}
+        {movie &&
+        isObjOfType<IComment[]>(movie?.comments) &&
+        movie.comments.length > 0 ? (
+          movie.comments.map((comment, i) => (
+            <CommentDetailsComponent key={i} comment={comment} />
+          ))
+        ) : (
+          <MessageComponent message="Be first to comment" />
         )}
       </Box>
     </Container>

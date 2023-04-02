@@ -48,6 +48,7 @@ export const MovieDetailsComponent = ({
     <Card
       sx={{
         marginTop: 5,
+        marginBottom: 5,
       }}
       style={{ backgroundColor: '#fbfbfb' }}
     >
