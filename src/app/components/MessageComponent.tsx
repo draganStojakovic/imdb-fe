@@ -4,7 +4,7 @@ type Props = {
   message: string;
 };
 
-export const NoContentFoundComponent = ({ message }: Props) => {
+export const MessageComponent = ({ message }: Props) => {
   return (
     <Box
       sx={{

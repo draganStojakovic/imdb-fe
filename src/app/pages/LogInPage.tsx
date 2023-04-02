@@ -45,7 +45,7 @@ export const LogInPage = () => {
     onSuccess: (data: AxiosResponse<IUser>) => {
       if (isObjOfType<IUser>(data)) {
         login(data);
-        notficationManager.success('Welcome');
+        notficationManager.success(`Welcome ${data.fname}`);
       }
       setLoading(false);
     },

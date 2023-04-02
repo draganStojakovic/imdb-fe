@@ -7,7 +7,7 @@ import { Container, Box, Grid } from '@mui/material';
 import { SearchComponent } from 'app/components/SearchComponent';
 import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
-import { NoContentFoundComponent } from 'app/components/NoContentFoundComponent';
+import { MessageComponent } from 'app/components/MessageComponent';
 import { returnObject, isObjOfType } from 'app/utils/typeCheckers';
 import { IMoviePaginated } from 'app/types/IMovies';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
@@ -80,7 +80,7 @@ export const MoviesPage = () => {
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.movies.length === 0 && (
-            <NoContentFoundComponent message="no movies found" />
+            <MessageComponent message="no movies found" />
           )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           returnObject<IMoviePaginated>(moviesPaginated) &&
