@@ -1,6 +1,6 @@
 import { moviesService } from 'app/services/movies.service';
 import { IError } from 'app/types/IError';
-import { IMoviePaginated, IMovieWithComments } from 'app/types/IMovies';
+import { IMovie, IMoviePaginated } from 'app/types/IMovies';
 import { QUERRY_KEYS } from 'app/utils/static';
 import { useQuery, QueryKey } from 'react-query';
 
@@ -19,7 +19,7 @@ export const useGetMoviesQuerry = (
   );
 
 export const useGetSingleMovieQuerry = (id: string) =>
-  useQuery<IMovieWithComments | IError>([QUERRY_KEYS.MOVIE], async () => {
+  useQuery<IMovie | IError>([QUERRY_KEYS.MOVIE], async () => {
     const data = await moviesService.GetSingleMovie(id);
     return data;
   });

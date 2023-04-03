@@ -17,7 +17,9 @@ export const CommentDetailsComponent = ({ comment }: Props) => {
     <Card
       sx={{
         marginBottom: 5,
+        boxShadow: 3,
       }}
+      style={{ backgroundColor: '#fbfbfb' }}
     >
       <Stack spacing={0}>
         <ListItem>
@@ -27,7 +29,7 @@ export const CommentDetailsComponent = ({ comment }: Props) => {
         </ListItem>
         <Divider />
         <ListItem>
-          <Typography component={'span'} variant={'body2'} align="left">
+          <Typography component={'span'} variant={'body1'} align="left">
             <CardContent>{comment.content}</CardContent>
           </Typography>
         </ListItem>

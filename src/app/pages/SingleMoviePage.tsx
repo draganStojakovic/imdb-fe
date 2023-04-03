@@ -5,17 +5,25 @@ import { Container, Box } from '@mui/material';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import { CommentDetailsComponent } from 'app/components/CommentDetailsComponent';
 import { MessageComponent } from 'app/components/MessageComponent';
-import { isObjOfType } from 'app/utils/typeCheckers';
-import { IComment } from 'app/types/IComment';
-import { IMovieWithComments } from 'app/types/IMovies';
+import { isObjOfType, returnObject } from 'app/utils/typeCheckers';
+import { IComment, ICommentPaginated } from 'app/types/IComment';
 import { useEffect, useContext } from 'react';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
+import { useGetCommentsQuery } from 'app/querries/comment.querry';
+import { IMovie } from 'app/types/IMovies';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
-  const { getSingleMovie } = useMovies();
   const { id } = useParams();
+  const { getSingleMovie } = useMovies();
   const movie = getSingleMovie(id as string);
+
+  const { data: commentsPaginated } = useGetCommentsQuery(
+    id as string,
+    '1',
+    '5'
+  );
+
   const { search, setSearch, genres, setGenres } =
     useContext(MovieParamsContext);
 
@@ -32,7 +40,7 @@ export const SingleMoviePage = () => {
           marginBottom: 5,
         }}
       >
-        {movie && isObjOfType<IMovieWithComments>(movie) && (
+        {movie && isObjOfType<IMovie>(movie) && (
           <MovieDetailsComponent
             movieId={movie.id}
             title={movie.title}
@@ -48,10 +56,10 @@ export const SingleMoviePage = () => {
             checkIfDescShow={undefined}
           />
         )}
-        {movie &&
-        isObjOfType<IComment[]>(movie?.comments) &&
-        movie.comments.length > 0 ? (
-          movie.comments.map((comment, i) => (
+        {isObjOfType<ICommentPaginated>(commentsPaginated) &&
+        returnObject<ICommentPaginated>(commentsPaginated) &&
+        commentsPaginated.comments.length > 0 ? (
+          commentsPaginated.comments.map((comment: IComment, i) => (
             <CommentDetailsComponent key={i} comment={comment} />
           ))
         ) : (

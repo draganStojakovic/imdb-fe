@@ -49,6 +49,7 @@ export const MovieDetailsComponent = ({
       sx={{
         marginTop: 5,
         marginBottom: 5,
+        boxShadow: 3,
       }}
       style={{ backgroundColor: '#fbfbfb' }}
     >

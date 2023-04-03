@@ -3,7 +3,6 @@ import {
   IMovie,
   IMovieDraft,
   IMoviePaginated,
-  IMovieWithComments,
   IVoteMoviePayload,
 } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
@@ -20,7 +19,7 @@ class MoviesService {
   }
 
   async GetSingleMovie(payload: string) {
-    return await httpService.request<IMovieWithComments | IError>({
+    return await httpService.request<IMovie | IError>({
       url: `/api/movies/${payload}`,
       method: 'GET',
     });
