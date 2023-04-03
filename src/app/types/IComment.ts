@@ -8,6 +8,6 @@ export interface IComment {
 
 export interface ICommentPaginated {
   comments: IComment[];
-  currentPage: number;
-  totalPages: number;
+  shownComments: number;
+  remainingComments: number;
 }

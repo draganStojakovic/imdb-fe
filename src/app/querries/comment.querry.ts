@@ -4,15 +4,11 @@ import { IError } from 'app/types/IError';
 import { useQuery, QueryKey } from 'react-query';
 import { commentsService } from 'app/services/comments.service';
 
-export const useGetCommentsQuery = (
-  movieId: string,
-  page: string,
-  limit: string
-) =>
+export const useGetCommentsQuery = (movieId: string, limit: number) =>
   useQuery<ICommentPaginated | IError>(
     [QUERRY_KEYS.COMMENTS] as QueryKey,
     async () => {
-      const data = await commentsService.getComments(movieId, page, limit);
+      const data = await commentsService.getComments(movieId, limit);
       return data;
     }
   );

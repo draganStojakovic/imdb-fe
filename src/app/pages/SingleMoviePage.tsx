@@ -11,26 +11,32 @@ import { useEffect, useContext } from 'react';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { useGetCommentsQuery } from 'app/querries/comment.querry';
 import { IMovie } from 'app/types/IMovies';
+import { LoadMoreComponent } from 'app/components/LoadMoreComponent';
+import useCommentParams from 'app/hooks/useCommentParams';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
   const { id } = useParams();
+
+  const { commentLimit, loadMoreComments } = useCommentParams();
+
   const { getSingleMovie } = useMovies();
   const movie = getSingleMovie(id as string);
 
-  const { data: commentsPaginated } = useGetCommentsQuery(
-    id as string,
-    '1',
-    '5'
-  );
-
   const { search, setSearch, genres, setGenres } =
     useContext(MovieParamsContext);
+
+  const { data: commentsPaginated, refetch: reloadComments } =
+    useGetCommentsQuery(id as string, commentLimit);
 
   useEffect(() => {
     if (search.length > 0) setSearch('');
     if (genres.length > 0) setGenres('');
   }, []);
+
+  useEffect(() => {
+    reloadComments();
+  }, [commentLimit]);
 
   return (
     <Container component="main" maxWidth="xl">
@@ -65,6 +71,11 @@ export const SingleMoviePage = () => {
         ) : (
           <MessageComponent message="Be first to comment" />
         )}
+        {isObjOfType<ICommentPaginated>(commentsPaginated) &&
+          returnObject<ICommentPaginated>(commentsPaginated) &&
+          commentsPaginated.remainingComments !== 0 && (
+            <LoadMoreComponent loadMore={loadMoreComments} />
+          )}
       </Box>
     </Container>
   );

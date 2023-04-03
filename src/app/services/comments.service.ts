@@ -3,9 +3,9 @@ import { httpService } from './http.service';
 import { IError } from 'app/types/IError';
 
 class CommentsService {
-  async getComments(movieId: string, page: string, limit: string) {
+  async getComments(movieId: string, limit: number) {
     return await httpService.request<ICommentPaginated | IError>({
-      url: `/api/comments?movieId=${movieId}&page=${page}&limit=${limit}`,
+      url: `/api/comments?movieId=${movieId}&limit=${limit}`,
       method: 'GET',
     });
   }
