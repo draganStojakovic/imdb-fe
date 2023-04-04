@@ -6,9 +6,8 @@ import {
   RefetchQueryFilters,
   useMutation,
 } from 'react-query';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from 'app/context/UserContext';
-import { LoadingContext } from 'app/context/LoadingContext';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import {
   ICommentDraft,
@@ -27,8 +26,8 @@ type Props = {
 };
 
 export const LeaveACommentComponent = ({ reloadComments }: Props) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { user } = useContext(UserContext);
-  const { setLoading, loading } = useContext(LoadingContext);
   const location = useLocation();
 
   const {

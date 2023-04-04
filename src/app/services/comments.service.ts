@@ -1,4 +1,6 @@
 import {
+  ICommentDelete,
+  ICommentDeleteResponse,
   ICommentDraft,
   ICommentPaginated,
   ICommentResponse,
@@ -19,6 +21,16 @@ class CommentsService {
     return await httpService.request<AxiosResponse<ICommentResponse, IError>>({
       url: '/api/comments',
       method: 'POST',
+      data: payload,
+    });
+  }
+
+  async deleteCommment(payload: ICommentDelete) {
+    return await httpService.request<
+      AxiosResponse<ICommentDeleteResponse, IError>
+    >({
+      url: '/api/comments',
+      method: 'DELETE',
       data: payload,
     });
   }

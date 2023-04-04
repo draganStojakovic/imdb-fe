@@ -12,6 +12,16 @@ export interface ICommentResponse {
   userId: string;
 }
 
+export interface ICommentDelete {
+  commentId: string;
+  movieId: string;
+  userId: string;
+}
+
+export interface ICommentDeleteResponse {
+  delete: string;
+}
+
 export interface IComment {
   _id: string;
   content: string;
