@@ -1,12 +1,25 @@
-import { ICommentPaginated } from 'app/types/IComment';
+import {
+  ICommentDraft,
+  ICommentPaginated,
+  ICommentResponse,
+} from 'app/types/IComment';
 import { httpService } from './http.service';
 import { IError } from 'app/types/IError';
+import { AxiosResponse } from 'axios';
 
 class CommentsService {
   async getComments(movieId: string, limit: number) {
     return await httpService.request<ICommentPaginated | IError>({
       url: `/api/comments?movieId=${movieId}&limit=${limit}`,
       method: 'GET',
+    });
+  }
+
+  async postComment(payload: ICommentDraft) {
+    return await httpService.request<AxiosResponse<ICommentResponse, IError>>({
+      url: '/api/comments',
+      method: 'POST',
+      data: payload,
     });
   }
 }

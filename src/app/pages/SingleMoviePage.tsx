@@ -13,6 +13,7 @@ import { useGetCommentsQuery } from 'app/querries/comment.querry';
 import { IMovie } from 'app/types/IMovies';
 import { LoadMoreComponent } from 'app/components/LoadMoreComponent';
 import useCommentParams from 'app/hooks/useCommentParams';
+import { LeaveACommentComponent } from 'app/components/LeaveACommentComponent';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
@@ -62,6 +63,7 @@ export const SingleMoviePage = () => {
             checkIfDescShow={undefined}
           />
         )}
+        <LeaveACommentComponent reloadComments={reloadComments} />
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
         returnObject<ICommentPaginated>(commentsPaginated) &&
         commentsPaginated.comments.length > 0 ? (
