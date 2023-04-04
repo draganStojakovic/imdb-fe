@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { IComment } from 'app/types/IComment';
 import useDeleteComment from 'app/hooks/useDeleteComment';
-import {} from 'react-query';
 import { useEffect } from 'react';
 
 type Props = {
