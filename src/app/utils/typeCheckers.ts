@@ -1,3 +1,4 @@
+import { ICommentPaginated } from 'app/types/IComment';
 import { IGenre } from 'app/types/IGenre';
 import { IMovie, IMoviePaginated } from 'app/types/IMovies';
 import { IUser } from 'app/types/IUser';
@@ -18,6 +19,7 @@ export function returnObject<T>(
     | IGenre
     | IGenre[]
     | IViews
+    | ICommentPaginated
 ) {
   if (obj) return obj as T;
 }

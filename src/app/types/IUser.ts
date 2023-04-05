@@ -14,3 +14,9 @@ export interface IRegister extends IUser {
   password: string;
   confirmPassword: string;
 }
+
+export interface IUserCommentInfo {
+  _id: string;
+  fname: string;
+  lname: string;
+}

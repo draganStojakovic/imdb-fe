@@ -102,7 +102,6 @@ export const MoviesPage = () => {
               checkIfDescShow={checkIfDescShow}
             />
           ))}
-
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.movies.length > 0 && (
