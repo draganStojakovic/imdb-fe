@@ -1,5 +1,5 @@
-import { UserContext } from "app/context/UserContext";
-import useUser from "app/hooks/useUser";
+import { UserContext } from 'app/context/UserContext';
+import useUser from 'app/hooks/useUser';
 
 interface Props {
   children: React.ReactNode;

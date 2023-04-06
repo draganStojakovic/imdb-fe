@@ -12,5 +12,5 @@ export const EventContext = createContext<IEventContext>({
   reloadCommentsEvent: false,
   setReloadCommentsEvent: (_reloadComments: boolean) => Function,
   loadMoreCommentsEvent: 5,
-  setLoadMoreCommentsEvent: (loadMoreCommentsEvent: number) => Function,
+  setLoadMoreCommentsEvent: (_loadMoreCommentsEvent: number) => Function,
 });

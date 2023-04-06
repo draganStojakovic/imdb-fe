@@ -69,9 +69,10 @@ export const SingleMoviePage = () => {
           marginBottom: 5,
         }}
       >
-        {isObjOfType<IMovie>(movie) && (
+        {isObjOfType<IMovie>(movie) && isObjOfType<IUser>(user) && (
           <MovieDetailsComponent
             movieId={movie.id}
+            authUser={user}
             title={movie.title}
             description={movie.description}
             coverImage={movie.coverImage}

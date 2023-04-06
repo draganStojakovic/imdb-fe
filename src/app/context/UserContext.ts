@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IUser } from "app/types/IUser";
-import { createContext } from "react";
+import { IUser } from 'app/types/IUser';
+import { createContext } from 'react';
 
 interface IUserContext {
   user: IUser | null;
