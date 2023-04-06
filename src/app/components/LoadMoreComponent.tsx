@@ -1,10 +1,11 @@
 import { Button, Box } from '@mui/material';
 
 type Props = {
-  loadMore: () => void;
+  commentLimit: number;
+  loadMore: (loadMoreCommentsEvent: number) => void;
 };
 
-export const LoadMoreComponent = ({ loadMore }: Props) => {
+export const LoadMoreComponent = ({ loadMore, commentLimit }: Props) => {
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
       <Button
@@ -12,7 +13,10 @@ export const LoadMoreComponent = ({ loadMore }: Props) => {
         sx={{ borderRadius: 20 }}
         variant="contained"
         size="small"
-        onClick={() => loadMore()}
+        onClick={() => {
+          const newLimit = commentLimit + 5;
+          loadMore(newLimit);
+        }}
       >
         Load More
       </Button>

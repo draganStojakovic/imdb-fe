@@ -10,9 +10,8 @@ import { useEffect, useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { LoadMoreComponent } from 'app/components/LoadMoreComponent';
-import useCommentParams from 'app/hooks/useCommentParams';
 import { PostCommentComponent } from 'app/components/PostCommentComponent';
-import { isObjOfType, returnObject } from 'app/utils/typeCheckers';
+import { isObjOfType } from 'app/utils/typeCheckers';
 import { IMovie } from 'app/types/IMovies';
 import { IUser } from 'app/types/IUser';
 import { ICommentPaginated } from 'app/types/IComment';
@@ -22,10 +21,19 @@ export const SingleMoviePage = () => {
   useAuthGuard(true);
 
   const { id } = useParams();
-  const { commentLimit, loadMoreComments } = useCommentParams();
 
   const { getSingleMovie } = useMovies();
   const { getComments } = useComments();
+
+  const {
+    reloadCommentsEvent,
+    setReloadCommentsEvent,
+    loadMoreCommentsEvent: commentLimit,
+    setLoadMoreCommentsEvent: loadFiveMoreComments,
+  } = useContext(EventContext);
+  const { user } = useContext(UserContext);
+  const { search, setSearch, genres, setGenres } =
+    useContext(MovieParamsContext);
 
   const { data: movie } = getSingleMovie(id as string);
   const { data: commentsPaginated, refetch: refetchComments } = getComments(
@@ -33,15 +41,13 @@ export const SingleMoviePage = () => {
     commentLimit
   );
 
-  const { reloadCommentsEvent, setReloadCommentsEvent } =
-    useContext(EventContext);
-  const { user } = useContext(UserContext);
-  const { search, setSearch, genres, setGenres } =
-    useContext(MovieParamsContext);
-
   useEffect(() => {
     if (search.length > 0) setSearch('');
     if (genres.length > 0) setGenres('');
+
+    return () => {
+      loadFiveMoreComments(5);
+    };
   }, []);
 
   useEffect(() => {
@@ -98,9 +104,11 @@ export const SingleMoviePage = () => {
           <MessageComponent message="Be first to comment" />
         )}
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
-          returnObject<ICommentPaginated>(commentsPaginated) &&
           commentsPaginated.remainingComments !== 0 && (
-            <LoadMoreComponent loadMore={loadMoreComments} />
+            <LoadMoreComponent
+              loadMore={loadFiveMoreComments}
+              commentLimit={commentLimit}
+            />
           )}
       </Box>
     </Container>

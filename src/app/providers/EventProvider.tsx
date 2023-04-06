@@ -6,13 +6,20 @@ interface Props {
 }
 
 const EventProvider = ({ children }: Props) => {
-  const { reloadCommentsEvent, setReloadCommentsEvent } = useEvent();
+  const {
+    reloadCommentsEvent,
+    setReloadCommentsEvent,
+    loadMoreCommentsEvent,
+    setLoadMoreCommentsEvent,
+  } = useEvent();
 
   return (
     <EventContext.Provider
       value={{
         reloadCommentsEvent,
         setReloadCommentsEvent,
+        loadMoreCommentsEvent,
+        setLoadMoreCommentsEvent,
       }}
     >
       {children}
