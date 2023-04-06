@@ -1,37 +1,43 @@
 import { useParams } from 'react-router-dom';
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import useMovies from 'app/hooks/useMovies';
+import useComments from 'app/hooks/useComments';
 import { Container, Box } from '@mui/material';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import { CommentDetailsComponent } from 'app/components/CommentDetailsComponent';
 import { MessageComponent } from 'app/components/MessageComponent';
-import { isObjOfType, returnObject } from 'app/utils/typeCheckers';
-import { IComment, ICommentPaginated } from 'app/types/IComment';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
-import { useGetCommentsQuery } from 'app/querries/comment.querry';
-import { IMovie } from 'app/types/IMovies';
 import { LoadMoreComponent } from 'app/components/LoadMoreComponent';
 import useCommentParams from 'app/hooks/useCommentParams';
-import { LeaveACommentComponent } from 'app/components/LeaveACommentComponent';
+import { PostCommentComponent } from 'app/components/PostCommentComponent';
+import { isObjOfType, returnObject } from 'app/utils/typeCheckers';
+import { IMovie } from 'app/types/IMovies';
+import { IUser } from 'app/types/IUser';
+import { ICommentPaginated } from 'app/types/IComment';
+import { EventContext } from 'app/context/EventContext';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
-  const { id } = useParams();
-  const [reloadCommentsEvent, setReloadCommentsEvent] = useState(false);
-  const { commentLimit, loadMoreComments } = useCommentParams();
-  
-  const { getSingleMovie } = useMovies();
-  const movie = getSingleMovie(id as string);
 
+  const { id } = useParams();
+  const { commentLimit, loadMoreComments } = useCommentParams();
+
+  const { getSingleMovie } = useMovies();
+  const { getComments } = useComments();
+
+  const { data: movie } = getSingleMovie(id as string);
+  const { data: commentsPaginated, refetch: refetchComments } = getComments(
+    id as string,
+    commentLimit
+  );
+
+  const { reloadCommentsEvent, setReloadCommentsEvent } =
+    useContext(EventContext);
+  const { user } = useContext(UserContext);
   const { search, setSearch, genres, setGenres } =
     useContext(MovieParamsContext);
-
-  const { data: commentsPaginated, refetch: reloadComments } =
-    useGetCommentsQuery(id as string, commentLimit);
-
-  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (search.length > 0) setSearch('');
@@ -39,12 +45,12 @@ export const SingleMoviePage = () => {
   }, []);
 
   useEffect(() => {
-    reloadComments();
+    refetchComments();
   }, [commentLimit]);
 
   useEffect(() => {
     if (reloadCommentsEvent) {
-      reloadComments();
+      refetchComments();
       setReloadCommentsEvent(false);
     }
   }, [reloadCommentsEvent]);
@@ -57,7 +63,7 @@ export const SingleMoviePage = () => {
           marginBottom: 5,
         }}
       >
-        {movie && isObjOfType<IMovie>(movie) && (
+        {isObjOfType<IMovie>(movie) && (
           <MovieDetailsComponent
             movieId={movie.id}
             title={movie.title}
@@ -73,20 +79,18 @@ export const SingleMoviePage = () => {
             checkIfDescShow={undefined}
           />
         )}
-        <LeaveACommentComponent reloadComments={reloadComments} />
+        <PostCommentComponent />
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
-        returnObject<ICommentPaginated>(commentsPaginated) &&
         commentsPaginated.comments.length > 0 ? (
           commentsPaginated.comments.map(
-            (comment: IComment) =>
-              user &&
-              movie && (
+            (comment) =>
+              isObjOfType<IUser>(user) &&
+              isObjOfType<IMovie>(movie) && (
                 <CommentDetailsComponent
                   key={comment._id}
                   comment={comment}
                   authUserId={user?.id}
                   movieId={movie?.id}
-                  setReloadCommentsEvent={setReloadCommentsEvent}
                 />
               )
           )

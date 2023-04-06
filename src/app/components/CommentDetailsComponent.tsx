@@ -11,30 +11,23 @@ import {
 } from '@mui/material';
 import { IComment } from 'app/types/IComment';
 import useDeleteComment from 'app/hooks/useDeleteComment';
-import { useEffect } from 'react';
 
 type Props = {
   comment: IComment;
   authUserId: string;
   movieId: string;
-  setReloadCommentsEvent: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CommentDetailsComponent = ({
   comment,
   authUserId,
   movieId,
-  setReloadCommentsEvent,
 }: Props) => {
-  const { onSubmit, handleSubmit, commentDeleted, setCommentDeleted } =
-    useDeleteComment(comment._id, movieId, authUserId);
-
-  useEffect(() => {
-    if (commentDeleted) {
-      setReloadCommentsEvent(true);
-      setCommentDeleted(false);
-    }
-  }, [commentDeleted]);
+  const { onSubmit, handleSubmit } = useDeleteComment(
+    comment._id,
+    movieId,
+    authUserId
+  );
 
   return (
     <Card

@@ -5,8 +5,8 @@ import { IUser } from 'app/types/IUser';
 import { IViews } from 'app/types/IViews';
 import { IVote } from 'app/types/IVote';
 
-export function isObjOfType<T>(_obj: unknown): _obj is T {
-  return true;
+export function isObjOfType<T>(obj: unknown): obj is T {
+  return !!obj;
 }
 
 export function returnObject<T>(

@@ -4,15 +4,16 @@ import { ICommentDelete, ICommentDeleteResponse } from 'app/types/IComment';
 import { commentsService } from 'app/services/comments.service';
 import { AxiosResponse } from 'axios';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { EventContext } from 'app/context/EventContext';
 
 export default function useDeleteComment(
   commentId: string,
   movieId: string,
   userId: string
 ) {
-  const [commentDeleted, setCommentDeleted] = useState(false);
-  
+  const { setReloadCommentsEvent } = useContext(EventContext);
+
   const { handleSubmit } = useForm<ICommentDelete>({
     defaultValues: {
       commentId: commentId,
@@ -23,7 +24,8 @@ export default function useDeleteComment(
 
   const { mutate } = useMutation(commentsService.deleteCommment, {
     onSuccess: (data: AxiosResponse<ICommentDeleteResponse>) => {
-      if (isObjOfType<ICommentDeleteResponse>(data)) setCommentDeleted(true);
+      if (isObjOfType<ICommentDeleteResponse>(data))
+        setReloadCommentsEvent(true);
     },
   });
 
@@ -34,7 +36,5 @@ export default function useDeleteComment(
   return {
     onSubmit,
     handleSubmit,
-    commentDeleted,
-    setCommentDeleted,
   };
 }

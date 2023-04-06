@@ -1,7 +1,6 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useEffect, useContext, useState } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
-import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 import { PaginationComponent } from 'app/components/PaginationComponent';
 import { Container, Box, Grid } from '@mui/material';
 import { SearchComponent } from 'app/components/SearchComponent';
@@ -11,19 +10,22 @@ import { MessageComponent } from 'app/components/MessageComponent';
 import { returnObject, isObjOfType } from 'app/utils/typeCheckers';
 import { IMoviePaginated } from 'app/types/IMovies';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
+import useMovies from 'app/hooks/useMovies';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
 
+  const [showDesc, setShowDesc] = useState<string[]>([]);
+  const { getMovies } = useMovies();
+
   const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
-  const [showDesc, setShowDesc] = useState<string[]>([]);
 
   const {
     data: moviesPaginated,
     isLoading,
     refetch: reloadMovies,
-  } = useGetMoviesQuerry(page, 10, search, genres);
+  } = getMovies(page, 10, search, genres);
 
   useEffect(() => {
     reloadMovies();

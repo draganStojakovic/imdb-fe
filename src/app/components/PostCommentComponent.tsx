@@ -1,33 +1,20 @@
 import { Grid, Card, CardContent, Box, Button, TextField } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
-  useMutation,
-} from 'react-query';
+import { EventContext } from 'app/context/EventContext';
+import { useMutation } from 'react-query';
 import { useContext, useState } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import {
-  ICommentDraft,
-  ICommentPaginated,
-  ICommentResponse,
-} from 'app/types/IComment';
+import { ICommentDraft, ICommentResponse } from 'app/types/IComment';
 import { useLocation } from 'react-router-dom';
 import { commentsService } from 'app/services/comments.service';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
 
-type Props = {
-  reloadComments: <TPageData>(
-    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
-  ) => Promise<QueryObserverResult<IError | ICommentPaginated, unknown>>;
-};
-
-export const LeaveACommentComponent = ({ reloadComments }: Props) => {
+export const PostCommentComponent = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useContext(UserContext);
+  const { setReloadCommentsEvent } = useContext(EventContext);
   const location = useLocation();
 
   const {
@@ -48,7 +35,7 @@ export const LeaveACommentComponent = ({ reloadComments }: Props) => {
     onSuccess: (data: AxiosResponse<ICommentResponse>) => {
       if (isObjOfType<ICommentResponse>(data)) {
         reset();
-        reloadComments();
+        setReloadCommentsEvent(true);
       }
       setLoading(false);
     },

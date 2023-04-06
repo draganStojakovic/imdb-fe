@@ -1,14 +1,28 @@
 import { useGetSingleMovieQuerry } from 'app/querries/movie.querry';
-import { isObjOfType } from 'app/utils/typeCheckers';
-import { IMovie } from 'app/types/IMovies';
+import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 
 const useMovies = () => {
-  const getSingleMovie = (id: string) => {
-    const { data } = useGetSingleMovieQuerry(id);
-    if (isObjOfType<IMovie>(data)) return data;
+  const getMovies = (
+    page: number,
+    limit: number,
+    search: string,
+    genres: string
+  ) => {
+    const { data, isLoading, refetch } = useGetMoviesQuerry(
+      page,
+      limit,
+      search,
+      genres
+    );
+    return { data, isLoading, refetch };
   };
 
-  return { getSingleMovie };
+  const getSingleMovie = (id: string) => {
+    const { data, refetch } = useGetSingleMovieQuerry(id);
+    return { data, refetch };
+  };
+
+  return { getSingleMovie, getMovies };
 };
 
 export default useMovies;
