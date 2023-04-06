@@ -12,6 +12,14 @@ import { IMoviePaginated } from 'app/types/IMovies';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import useMovies from 'app/hooks/useMovies';
 
+function trunctate(sentences: string) {
+  if (sentences.length > 30) {
+    const trunctated = sentences.split('.');
+    return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
+  }
+  return sentences;
+}
+
 export const MoviesPage = () => {
   useAuthGuard(true);
 
@@ -34,14 +42,6 @@ export const MoviesPage = () => {
   useEffect(() => {
     setLoading(isLoading);
   }, [isLoading]);
-
-  function trunctate(sentences: string) {
-    if (sentences.length > 30) {
-      const trunctated = sentences.split('.');
-      return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
-    }
-    return sentences;
-  }
 
   function checkIfDescShow(movieId: string) {
     for (let i = 0; i < showDesc.length; i++) {
