@@ -9,6 +9,7 @@ import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
 import { IVote } from 'app/types/IVote';
 import { IViews } from 'app/types/IViews';
+import { IUser } from 'app/types/IUser';
 
 class MoviesService {
   async GetMovies(page = 1, limit = 10, search?: string, genres?: string) {
@@ -47,9 +48,12 @@ class MoviesService {
     });
   }
 
-  // async WatchedMovie(payload: string) {
-  //   return await httpService.request<AxiosResponse>
-  // }
+  async WatchedMovie(payload: string) {
+    return await httpService.request<AxiosResponse<IUser, IError>>({
+      url: `/api/watched-movie/${payload}`,
+      method: 'PUT',
+    });
+  }
 }
 
 export const moviesService = new MoviesService();

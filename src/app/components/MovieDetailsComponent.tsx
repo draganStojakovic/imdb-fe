@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { VoteMovieComponent } from './VoteMovieComponent';
 import { MovieViewsComponent } from './MovieViewsComponent';
+import { WatchedMoviesComponent } from './WatchedMoviesComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -109,11 +110,17 @@ export const MovieDetailsComponent = ({
               <ListItem>
                 <Grid container spacing={2}>
                   <Grid item xs={8}>
-                    <VoteMovieComponent
-                      likes={likes}
-                      dislikes={dislikes}
-                      movieId={movieId}
-                    />
+                    <Box display="flex" justifyContent="flex-start">
+                      <VoteMovieComponent
+                        likes={likes}
+                        dislikes={dislikes}
+                        movieId={movieId}
+                      />
+                      <WatchedMoviesComponent
+                        isWatched={isWatched}
+                        movieId={movieId}
+                      />
+                    </Box>
                   </Grid>
                   <Grid item xs={4}>
                     <Box display="flex" justifyContent="flex-end">
