@@ -46,6 +46,10 @@ class MoviesService {
       method: 'PUT',
     });
   }
+
+  // async WatchedMovie(payload: string) {
+  //   return await httpService.request<AxiosResponse>
+  // }
 }
 
 export const moviesService = new MoviesService();
