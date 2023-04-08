@@ -36,7 +36,7 @@ type Props = {
   checkIfDescShow: undefined | ((movieId: string) => boolean);
 };
 
-function checkIfMovieWatched(movieId: string, user: IUser) {
+export function checkIfMovieWatched(movieId: string, user: IUser) {
   for (let i = 0; i < user?.watchedMovies.length; i++) {
     if (movieId === user.watchedMovies[i]) return true;
   }

@@ -1,4 +1,7 @@
-import { useGetSingleMovieQuerry } from 'app/querries/movie.querry';
+import {
+  useGetAllMoviesFromWatchListQuery,
+  useGetSingleMovieQuerry,
+} from 'app/querries/movie.querry';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
 
 const useMovies = () => {
@@ -22,7 +25,12 @@ const useMovies = () => {
     return { data, refetch };
   };
 
-  return { getSingleMovie, getMovies };
+  const getAllMoviesFromWatchList = () => {
+    const { data, refetch, isLoading } = useGetAllMoviesFromWatchListQuery();
+    return { data, refetch, isLoading };
+  };
+
+  return { getSingleMovie, getMovies, getAllMoviesFromWatchList };
 };
 
 export default useMovies;

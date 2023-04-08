@@ -29,3 +29,9 @@ export interface IVoteMoviePayload {
   userId: string;
   button: string;
 }
+
+export interface IMovieWatchList {
+  _id: string;
+  title: string;
+  coverImage: string;
+}

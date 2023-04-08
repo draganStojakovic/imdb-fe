@@ -1,12 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { useMutation } from 'react-query';
-import { moviesService } from 'app/services/movies.service';
-import { IUser } from 'app/types/IUser';
-import { AxiosResponse } from 'axios';
-import { notficationManager } from 'app/utils/NotificationManager';
-import { useContext } from 'react';
-import { UserContext } from 'app/context/UserContext';
-import { isObjOfType } from 'app/utils/typeCheckers';
+import useWatchedMovie from 'app/hooks/useWatchedMovie';
 
 type Props = {
   isWatched: boolean;
@@ -14,22 +7,7 @@ type Props = {
 };
 
 export const WatchedMoviesComponent = ({ isWatched, movieId }: Props) => {
-  const { refresh } = useContext(UserContext);
-
-  const { mutate } = useMutation(moviesService.WatchedMovie, {
-    onSuccess: (data: AxiosResponse<IUser>) => {
-      if (isObjOfType<IUser>(data)) refresh(data);
-    },
-    onError: () => {
-      notficationManager.error(
-        'Something went wrong, please refresh the page and try again.'
-      );
-    },
-  });
-
-  async function watchedMovie(data: string) {
-    mutate(data);
-  }
+  const { watchedMovie } = useWatchedMovie();
 
   return (
     <Box

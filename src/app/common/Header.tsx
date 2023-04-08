@@ -47,6 +47,14 @@ export const Header = () => {
                     Create Movie
                   </Link>
                 </Button>
+                <Button color="inherit">
+                <Link
+                    to={ROUTES.WATCH_LIST}
+                    style={{ textDecoration: 'none', color: 'black' }}
+                  >
+                    Watch List
+                  </Link>
+                </Button>
               </Typography>
               <Button
                 color="inherit"
