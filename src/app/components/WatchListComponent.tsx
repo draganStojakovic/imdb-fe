@@ -9,14 +9,14 @@ import { UserContext } from 'app/context/UserContext';
 import { isObjOfType } from 'app/utils/typeCheckers';
 
 type Props = {
-  isWatched: boolean;
+  isOnWatchList: boolean;
   movieId: string;
 };
 
-export const WatchedMoviesComponent = ({ isWatched, movieId }: Props) => {
+export const WatchListComponent = ({ isOnWatchList, movieId }: Props) => {
   const { refresh } = useContext(UserContext);
 
-  const { mutate } = useMutation(moviesService.WatchedMovie, {
+  const { mutate } = useMutation(moviesService.WatchList, {
     onSuccess: (data: AxiosResponse<IUser>) => {
       if (isObjOfType<IUser>(data)) refresh(data);
     },
@@ -27,31 +27,30 @@ export const WatchedMoviesComponent = ({ isWatched, movieId }: Props) => {
     },
   });
 
-  async function watchedMovie(data: string) {
+  async function addOrRemoveFromWatchList(data: string) {
     mutate(data);
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'left',
-        marginRight: '1rem',
-      }}
-    >
-      <Button
-        type="button"
-        sx={{ borderRadius: 20 }}
-        size="small"
-        variant={isWatched ? 'outlined' : 'contained'}
-        color={isWatched ? 'success' : 'primary'}
-        onClick={() => {
-          watchedMovie(movieId);
+    <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
         }}
       >
-        {isWatched ? 'Remove from watched' : 'Add as watched'}
-      </Button>
+        <Button
+          type="button"
+          sx={{ borderRadius: 20 }}
+          size="small"
+          color={isOnWatchList ? 'success' : 'primary'}
+          variant={isOnWatchList ? 'outlined' : 'contained'}
+          onClick={() => addOrRemoveFromWatchList(movieId)}
+        >
+          {isOnWatchList ? 'Remove from watch list' : 'Add to Watch List'}
+        </Button>
+      </Box>
     </Box>
   );
 };

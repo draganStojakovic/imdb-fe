@@ -48,9 +48,16 @@ class MoviesService {
     });
   }
 
-  async WatchedMovie(payload: string) {
+  async WatchedMovie(movieId: string) {
     return await httpService.request<AxiosResponse<IUser, IError>>({
-      url: `/api/watched-movie/${payload}`,
+      url: `/api/watched-movie/${movieId}`,
+      method: 'PUT',
+    });
+  }
+
+  async WatchList(movieId: string) {
+    return await httpService.request<AxiosResponse<IUser, IError>>({
+      url: `/api/watch-list/${movieId}`,
       method: 'PUT',
     });
   }

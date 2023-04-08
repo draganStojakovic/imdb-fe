@@ -1,4 +1,4 @@
-import { Typography, Button, Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { useMutation } from 'react-query';
@@ -99,69 +99,60 @@ export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
   }
 
   return (
-    <Typography
-      sx={{
-        marginBottom: '1rem',
-      }}
-      variant="button"
-      display="block"
-      gutterBottom
-    >
-      <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-          }}
+    <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <Button
+          type="button"
+          sx={{ borderRadius: 20 }}
+          variant={
+            isObjOfType<IUser>(user) && checkIfVoted(likes, user)
+              ? 'contained'
+              : 'outlined'
+          }
+          size="small"
+          onClick={() =>
+            user &&
+            voteMovie({ movieId: movieId, userId: user?.id, button: 'like' })
+          }
         >
-          <Button
-            type="button"
-            sx={{ borderRadius: 20 }}
-            variant={
-              isObjOfType<IUser>(user) && checkIfVoted(likes, user)
-                ? 'contained'
-                : 'outlined'
-            }
-            size="small"
-            onClick={() =>
-              user &&
-              voteMovie({ movieId: movieId, userId: user?.id, button: 'like' })
-            }
-          >
-            👍 | {getCount(likes)}
-          </Button>
-        </Box>
-        <Box
-          sx={{
-            marginRight: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-          }}
-        >
-          <Button
-            type="button"
-            sx={{ borderRadius: 20 }}
-            variant={
-              isObjOfType<IUser>(user) && checkIfVoted(dislikes, user)
-                ? 'contained'
-                : 'outlined'
-            }
-            size="small"
-            onClick={() =>
-              user &&
-              voteMovie({
-                movieId: movieId,
-                userId: user?.id,
-                button: 'dislike',
-              })
-            }
-          >
-            👎 | {getCount(dislikes)}
-          </Button>
-        </Box>
+          👍 | {getCount(likes)}
+        </Button>
       </Box>
-    </Typography>
+      <Box
+        sx={{
+          marginRight: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <Button
+          type="button"
+          sx={{ borderRadius: 20 }}
+          variant={
+            isObjOfType<IUser>(user) && checkIfVoted(dislikes, user)
+              ? 'contained'
+              : 'outlined'
+          }
+          size="small"
+          onClick={() =>
+            user &&
+            voteMovie({
+              movieId: movieId,
+              userId: user?.id,
+              button: 'dislike',
+            })
+          }
+        >
+          👎 | {getCount(dislikes)}
+        </Button>
+      </Box>
+    </Box>
   );
 };

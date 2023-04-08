@@ -4,6 +4,7 @@ export interface IUser {
   lname: string;
   email: string;
   watchedMovies: string[];
+  watchList: string[];
 }
 
 export interface ISignIn {

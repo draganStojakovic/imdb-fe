@@ -18,6 +18,7 @@ import { isObjOfType } from 'app/utils/typeCheckers';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useCheckLocation from 'app/hooks/useCheckLocation';
+import { WatchListComponent } from './WatchListComponent';
 
 type Props = {
   authUser: IUser;
@@ -42,6 +43,13 @@ function checkIfMovieWatched(movieId: string, user: IUser) {
   return false;
 }
 
+function checkIfMoviesIsOnWatchList(movieId: string, user: IUser) {
+  for (let i = 0; i < user?.watchList.length; i++) {
+    if (movieId === user.watchList[i]) return true;
+  }
+  return false;
+}
+
 export const MovieDetailsComponent = ({
   authUser,
   movieId,
@@ -58,6 +66,7 @@ export const MovieDetailsComponent = ({
   checkIfDescShow,
 }: Props) => {
   const isWatched = checkIfMovieWatched(movieId, authUser);
+  const isOnWatchList = checkIfMoviesIsOnWatchList(movieId, authUser);
   const currentPath = useCheckLocation(`/movies/${movieId}`);
 
   useEffect(() => {
@@ -107,9 +116,9 @@ export const MovieDetailsComponent = ({
                   </Grid>
                 )}
               </ListItem>
-              <ListItem>
+              <ListItem sx={{ marginBottom: '1rem' }}>
                 <Grid container spacing={2}>
-                  <Grid item xs={8}>
+                  <Grid item xs={10}>
                     <Box display="flex" justifyContent="flex-start">
                       <VoteMovieComponent
                         likes={likes}
@@ -120,9 +129,13 @@ export const MovieDetailsComponent = ({
                         isWatched={isWatched}
                         movieId={movieId}
                       />
+                      <WatchListComponent
+                        isOnWatchList={isOnWatchList}
+                        movieId={movieId}
+                      />
                     </Box>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={2}>
                     <Box display="flex" justifyContent="flex-end">
                       <MovieViewsComponent movieId={movieId} views={views} />
                     </Box>
