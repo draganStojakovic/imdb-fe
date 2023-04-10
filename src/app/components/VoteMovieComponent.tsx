@@ -1,13 +1,14 @@
-import { Typography, Button, Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import { useContext } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { useMutation } from 'react-query';
 import { moviesService } from 'app/services/movies.service';
 import { AxiosError, AxiosResponse } from 'axios';
+import { isObjOfType } from 'app/utils/typeCheckers';
 import { IVoteMoviePayload } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
-import { isObjOfType } from 'app/utils/typeCheckers';
 import { IVote } from 'app/types/IVote';
+import { IUser } from 'app/types/IUser';
 
 type Props = {
   likes: string[];
@@ -15,70 +16,78 @@ type Props = {
   movieId: string;
 };
 
+function getCount(arr: string[]): number {
+  return arr.length;
+}
+
+function findUserIdIndex(votes: string[], user: IUser): number {
+  return votes.findIndex((item) => {
+    item === user?.id;
+  });
+}
+
+function handleVotes(
+  data: IVote,
+  user: IUser,
+  likes: string[],
+  dislikes: string[]
+) {
+  const { like, dislike } = data;
+
+  if (like === 'added' && dislike === null) {
+    user && likes.push(user.id);
+    return;
+  }
+
+  if (like === 'removed' && dislike === null) {
+    const i = findUserIdIndex(likes, user);
+    likes.splice(i, 1);
+    return;
+  }
+
+  if (like === 'removed' && dislike === 'added') {
+    const i = findUserIdIndex(likes, user);
+    likes.splice(i, 1);
+    user && dislikes.push(user.id);
+    return;
+  }
+
+  if (like === null && dislike === 'added') {
+    user && dislikes.push(user.id);
+    return;
+  }
+
+  if (like === null && dislike === 'removed') {
+    const i = findUserIdIndex(dislikes, user);
+    dislikes.splice(i, 1);
+    return;
+  }
+
+  if (like === 'added' && dislike === 'removed') {
+    const i = findUserIdIndex(dislikes, user);
+    dislikes.splice(i, 1);
+    user && likes.push(user.id);
+    return;
+  }
+}
+
+function checkIfVoted(arr: string[], user: IUser): boolean {
+  for (let i = 0; i < arr.length; i++) {
+    if (user?.id === arr[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
   const { user } = useContext(UserContext);
 
-  function getCount(arr: string[]): number {
-    return arr.length;
-  }
-
-  function checkIfVoted(arr: string[]) {
-    for (let i = 0; i < arr.length; i++) {
-      if (user?.id === arr[i]) {
-        return true;
-      }
-    }
-  }
-
-  function findUserIdIndex(votes: string[]): number {
-    return votes.findIndex((item) => {
-      item === user?.id;
-    });
-  }
-
-  function handleVotes(data: IVote) {
-    const { like, dislike } = data;
-
-    if (like === 'added' && dislike === null) {
-      user && likes.push(user.id);
-      return;
-    }
-
-    if (like === 'removed' && dislike === null) {
-      const i = findUserIdIndex(likes);
-      likes.splice(i, 1);
-      return;
-    }
-
-    if (like === 'removed' && dislike === 'added') {
-      const i = findUserIdIndex(likes);
-      likes.splice(i, 1);
-      user && dislikes.push(user.id);
-      return;
-    }
-
-    if (like === null && dislike === 'added') {
-      user && dislikes.push(user.id);
-      return;
-    }
-
-    if (like === null && dislike === 'removed') {
-      const i = findUserIdIndex(dislikes);
-      dislikes.splice(i, 1);
-      return;
-    }
-
-    if (like === 'added' && dislike === 'removed') {
-      const i = findUserIdIndex(dislikes);
-      dislikes.splice(i, 1);
-      user && likes.push(user.id);
-      return;
-    }
-  }
-
   const { mutate } = useMutation(moviesService.VoteMovie, {
     onSuccess: (data: AxiosResponse<IVote>) => {
-      isObjOfType<IVote>(data) && handleVotes(data);
+      isObjOfType<IVote>(data) &&
+        isObjOfType<IUser>(user) &&
+        handleVotes(data, user, likes, dislikes);
     },
     onError: (error: AxiosError<IError>) => {
       console.log(error);
@@ -90,63 +99,60 @@ export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
   }
 
   return (
-    <Typography
-      sx={{
-        marginBottom: '1rem',
-      }}
-      variant="button"
-      display="block"
-      gutterBottom
-    >
-      <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-          }}
+    <Box sx={{ display: 'inline-flex', gap: '1rem' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <Button
+          type="button"
+          sx={{ borderRadius: 20 }}
+          variant={
+            isObjOfType<IUser>(user) && checkIfVoted(likes, user)
+              ? 'contained'
+              : 'outlined'
+          }
+          size="small"
+          onClick={() =>
+            user &&
+            voteMovie({ movieId: movieId, userId: user?.id, button: 'like' })
+          }
         >
-          <Button
-            type="button"
-            sx={{ borderRadius: 20 }}
-            variant={checkIfVoted(likes) ? 'contained' : 'outlined'}
-            color={checkIfVoted(likes) && 'success'}
-            size="small"
-            onClick={() =>
-              user &&
-              voteMovie({ movieId: movieId, userId: user?.id, button: 'like' })
-            }
-          >
-            👍 | {getCount(likes)}
-          </Button>
-        </Box>
-        <Box
-          sx={{
-            marginRight: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-          }}
-        >
-          <Button
-            type="button"
-            sx={{ borderRadius: 20 }}
-            variant={checkIfVoted(dislikes) ? 'contained' : 'outlined'}
-            color={checkIfVoted(dislikes) && 'error'}
-            size="small"
-            onClick={() =>
-              user &&
-              voteMovie({
-                movieId: movieId,
-                userId: user?.id,
-                button: 'dislike',
-              })
-            }
-          >
-            👎 | {getCount(dislikes)}
-          </Button>
-        </Box>
+          👍 | {getCount(likes)}
+        </Button>
       </Box>
-    </Typography>
+      <Box
+        sx={{
+          marginRight: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <Button
+          type="button"
+          sx={{ borderRadius: 20 }}
+          variant={
+            isObjOfType<IUser>(user) && checkIfVoted(dislikes, user)
+              ? 'contained'
+              : 'outlined'
+          }
+          size="small"
+          onClick={() =>
+            user &&
+            voteMovie({
+              movieId: movieId,
+              userId: user?.id,
+              button: 'dislike',
+            })
+          }
+        >
+          👎 | {getCount(dislikes)}
+        </Button>
+      </Box>
+    </Box>
   );
 };

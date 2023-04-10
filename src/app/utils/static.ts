@@ -4,6 +4,7 @@ export const ROUTES = {
   MOVIES: '/movies',
   MOVIE_DETAILS: '/movies/:id',
   MOVIES_CREATE: '/movies/create',
+  WATCH_LIST: 'watchlist',
 };
 
 export const QUERRY_KEYS = {
@@ -12,4 +13,5 @@ export const QUERRY_KEYS = {
   GENRES: 'genres',
   VOTE: 'vote',
   COMMENTS: 'comments',
+  WATCH_LIST: 'watchlist',
 };

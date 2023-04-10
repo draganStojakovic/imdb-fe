@@ -1,16 +1,18 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useEffect, useContext, useState } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
+import { UserContext } from 'app/context/UserContext';
 import { PaginationComponent } from 'app/components/PaginationComponent';
 import { Container, Box, Grid } from '@mui/material';
 import { SearchComponent } from 'app/components/SearchComponent';
 import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { MessageComponent } from 'app/components/MessageComponent';
-import { returnObject, isObjOfType } from 'app/utils/typeCheckers';
+import { isObjOfType } from 'app/utils/typeCheckers';
 import { IMoviePaginated } from 'app/types/IMovies';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import useMovies from 'app/hooks/useMovies';
+import { IUser } from 'app/types/IUser';
 
 function trunctate(sentences: string) {
   if (sentences.length > 30) {
@@ -28,6 +30,7 @@ export const MoviesPage = () => {
 
   const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
+  const { user } = useContext(UserContext);
 
   const {
     data: moviesPaginated,
@@ -45,9 +48,7 @@ export const MoviesPage = () => {
 
   function checkIfDescShow(movieId: string) {
     for (let i = 0; i < showDesc.length; i++) {
-      if (showDesc[i] === movieId) {
-        return true;
-      }
+      if (showDesc[i] === movieId) return true;
     }
     return false;
   }
@@ -80,16 +81,16 @@ export const MoviesPage = () => {
           </Grid>
         </Grid>
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
-          returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.movies.length === 0 && (
             <MessageComponent message="no movies found" />
           )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
-          returnObject<IMoviePaginated>(moviesPaginated) &&
+          isObjOfType<IUser>(user) &&
           moviesPaginated.currentPage === page &&
-          moviesPaginated.movies.map((movie, i) => (
+          moviesPaginated.movies.map((movie) => (
             <MovieDetailsComponent
-              key={i}
+              key={movie.id}
+              authUser={user}
               movieId={movie.id}
               title={movie.title}
               description={movie.description}
@@ -105,7 +106,6 @@ export const MoviesPage = () => {
             />
           ))}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
-          returnObject<IMoviePaginated>(moviesPaginated) &&
           moviesPaginated.movies.length > 0 && (
             <PaginationComponent count={moviesPaginated?.totalPages} />
           )}

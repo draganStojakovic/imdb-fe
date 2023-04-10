@@ -1,4 +1,5 @@
 import { IGenre } from 'app/types/IGenre';
+import { IUser } from 'app/types/IUser';
 import {
   Typography,
   Grid,
@@ -12,10 +13,15 @@ import {
 } from '@mui/material';
 import { VoteMovieComponent } from './VoteMovieComponent';
 import { MovieViewsComponent } from './MovieViewsComponent';
+import { WatchedMoviesComponent } from './WatchedMoviesComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import useCheckLocation from 'app/hooks/useCheckLocation';
+import { WatchListComponent } from './WatchListComponent';
 
 type Props = {
+  authUser: IUser;
   movieId: string;
   title: string;
   description: string;
@@ -30,7 +36,22 @@ type Props = {
   checkIfDescShow: undefined | ((movieId: string) => boolean);
 };
 
+export function checkIfMovieWatched(movieId: string, user: IUser) {
+  for (let i = 0; i < user?.watchedMovies.length; i++) {
+    if (movieId === user.watchedMovies[i]) return true;
+  }
+  return false;
+}
+
+function checkIfMoviesIsOnWatchList(movieId: string, user: IUser) {
+  for (let i = 0; i < user?.watchList.length; i++) {
+    if (movieId === user.watchList[i]) return true;
+  }
+  return false;
+}
+
 export const MovieDetailsComponent = ({
+  authUser,
   movieId,
   title,
   description,
@@ -44,6 +65,14 @@ export const MovieDetailsComponent = ({
   showMovieDesc,
   checkIfDescShow,
 }: Props) => {
+  const isWatched = checkIfMovieWatched(movieId, authUser);
+  const isOnWatchList = checkIfMoviesIsOnWatchList(movieId, authUser);
+  const currentPath = useCheckLocation(`/movies/${movieId}`);
+
+  useEffect(() => {
+    if (currentPath) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPath]);
+
   return (
     <Card
       sx={{
@@ -65,29 +94,48 @@ export const MovieDetailsComponent = ({
           <CardContent>
             <Stack spacing={0}>
               <ListItem>
-                <Typography variant="h3" gutterBottom>
-                  {multiView ? (
-                    <Link
-                      to={`/movies/${movieId}`}
-                      style={{ textDecoration: 'none', color: '#2e2e2e' }}
-                    >
-                      {title}
-                    </Link>
-                  ) : (
-                    <>{title}</>
-                  )}
-                </Typography>
-              </ListItem>
-              <ListItem>
-                <Grid container spacing={2}>
-                  <Grid item xs={8}>
-                    <VoteMovieComponent
-                      likes={likes}
-                      dislikes={dislikes}
-                      movieId={movieId}
-                    />
+                <Grid item xs={11}>
+                  <Typography variant="h3" gutterBottom>
+                    {multiView ? (
+                      <Link
+                        to={`/movies/${movieId}`}
+                        style={{ textDecoration: 'none', color: '#2e2e2e' }}
+                      >
+                        {title}
+                      </Link>
+                    ) : (
+                      <>{title}</>
+                    )}
+                  </Typography>
+                </Grid>
+                {isWatched && (
+                  <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                      <Typography>✅</Typography>
+                    </Box>
                   </Grid>
-                  <Grid item xs={4}>
+                )}
+              </ListItem>
+              <ListItem sx={{ marginBottom: '1rem' }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={10}>
+                    <Box display="flex" justifyContent="flex-start">
+                      <VoteMovieComponent
+                        likes={likes}
+                        dislikes={dislikes}
+                        movieId={movieId}
+                      />
+                      <WatchedMoviesComponent
+                        isWatched={isWatched}
+                        movieId={movieId}
+                      />
+                      <WatchListComponent
+                        isOnWatchList={isOnWatchList}
+                        movieId={movieId}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={2}>
                     <Box display="flex" justifyContent="flex-end">
                       <MovieViewsComponent movieId={movieId} views={views} />
                     </Box>

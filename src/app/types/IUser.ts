@@ -3,6 +3,8 @@ export interface IUser {
   fname: string;
   lname: string;
   email: string;
+  watchedMovies: string[];
+  watchList: string[];
 }
 
 export interface ISignIn {

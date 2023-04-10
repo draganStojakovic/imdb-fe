@@ -3,14 +3,14 @@ import { List, ListItem, Button } from '@mui/material';
 import { useContext } from 'react';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 
+function isButtonClicked(genres: string, value: string) {
+  if (genres.includes(value)) return true;
+  return false;
+}
+
 export const FilterGenresComponent = () => {
   const { getGenres } = useGenres();
   const { genres, setGenres, setPage } = useContext(MovieParamsContext);
-
-  function isButtonClicked(genres: string, value: string) {
-    if (genres.includes(value)) return true;
-    return false;
-  }
 
   function handleAddGenre(e: React.ChangeEvent<unknown>) {
     const value = (e.target as HTMLButtonElement).value;

@@ -5,6 +5,7 @@ import { LogInPage } from 'app/pages/LogInPage';
 import { RegisterPage } from 'app/pages/RegisterPage';
 import { CreateMoviePage } from 'app/pages/CreateMoviePage';
 import { SingleMoviePage } from 'app/pages/SingleMoviePage';
+import { WatchListPage } from 'app/pages/WatchListPage';
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
       <Route path={ROUTES.MOVIES_CREATE} element={<CreateMoviePage />} />
       <Route path={ROUTES.LOGIN} element={<LogInPage />} />
       <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+      <Route path={ROUTES.WATCH_LIST} element={<WatchListPage />} />
     </Routes>
   );
 };
