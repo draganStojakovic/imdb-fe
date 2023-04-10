@@ -29,10 +29,10 @@ export const SingleMoviePage = () => {
     reloadCommentsEvent,
     setReloadCommentsEvent,
     loadMoreCommentsEvent: commentLimit,
-    setLoadMoreCommentsEvent: loadFiveMoreComments,
+    setLoadMoreCommentsEvent,
   } = useContext(EventContext);
   const { user } = useContext(UserContext);
-  const { search, setSearch, genres, setGenres } =
+  const { search, setSearch, genres, setGenres, setPage } =
     useContext(MovieParamsContext);
 
   const { data: movie } = getSingleMovie(id as string);
@@ -46,7 +46,8 @@ export const SingleMoviePage = () => {
     if (genres.length > 0) setGenres('');
 
     return () => {
-      loadFiveMoreComments(5);
+      setLoadMoreCommentsEvent(5);
+      setPage(1);
     };
   }, []);
 
@@ -107,7 +108,7 @@ export const SingleMoviePage = () => {
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
           commentsPaginated.remainingComments !== 0 && (
             <LoadMoreComponent
-              loadMore={loadFiveMoreComments}
+              loadMore={setLoadMoreCommentsEvent}
               commentLimit={commentLimit}
             />
           )}

@@ -28,7 +28,7 @@ export const WatchedMoviesComponent = ({ isWatched, movieId }: Props) => {
           watchedMovie(movieId);
         }}
       >
-        {isWatched ? 'Remove from watched' : 'Add as watched'}
+        {isWatched ? 'Unmark watched' : 'Mark watched'}
       </Button>
     </Box>
   );
