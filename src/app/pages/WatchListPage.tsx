@@ -10,6 +10,7 @@ import { SimpleMovieCardComponent } from 'app/components/SimpleMovieCardComponen
 import useWatchList from 'app/hooks/useWatchList';
 import { IUser } from 'app/types/IUser';
 import useWatchedMovie from 'app/hooks/useWatchedMovie';
+import { MessageComponent } from 'app/components/MessageComponent';
 
 export const WatchListPage = () => {
   useAuthGuard(true);
@@ -51,8 +52,9 @@ export const WatchListPage = () => {
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
-          {isObjOfType<IMovieWatchList[]>(movies) &&
-            isObjOfType<IUser>(user) &&
+          {isObjOfType<IUser>(user) &&
+          isObjOfType<IMovieWatchList[]>(movies) &&
+          movies.length !== 0 ? (
             movies.map((movie) => (
               <Grid item xs={2} sm={4} md={4} key={movie._id}>
                 <ListItem>
@@ -66,7 +68,10 @@ export const WatchListPage = () => {
                   />
                 </ListItem>
               </Grid>
-            ))}
+            ))
+          ) : (
+            <MessageComponent message={'Watch list is empty'} />
+          )}
         </Grid>
       </Box>
     </Container>
