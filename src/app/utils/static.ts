@@ -14,4 +14,5 @@ export const QUERRY_KEYS = {
   VOTE: 'vote',
   COMMENTS: 'comments',
   WATCH_LIST: 'watchlist',
+  POPULAR: 'popular',
 };

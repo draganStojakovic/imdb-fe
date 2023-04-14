@@ -1,5 +1,6 @@
 import {
   useGetAllMoviesFromWatchListQuery,
+  useGetPopularMovies,
   useGetSingleMovieQuerry,
 } from 'app/querries/movie.querry';
 import { useGetMoviesQuerry } from 'app/querries/movie.querry';
@@ -30,7 +31,17 @@ const useMovies = () => {
     return { data, refetch, isLoading };
   };
 
-  return { getSingleMovie, getMovies, getAllMoviesFromWatchList };
+  const getPopularMovies = () => {
+    const { data } = useGetPopularMovies();
+    return { data };
+  };
+
+  return {
+    getSingleMovie,
+    getMovies,
+    getAllMoviesFromWatchList,
+    getPopularMovies,
+  };
 };
 
 export default useMovies;

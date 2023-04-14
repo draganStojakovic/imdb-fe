@@ -4,6 +4,7 @@ import {
   IMovieDraft,
   IMoviePaginated,
   IMovieWatchList,
+  IPopularMovie,
   IVoteMoviePayload,
 } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
@@ -67,6 +68,13 @@ class MoviesService {
     return await httpService.request<AxiosResponse<IUser, IError>>({
       url: `/api/watch-list/${movieId}`,
       method: 'PUT',
+    });
+  }
+
+  async PopularMovies() {
+    return await httpService.request<IPopularMovie[] | IError>({
+      url: '/api/popular-movies',
+      method: 'GET',
     });
   }
 }
