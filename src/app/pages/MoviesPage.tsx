@@ -9,10 +9,11 @@ import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { MessageComponent } from 'app/components/MessageComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import { IMoviePaginated } from 'app/types/IMovies';
+import { IMoviePaginated, IPopularMovie } from 'app/types/IMovies';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import useMovies from 'app/hooks/useMovies';
 import { IUser } from 'app/types/IUser';
+import { PopularMoviesComponent } from 'app/components/PopularMoviesComponent';
 
 function trunctate(sentences: string) {
   if (sentences.length > 30) {
@@ -26,7 +27,7 @@ export const MoviesPage = () => {
   useAuthGuard(true);
 
   const [showDesc, setShowDesc] = useState<string[]>([]);
-  const { getMovies } = useMovies();
+  const { getMovies, getPopularMovies } = useMovies();
 
   const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
@@ -37,6 +38,8 @@ export const MoviesPage = () => {
     isLoading,
     refetch: reloadMovies,
   } = getMovies(page, 10, search, genres);
+
+  const { data: popularMovies } = getPopularMovies();
 
   useEffect(() => {
     reloadMovies();
@@ -84,6 +87,9 @@ export const MoviesPage = () => {
           moviesPaginated.movies.length === 0 && (
             <MessageComponent message="no movies found" />
           )}
+        {isObjOfType<IPopularMovie[]>(popularMovies) && (
+          <PopularMoviesComponent popularMovies={popularMovies} />
+        )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           isObjOfType<IUser>(user) &&
           moviesPaginated.currentPage === page &&

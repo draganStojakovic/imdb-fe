@@ -1,6 +1,11 @@
 import { moviesService } from 'app/services/movies.service';
 import { IError } from 'app/types/IError';
-import { IMovie, IMoviePaginated, IMovieWatchList } from 'app/types/IMovies';
+import {
+  IMovie,
+  IMoviePaginated,
+  IMovieWatchList,
+  IPopularMovie,
+} from 'app/types/IMovies';
 import { QUERRY_KEYS } from 'app/utils/static';
 import { useQuery, QueryKey } from 'react-query';
 
@@ -27,5 +32,11 @@ export const useGetSingleMovieQuerry = (id: string) =>
 export const useGetAllMoviesFromWatchListQuery = () =>
   useQuery<IMovieWatchList[] | IError>([QUERRY_KEYS.WATCH_LIST], async () => {
     const data = await moviesService.GetAllMoviesFromWatchList();
+    return data;
+  });
+
+export const useGetPopularMovies = () =>
+  useQuery<IPopularMovie[] | IError>([QUERRY_KEYS.POPULAR], async () => {
+    const data = await moviesService.PopularMovies();
     return data;
   });
