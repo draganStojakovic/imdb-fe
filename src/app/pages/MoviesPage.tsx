@@ -9,11 +9,11 @@ import { FilterGenresComponent } from 'app/components/FilterGenresComponent';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { MessageComponent } from 'app/components/MessageComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import { IMoviePaginated, IPopularMovie } from 'app/types/IMovies';
+import { IMoviePaginated, IMovieStrippedDown } from 'app/types/IMovies';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import useMovies from 'app/hooks/useMovies';
 import { IUser } from 'app/types/IUser';
-import { PopularMoviesComponent } from 'app/components/PopularMoviesComponent';
+import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
 
 function trunctate(sentences: string) {
   if (sentences.length > 30) {
@@ -87,8 +87,11 @@ export const MoviesPage = () => {
           moviesPaginated.movies.length === 0 && (
             <MessageComponent message="no movies found" />
           )}
-        {isObjOfType<IPopularMovie[]>(popularMovies) && (
-          <PopularMoviesComponent popularMovies={popularMovies} />
+        {isObjOfType<IMovieStrippedDown[]>(popularMovies) && (
+          <ListMoviesComponent
+            popularMovies={popularMovies}
+            caption="Popular movies:"
+          />
         )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           isObjOfType<IUser>(user) &&

@@ -7,19 +7,20 @@ import {
   List,
   CardMedia,
 } from '@mui/material';
-import { IPopularMovie } from 'app/types/IMovies';
+import { IMovieStrippedDown } from 'app/types/IMovies';
 import { Link } from 'react-router-dom';
 
 type Props = {
-  popularMovies: IPopularMovie[];
+  popularMovies: IMovieStrippedDown[];
+  caption: string;
 };
 
-export const PopularMoviesComponent = ({ popularMovies }: Props) => {
+export const ListMoviesComponent = ({ popularMovies, caption }: Props) => {
   return (
     <Card>
       <CardContent>
         <Box sx={{ m: 2 }}>
-          <Typography variant="h5">Popular movies:</Typography>
+          <Typography variant="h5">{caption}</Typography>
           <List
             style={{
               display: 'flex',

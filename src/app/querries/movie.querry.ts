@@ -4,7 +4,7 @@ import {
   IMovie,
   IMoviePaginated,
   IMovieWatchList,
-  IPopularMovie,
+  IMovieStrippedDown
 } from 'app/types/IMovies';
 import { QUERRY_KEYS } from 'app/utils/static';
 import { useQuery, QueryKey } from 'react-query';
@@ -36,7 +36,7 @@ export const useGetAllMoviesFromWatchListQuery = () =>
   });
 
 export const useGetPopularMovies = () =>
-  useQuery<IPopularMovie[] | IError>([QUERRY_KEYS.POPULAR], async () => {
+  useQuery<IMovieStrippedDown[] | IError>([QUERRY_KEYS.POPULAR], async () => {
     const data = await moviesService.PopularMovies();
     return data;
   });
