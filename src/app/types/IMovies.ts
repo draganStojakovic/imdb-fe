@@ -38,5 +38,5 @@ export interface IMovieWatchList {
 
 export interface IPopularMovie {
   id: string;
-  title: string;
+  coverImage: string;
 }

@@ -5,6 +5,7 @@ import {
   Box,
   ListItem,
   List,
+  CardMedia,
 } from '@mui/material';
 import { IPopularMovie } from 'app/types/IMovies';
 import { Link } from 'react-router-dom';
@@ -34,7 +35,7 @@ export const PopularMoviesComponent = ({ popularMovies }: Props) => {
                   to={`/movies/${movie.id}`}
                   style={{ textDecoration: 'none', color: 'black' }}
                 >
-                  {movie.title}
+                  <CardMedia component="img" image={movie.coverImage} />
                 </Link>
               </ListItem>
             ))}
