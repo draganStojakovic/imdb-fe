@@ -17,9 +17,9 @@ type Props = {
 export const PopularMoviesComponent = ({ popularMovies }: Props) => {
   return (
     <Card>
-      <Box sx={{ m: 2 }}>
-        <Typography variant="h5">Popular movies:</Typography>
-        <CardContent>
+      <CardContent>
+        <Box sx={{ m: 2 }}>
+          <Typography variant="h5">Popular movies:</Typography>
           <List
             style={{
               display: 'flex',
@@ -40,8 +40,8 @@ export const PopularMoviesComponent = ({ popularMovies }: Props) => {
               </ListItem>
             ))}
           </List>
-        </CardContent>
-      </Box>
+        </Box>
+      </CardContent>
     </Card>
   );
 };
