@@ -6,21 +6,44 @@ import { Container, Box } from '@mui/material';
 import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import { CommentDetailsComponent } from 'app/components/CommentDetailsComponent';
 import { MessageComponent } from 'app/components/MessageComponent';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { LoadMoreComponent } from 'app/components/LoadMoreComponent';
 import { PostCommentComponent } from 'app/components/PostCommentComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import { IMovie } from 'app/types/IMovies';
+import { IMovie, IMovieStrippedDown } from 'app/types/IMovies';
 import { IUser } from 'app/types/IUser';
 import { ICommentPaginated } from 'app/types/IComment';
 import { EventContext } from 'app/context/EventContext';
+import { IPopulatedGenre } from 'app/types/IGenre';
+import { moviesService } from 'app/services/movies.service';
+import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
+
+function formatGenres(movie: IMovie) {
+  const { genres } = movie;
+  const genresFiltered = (genres as unknown as IPopulatedGenre[]).map(
+    (genre) => genre._id
+  );
+  const movieGenres = genresFiltered.join(',');
+  return movieGenres;
+}
+
+async function getRelatedMovies(genres: string) {
+  try {
+    return await moviesService.RelatedMovies(genres);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
 
   const { id } = useParams();
+  const [relatedMovies, setRelatedMovies] = useState<
+    IMovieStrippedDown[] | null
+  >(null);
 
   const { getSingleMovie } = useMovies();
   const { getComments } = useComments();
@@ -35,7 +58,9 @@ export const SingleMoviePage = () => {
   const { search, setSearch, genres, setGenres, setPage } =
     useContext(MovieParamsContext);
 
-  const { data: movie } = getSingleMovie(id as string);
+  const { data: movie, refetch: reloadSingleMovie } = getSingleMovie(
+    id as string
+  );
   const { data: commentsPaginated, refetch: refetchComments } = getComments(
     id as string,
     commentLimit
@@ -52,6 +77,10 @@ export const SingleMoviePage = () => {
   }, []);
 
   useEffect(() => {
+    reloadSingleMovie();
+  }, [id]);
+
+  useEffect(() => {
     refetchComments();
   }, [commentLimit]);
 
@@ -62,6 +91,19 @@ export const SingleMoviePage = () => {
     }
   }, [reloadCommentsEvent]);
 
+  useEffect(() => {
+    if (isObjOfType<IMovie>(movie)) {
+      const formattedGenres = formatGenres(movie);
+      const response = getRelatedMovies(formattedGenres);
+      response.then((data) => {
+        if (isObjOfType<IMovieStrippedDown[]>(data)) {
+          const filteredData = data.filter((genre) => genre.id !== id);
+          if (filteredData.length !== 0) setRelatedMovies(filteredData);
+        }
+      });
+    }
+  }, [movie]);
+
   return (
     <Container component="main" maxWidth="xl">
       <Box
@@ -70,6 +112,12 @@ export const SingleMoviePage = () => {
           marginBottom: 5,
         }}
       >
+        {isObjOfType<IMovieStrippedDown[]>(relatedMovies) && (
+          <ListMoviesComponent
+            movies={relatedMovies}
+            caption="Related movies:"
+          />
+        )}
         {isObjOfType<IMovie>(movie) && isObjOfType<IUser>(user) && (
           <MovieDetailsComponent
             movieId={movie.id}

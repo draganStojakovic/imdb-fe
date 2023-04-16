@@ -4,8 +4,8 @@ import {
   IMovieDraft,
   IMoviePaginated,
   IMovieWatchList,
-  IPopularMovie,
   IVoteMoviePayload,
+  IMovieStrippedDown,
 } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
@@ -72,8 +72,15 @@ class MoviesService {
   }
 
   async PopularMovies() {
-    return await httpService.request<IPopularMovie[] | IError>({
+    return await httpService.request<IMovieStrippedDown[] | IError>({
       url: '/api/popular-movies',
+      method: 'GET',
+    });
+  }
+
+  async RelatedMovies(genres: string) {
+    return await httpService.request<IMovieStrippedDown[] | IError>({
+      url: `/api/related-movies?genres=${genres}`,
       method: 'GET',
     });
   }

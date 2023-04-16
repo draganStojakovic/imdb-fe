@@ -36,7 +36,4 @@ export interface IMovieWatchList {
   coverImage: string;
 }
 
-export interface IPopularMovie {
-  id: string;
-  coverImage: string;
-}
+export type IMovieStrippedDown = Pick<IMovie, 'id' | 'coverImage'>;
