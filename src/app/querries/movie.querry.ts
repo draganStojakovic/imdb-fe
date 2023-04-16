@@ -4,7 +4,7 @@ import {
   IMovie,
   IMoviePaginated,
   IMovieWatchList,
-  IMovieStrippedDown
+  IMovieStrippedDown,
 } from 'app/types/IMovies';
 import { QUERRY_KEYS } from 'app/utils/static';
 import { useQuery, QueryKey } from 'react-query';

@@ -89,7 +89,7 @@ export const MoviesPage = () => {
           )}
         {isObjOfType<IMovieStrippedDown[]>(popularMovies) && (
           <ListMoviesComponent
-            popularMovies={popularMovies}
+            movies={popularMovies}
             caption="Popular movies:"
           />
         )}

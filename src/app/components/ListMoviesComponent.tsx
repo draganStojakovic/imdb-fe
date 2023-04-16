@@ -1,48 +1,42 @@
-import {
-  Typography,
-  Card,
-  CardContent,
-  Box,
-  ListItem,
-  List,
-  CardMedia,
-} from '@mui/material';
+import { Typography, Box, ListItem, Stack, List } from '@mui/material';
 import { IMovieStrippedDown } from 'app/types/IMovies';
 import { Link } from 'react-router-dom';
 
 type Props = {
-  popularMovies: IMovieStrippedDown[];
+  movies: IMovieStrippedDown[];
   caption: string;
 };
 
-export const ListMoviesComponent = ({ popularMovies, caption }: Props) => {
+export const ListMoviesComponent = ({ movies, caption }: Props) => {
   return (
-    <Card>
-      <CardContent>
-        <Box sx={{ m: 2 }}>
-          <Typography variant="h5">{caption}</Typography>
-          <List
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              padding: '1rem',
-              maxHeight: '70%',
-              overflow: 'auto',
-            }}
-          >
-            {popularMovies.map((movie) => (
-              <ListItem key={movie.id}>
-                <Link
-                  to={`/movies/${movie.id}`}
-                  style={{ textDecoration: 'none', color: 'black' }}
-                >
-                  <CardMedia component="img" image={movie.coverImage} />
-                </Link>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </CardContent>
-    </Card>
+    <Box sx={{ m: 2 }}>
+      <Typography variant="h5">{caption}</Typography>
+      <Stack direction="row" spacing={2}>
+        <List
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            padding: 0,
+            maxHeight: '70%',
+            overflow: 'auto',
+          }}
+        >
+          {movies.map((movie) => (
+            <ListItem key={movie.id}>
+              <Link
+                to={`/movies/${movie.id}`}
+                style={{ textDecoration: 'none', color: 'black' }}
+              >
+                <Box
+                  component="img"
+                  sx={{ height: 200 }}
+                  src={movie.coverImage}
+                />
+              </Link>
+            </ListItem>
+          ))}
+        </List>
+      </Stack>
+    </Box>
   );
 };

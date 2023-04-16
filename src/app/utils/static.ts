@@ -15,4 +15,5 @@ export const QUERRY_KEYS = {
   COMMENTS: 'comments',
   WATCH_LIST: 'watchlist',
   POPULAR: 'popular',
+  RELATED: 'related',
 };

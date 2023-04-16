@@ -77,6 +77,13 @@ class MoviesService {
       method: 'GET',
     });
   }
+
+  async RelatedMovies(genres: string) {
+    return await httpService.request<IMovieStrippedDown[] | IError>({
+      url: `/api/related-movies?genres=${genres}`,
+      method: 'GET',
+    });
+  }
 }
 
 export const moviesService = new MoviesService();
