@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useCheckLocation from 'app/hooks/useCheckLocation';
 import { WatchListComponent } from './WatchListComponent';
+import { ListItemsChipComponent } from './ListItemsChipComponent';
 
 type Props = {
   authUser: IUser;
@@ -164,12 +165,9 @@ export const MovieDetailsComponent = ({
                 </ListItem>
               )}
               <ListItem>
-                <Stack direction="row" spacing={2}>
-                  {isObjOfType<IGenre[]>(genres) &&
-                    genres.map((genre, i) => (
-                      <Typography key={i}>{genre.name}</Typography>
-                    ))}
-                </Stack>
+                {isObjOfType<IGenre[]>(genres) && (
+                  <ListItemsChipComponent list={genres} direction="row" />
+                )}
               </ListItem>
             </Stack>
           </CardContent>

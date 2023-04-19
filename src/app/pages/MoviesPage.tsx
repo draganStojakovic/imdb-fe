@@ -87,12 +87,14 @@ export const MoviesPage = () => {
           moviesPaginated.movies.length === 0 && (
             <MessageComponent message="no movies found" />
           )}
-        {isObjOfType<IMovieStrippedDown[]>(popularMovies) && (
-          <ListMoviesComponent
-            movies={popularMovies}
-            caption="Popular movies:"
-          />
-        )}
+        {isObjOfType<IMoviePaginated>(moviesPaginated) &&
+          moviesPaginated.movies.length !== 0 &&
+          isObjOfType<IMovieStrippedDown[]>(popularMovies) && (
+            <ListMoviesComponent
+              movies={popularMovies}
+              caption="Popular movies:"
+            />
+          )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
           isObjOfType<IUser>(user) &&
           moviesPaginated.currentPage === page &&
