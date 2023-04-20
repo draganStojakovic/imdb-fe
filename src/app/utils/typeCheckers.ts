@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IGenre } from 'app/types/IGenre';
-import { IOMDb, IOMDbError, IRating, IMovieOMdb } from 'app/types/IMovies';
+import {
+  IOMDb,
+  IOMDbError,
+  IRating,
+  IMovieOMdb,
+  IMovie,
+} from 'app/types/IMovies';
 import { IError, IErrors } from 'app/types/IError';
 
 export function isObjOfType<T>(obj: unknown): obj is T {
@@ -35,6 +41,30 @@ export function isGenres(arg: any): arg is IGenre[] {
 
 function isOmdbRating(arg: any): arg is IRating[] {
   return arg.every(isRating);
+}
+
+export function isIMovie(arg: unknown): arg is IMovie {
+  return (
+    !!arg &&
+    typeof arg === 'object' &&
+    'title' in arg &&
+    typeof arg.title === 'string' &&
+    'description' in arg &&
+    arg.description === 'string' &&
+    'coverImage' in arg &&
+    arg.coverImage === 'string' &&
+    'likes' in arg &&
+    arg.likes === 'string' &&
+    'id' in arg &&
+    typeof arg.id === 'string' &&
+    'dislikes' in arg &&
+    typeof arg.dislikes === 'string' &&
+    'views' in arg &&
+    typeof arg.views === 'string' &&
+    'genres' in arg &&
+    typeof arg.genres === 'object' &&
+    isGenres(arg.genres)
+  );
 }
 
 export function isMovieOMdb(arg: unknown): arg is IMovieOMdb {

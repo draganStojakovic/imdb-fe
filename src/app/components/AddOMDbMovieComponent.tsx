@@ -1,9 +1,12 @@
 import { Button, Box } from '@mui/material';
-import { IMovieOMdb } from 'app/types/IMovies';
+import { IMovie, IMovieOMdb } from 'app/types/IMovies';
 import { useMutation } from 'react-query';
 import { moviesService } from 'app/services/movies.service';
 import { IMovieDraft } from 'app/types/IMovies';
 import { notficationManager } from 'app/utils/NotificationManager';
+import { AxiosError, AxiosResponse } from 'axios';
+import { IError } from 'app/types/IError';
+import { isObjOfType } from 'app/utils/typeCheckers';
 
 type Props = {
   omdbMovie: IMovieOMdb;
@@ -11,11 +14,14 @@ type Props = {
 
 export const AddOMDbMovieComponent = ({ omdbMovie }: Props) => {
   const { mutate } = useMutation(moviesService.CreateMovie, {
-    onSuccess: () => {
-      notficationManager.success('Succesfully added a new movie!');
+    onSuccess: (data: AxiosResponse<IMovie>) => {
+      if (isObjOfType<IMovie>(data))
+        notficationManager.success('Succesfully added a new movie!');
     },
-    onError: () => {
-      notficationManager.error('Movie already in database.');
+    onError: (error: AxiosError<IError>) => {
+      error.response?.data?.errors.forEach((error) =>
+        notficationManager.error(error.msg)
+      );
     },
   });
 
