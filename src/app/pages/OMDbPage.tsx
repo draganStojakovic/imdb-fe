@@ -4,12 +4,16 @@ import { moviesService } from 'app/services/movies.service';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { SearchOMDbComponent } from 'app/components/SearchOMDbComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
-import { IOMDb, IMovieOMdb } from 'app/types/IMovies';
+import { IOMDb, IMovieOMdb, IOMDbError } from 'app/types/IMovies';
 import { OMDbMovieDetails } from 'app/components/OMDbMovieDetails';
 import useGenres from 'app/hooks/useGenres';
 import { IGenre } from 'app/types/IGenre';
+import { MessageComponent } from 'app/components/MessageComponent';
 
-function sanitizeOMDbResponse(movie: IOMDb, genresFromDB: IGenre[]) {
+function sanitizeOMDbResponse(
+  movie: IOMDb,
+  genresFromDB: IGenre[]
+): IMovieOMdb | null {
   const genreLowerCase = movie.Genre.toLowerCase().split(', ');
 
   const newGenres = genresFromDB
@@ -25,6 +29,8 @@ function sanitizeOMDbResponse(movie: IOMDb, genresFromDB: IGenre[]) {
       coverImage: movie.Poster,
       genres: newGenres,
     };
+
+  return null;
 }
 
 async function getOMDbMovie(movieTitle: string) {
@@ -40,19 +46,21 @@ export const OMDbPage = () => {
   const { getGenres } = useGenres();
   const [searchTerm, setSearchTerm] = useState('');
   const [omdbMovie, setOmdbMovie] = useState<IMovieOMdb | null>(null);
+  const [omdbErrorMsg, setOmdbErrorMsg] = useState<IOMDbError | null>(null);
 
   const genres = getGenres();
 
   useEffect(() => {
     if (searchTerm.length !== 0) {
-      if (searchTerm.includes(' ')) {
-        const newSearch = searchTerm.replace(/ /g, '+');
-        setSearchTerm(() => {
-          return newSearch;
-        });
-      }
+      if (searchTerm.includes(' '))
+        setSearchTerm(() => searchTerm.replace(/ /g, '+'));
+
       const response = getOMDbMovie(searchTerm);
+
       response.then((data) => {
+        if (isObjOfType<IOMDbError>(data)) {
+          setOmdbErrorMsg(data);
+        }
         if (isObjOfType<IOMDb>(data) && isObjOfType<IGenre[]>(genres)) {
           const omdb = sanitizeOMDbResponse(data, genres);
           if (isObjOfType<IMovieOMdb>(omdb)) setOmdbMovie(() => omdb);
@@ -60,13 +68,13 @@ export const OMDbPage = () => {
       });
     }
   }, [searchTerm]);
-
+  console.log(omdbErrorMsg);
   return (
     <Container component="main" maxWidth="xl">
       <Box
         sx={{
           marginTop: 8,
-          marginBottom: 5,
+          marginBottom: 8,
         }}
       >
         <Grid container spacing={2}>
@@ -79,6 +87,9 @@ export const OMDbPage = () => {
         </Grid>
         {isObjOfType<IMovieOMdb>(omdbMovie) && (
           <OMDbMovieDetails omdbMovie={omdbMovie} />
+        )}
+        {isObjOfType<IOMDbError>(omdbErrorMsg) && !omdbErrorMsg.Response && (
+          <MessageComponent message={omdbErrorMsg.Error} />
         )}
       </Box>
     </Container>

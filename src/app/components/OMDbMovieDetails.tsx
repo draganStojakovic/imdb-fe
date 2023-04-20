@@ -6,9 +6,12 @@ import {
   CardContent,
   Stack,
   ListItem,
+  CardActions,
+  Box,
 } from '@mui/material';
 import { IMovieOMdb } from 'app/types/IMovies';
 import { ListItemsChipComponent } from './ListItemsChipComponent';
+import { AddOMDbMovieComponent } from 'app/components/AddOMDbMovieComponent';
 
 type Props = {
   omdbMovie: IMovieOMdb;
@@ -49,12 +52,23 @@ export const OMDbMovieDetails = ({ omdbMovie }: Props) => {
                   {omdbMovie.description}
                 </Typography>
               </ListItem>
-              <ListItem>
-                <ListItemsChipComponent
-                  list={omdbMovie.genres}
-                  direction="row"
-                />
-              </ListItem>
+              <Grid container spacing={2}>
+                <Grid item xs={10}>
+                  <Box mt={3} position="absolute" bottom="0px">
+                    <ListItem>
+                      <ListItemsChipComponent
+                        list={omdbMovie.genres}
+                        direction="row"
+                      />
+                    </ListItem>
+                  </Box>
+                </Grid>
+                <Grid item xs={2}>
+                  <CardActions>
+                    <AddOMDbMovieComponent omdbMovie={omdbMovie} />
+                  </CardActions>
+                </Grid>
+              </Grid>
             </Stack>
           </CardContent>
         </Grid>
