@@ -9,8 +9,8 @@ type Props = {
 export const ListItemsChipComponent = ({ list, direction }: Props) => {
   return (
     <Stack direction={direction} spacing={2}>
-      {list.map((object) => (
-        <Chip key={object.id} label={object.name} variant="outlined" />
+      {list.map((object, i) => (
+        <Chip key={i} label={object.name} variant="outlined" />
       ))}
     </Stack>
   );

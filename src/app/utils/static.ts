@@ -4,7 +4,8 @@ export const ROUTES = {
   MOVIES: '/movies',
   MOVIE_DETAILS: '/movies/:id',
   MOVIES_CREATE: '/movies/create',
-  WATCH_LIST: 'watchlist',
+  MOVIES_CREATE_MANUAL: '/movies/create-manual',
+  WATCH_LIST: '/watchlist',
 };
 
 export const QUERRY_KEYS = {
@@ -16,4 +17,5 @@ export const QUERRY_KEYS = {
   WATCH_LIST: 'watchlist',
   POPULAR: 'popular',
   RELATED: 'related',
+  OMDB: 'omdb',
 };
