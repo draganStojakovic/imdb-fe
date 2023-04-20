@@ -4,7 +4,7 @@ import { isObjOfType } from 'app/utils/typeCheckers';
 
 const useGenres = () => {
   const { data } = useGetGenresQuerry();
-
+  
   const getGenres = () => {
     if (isObjOfType<IGenre[]>(data)) return data;
     return undefined;

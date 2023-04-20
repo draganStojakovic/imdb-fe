@@ -6,6 +6,8 @@ import {
   IMovieWatchList,
   IVoteMoviePayload,
   IMovieStrippedDown,
+  IOMDb,
+  IOMDbError,
 } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
 import { AxiosResponse } from 'axios';
@@ -81,6 +83,13 @@ class MoviesService {
   async RelatedMovies(genres: string) {
     return await httpService.request<IMovieStrippedDown[] | IError>({
       url: `/api/related-movies?genres=${genres}`,
+      method: 'GET',
+    });
+  }
+
+  async GetOMDbMovie(title: string) {
+    return await httpService.requestOMDb<IOMDb | IOMDbError>({
+      url: `/?t=${title}&plot=full&apikey=11e9c7ab`,
       method: 'GET',
     });
   }
