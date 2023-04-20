@@ -38,7 +38,7 @@ export interface IMovieWatchList {
 
 export type IMovieStrippedDown = Pick<IMovie, 'id' | 'coverImage'>;
 
-interface IRating {
+export interface IRating {
   Source: string;
   Value: string;
 }

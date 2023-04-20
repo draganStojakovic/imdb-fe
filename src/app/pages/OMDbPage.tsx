@@ -3,7 +3,12 @@ import { useState, useEffect } from 'react';
 import { moviesService } from 'app/services/movies.service';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { SearchOMDbComponent } from 'app/components/SearchOMDbComponent';
-import { isObjOfType } from 'app/utils/typeCheckers';
+import {
+  isGenres,
+  isOMDbError,
+  isOMDbResponse,
+  isObjOfType,
+} from 'app/utils/typeCheckers';
 import { IOMDb, IMovieOMdb, IOMDbError } from 'app/types/IMovies';
 import { OMDbMovieDetails } from 'app/components/OMDbMovieDetails';
 import useGenres from 'app/hooks/useGenres';
@@ -22,7 +27,7 @@ function sanitizeOMDbResponse(
     })
     .filter((data) => data);
 
-  if (isObjOfType<IGenre[]>(newGenres))
+  if (isGenres(newGenres))
     return {
       title: movie.Title,
       description: movie.Plot,
@@ -52,23 +57,22 @@ export const OMDbPage = () => {
 
   useEffect(() => {
     if (searchTerm.length !== 0) {
-      if (searchTerm.includes(' '))
+      setOmdbMovie(() => null);
+      setOmdbErrorMsg(() => null);
+
+      searchTerm.includes(' ') &&
         setSearchTerm(() => searchTerm.replace(/ /g, '+'));
 
-      const response = getOMDbMovie(searchTerm);
-
-      response.then((data) => {
-        if (isObjOfType<IOMDbError>(data)) {
-          setOmdbErrorMsg(data);
-        }
-        if (isObjOfType<IOMDb>(data) && isObjOfType<IGenre[]>(genres)) {
+      getOMDbMovie(searchTerm).then((data) => {
+        if (isOMDbError(data)) setOmdbErrorMsg(() => data);
+        if (isOMDbResponse(data) && isGenres(genres)) {
           const omdb = sanitizeOMDbResponse(data, genres);
-          if (isObjOfType<IMovieOMdb>(omdb)) setOmdbMovie(() => omdb);
+          isObjOfType<IOMDb>(omdb) && setOmdbMovie(() => omdb);
         }
       });
     }
   }, [searchTerm]);
-  console.log(omdbErrorMsg);
+
   return (
     <Container component="main" maxWidth="xl">
       <Box
@@ -88,7 +92,7 @@ export const OMDbPage = () => {
         {isObjOfType<IMovieOMdb>(omdbMovie) && (
           <OMDbMovieDetails omdbMovie={omdbMovie} />
         )}
-        {isObjOfType<IOMDbError>(omdbErrorMsg) && !omdbErrorMsg.Response && (
+        {isOMDbError(omdbErrorMsg) && omdbErrorMsg.Response === 'False' && (
           <MessageComponent message={omdbErrorMsg.Error} />
         )}
       </Box>
