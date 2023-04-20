@@ -94,8 +94,7 @@ export const SingleMoviePage = () => {
   useEffect(() => {
     if (isObjOfType<IMovie>(movie)) {
       const formattedGenres = formatGenres(movie);
-      const response = getRelatedMovies(formattedGenres);
-      response.then((data) => {
+      getRelatedMovies(formattedGenres).then((data) => {
         if (isObjOfType<IMovieStrippedDown[]>(data)) {
           const filteredData = data.filter((genre) => genre.id !== id);
           if (filteredData.length !== 0) setRelatedMovies(filteredData);
