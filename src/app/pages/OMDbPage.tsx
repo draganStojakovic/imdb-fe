@@ -1,5 +1,5 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { moviesService } from 'app/services/movies.service';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { SearchOMDbComponent } from 'app/components/SearchOMDbComponent';
@@ -14,6 +14,9 @@ import { OMDbMovieDetails } from 'app/components/OMDbMovieDetails';
 import useGenres from 'app/hooks/useGenres';
 import { IGenre } from 'app/types/IGenre';
 import { MessageComponent } from 'app/components/MessageComponent';
+import { LoadingContext } from 'app/context/LoadingContext';
+import { Link } from 'react-router-dom';
+import { ROUTES } from 'app/utils/static';
 
 function sanitizeOMDbResponse(
   movie: IOMDb,
@@ -53,10 +56,13 @@ export const OMDbPage = () => {
   const [omdbMovie, setOmdbMovie] = useState<IMovieOMdb | null>(null);
   const [omdbErrorMsg, setOmdbErrorMsg] = useState<IOMDbError | null>(null);
 
+  const { loading, setLoading } = useContext(LoadingContext);
+
   const genres = getGenres();
 
   useEffect(() => {
     if (searchTerm.length !== 0) {
+      setLoading(true);
       setOmdbMovie(() => null);
       setOmdbErrorMsg(() => null);
 
@@ -64,10 +70,14 @@ export const OMDbPage = () => {
         setSearchTerm(() => searchTerm.replace(/ /g, '+'));
 
       getOMDbMovie(searchTerm).then((data) => {
-        if (isOMDbError(data)) setOmdbErrorMsg(() => data);
+        if (isOMDbError(data)) {
+          setOmdbErrorMsg(() => data);
+          setLoading(false);
+        }
         if (isOMDbResponse(data) && isGenres(genres)) {
           const omdb = sanitizeOMDbResponse(data, genres);
           isObjOfType<IOMDb>(omdb) && setOmdbMovie(() => omdb);
+          setLoading(false);
         }
       });
     }
@@ -87,14 +97,20 @@ export const OMDbPage = () => {
           </Grid>
           <Grid item xs={10}>
             <SearchOMDbComponent setSearchTerm={setSearchTerm} />
+            <Link
+              to={ROUTES.MOVIES_CREATE_MANUAL}
+              style={{ textDecoration: 'none', color: 'blue' }}
+            >
+              Enter movie details manually
+            </Link>
           </Grid>
         </Grid>
-        {isObjOfType<IMovieOMdb>(omdbMovie) && (
+        {isObjOfType<IMovieOMdb>(omdbMovie) && !loading && (
           <OMDbMovieDetails omdbMovie={omdbMovie} />
         )}
-        {isOMDbError(omdbErrorMsg) && omdbErrorMsg.Response === 'False' && (
-          <MessageComponent message={omdbErrorMsg.Error} />
-        )}
+        {isOMDbError(omdbErrorMsg) &&
+          omdbErrorMsg.Response === 'False' &&
+          !loading && <MessageComponent message={omdbErrorMsg.Error} />}
       </Box>
     </Container>
   );

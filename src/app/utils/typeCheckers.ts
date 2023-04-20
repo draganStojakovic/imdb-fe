@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IGenre } from 'app/types/IGenre';
 import { IOMDb, IOMDbError, IRating, IMovieOMdb } from 'app/types/IMovies';
+import { IError, IErrors } from 'app/types/IError';
 
 export function isObjOfType<T>(obj: unknown): obj is T {
   return !!obj;
@@ -118,5 +119,35 @@ export function isOMDbError(arg: unknown): arg is IOMDbError {
     typeof arg.Response === 'string' &&
     'Error' in arg &&
     typeof arg.Error === 'string'
+  );
+}
+
+export function isErrors(arg: unknown): arg is IErrors {
+  return (
+    !!arg &&
+    typeof arg === 'object' &&
+    'value' in arg &&
+    typeof arg.value === 'string' &&
+    'msg' in arg &&
+    typeof arg.msg === 'string' &&
+    'param' in arg &&
+    typeof arg.param === 'string' &&
+    'location' in arg &&
+    typeof arg.location === 'string'
+  );
+}
+
+function isError(arg: any): arg is IErrors[] {
+  return arg.every(isError);
+}
+
+export function isErrorResponse(arg: unknown): arg is IError {
+  return (
+    !!arg &&
+    typeof arg === 'object' &&
+    'success' in arg &&
+    typeof arg.success === 'boolean' &&
+    'errors' in arg &&
+    isError(arg.errors)
   );
 }
