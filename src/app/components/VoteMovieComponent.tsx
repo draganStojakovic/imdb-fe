@@ -9,6 +9,7 @@ import { IVoteMoviePayload } from 'app/types/IMovies';
 import { IError } from 'app/types/IError';
 import { IVote } from 'app/types/IVote';
 import { IUser } from 'app/types/IUser';
+import { notficationManager } from 'app/utils/NotificationManager';
 
 type Props = {
   likes: string[];
@@ -88,9 +89,11 @@ export const VoteMovieComponent = ({ likes, dislikes, movieId }: Props) => {
       isObjOfType<IVote>(data) &&
         isObjOfType<IUser>(user) &&
         handleVotes(data, user, likes, dislikes);
+      notficationManager.success('Voted successfully.');
     },
     onError: (error: AxiosError<IError>) => {
       console.log(error);
+      notficationManager.success('Something went wrong.');
     },
   });
 
