@@ -35,6 +35,12 @@ type Props = {
   trunctate: undefined | ((sentences: string) => string);
   showMovieDesc: undefined | ((movieId: string) => void);
   checkIfDescShow: undefined | ((movieId: string) => boolean);
+  checkIfMouseIsOverCard: (
+    mousedOverMovieId: string,
+    currentMovieId: string
+  ) => boolean;
+  mouseOver: string;
+  setMouseOver: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export function checkIfMovieWatched(movieId: string, user: IUser) {
@@ -65,10 +71,14 @@ export const MovieDetailsComponent = ({
   trunctate,
   showMovieDesc,
   checkIfDescShow,
+  checkIfMouseIsOverCard,
+  mouseOver,
+  setMouseOver,
 }: Props) => {
   const isWatched = checkIfMovieWatched(movieId, authUser);
   const isOnWatchList = checkIfMoviesIsOnWatchList(movieId, authUser);
   const currentPath = useCheckLocation(`/movies/${movieId}`);
+  const isMoused = checkIfMouseIsOverCard(mouseOver, movieId);
 
   useEffect(() => {
     if (currentPath) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -76,12 +86,14 @@ export const MovieDetailsComponent = ({
 
   return (
     <Card
+      raised
       sx={{
         marginTop: 5,
         marginBottom: 5,
-        boxShadow: 3,
+        boxShadow: isMoused ? 12 : 3,
       }}
-      style={{ backgroundColor: '#fbfbfb' }}
+      onMouseOver={() => setMouseOver(() => movieId)}
+      onMouseLeave={() => setMouseOver(() => '')}
     >
       <Grid container spacing={2}>
         <Grid item xs={4}>

@@ -14,6 +14,7 @@ import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import useMovies from 'app/hooks/useMovies';
 import { IUser } from 'app/types/IUser';
 import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
+import useHighlightCard from 'app/hooks/useHighlightCard';
 
 function trunctate(sentences: string) {
   if (sentences.length > 30) {
@@ -32,6 +33,9 @@ export const MoviesPage = () => {
   const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
   const { user } = useContext(UserContext);
+
+  const { mouseOver, setMouseOver, checkIfMouseIsOverCard } =
+    useHighlightCard();
 
   const {
     data: moviesPaginated,
@@ -93,6 +97,9 @@ export const MoviesPage = () => {
             <ListMoviesComponent
               movies={popularMovies}
               caption="Popular movies:"
+              checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+              mouseOver={mouseOver}
+              setMouseOver={setMouseOver}
             />
           )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&
@@ -114,6 +121,9 @@ export const MoviesPage = () => {
               trunctate={trunctate}
               showMovieDesc={showMovieDesc}
               checkIfDescShow={checkIfDescShow}
+              checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+              mouseOver={mouseOver}
+              setMouseOver={setMouseOver}
             />
           ))}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&

@@ -19,6 +19,7 @@ import { EventContext } from 'app/context/EventContext';
 import { IPopulatedGenre } from 'app/types/IGenre';
 import { moviesService } from 'app/services/movies.service';
 import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
+import useHighlightCard from 'app/hooks/useHighlightCard';
 
 function formatGenres(movie: IMovie) {
   const { genres } = movie;
@@ -65,6 +66,9 @@ export const SingleMoviePage = () => {
     id as string,
     commentLimit
   );
+
+  const { mouseOver, setMouseOver, checkIfMouseIsOverCard } =
+    useHighlightCard();
 
   useEffect(() => {
     if (search.length > 0) setSearch('');
@@ -115,6 +119,9 @@ export const SingleMoviePage = () => {
           <ListMoviesComponent
             movies={relatedMovies}
             caption="Related movies:"
+            checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+            mouseOver={mouseOver}
+            setMouseOver={setMouseOver}
           />
         )}
         {isObjOfType<IMovie>(movie) && isObjOfType<IUser>(user) && (
@@ -132,6 +139,9 @@ export const SingleMoviePage = () => {
             trunctate={undefined}
             showMovieDesc={undefined}
             checkIfDescShow={undefined}
+            checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+            mouseOver={mouseOver}
+            setMouseOver={setMouseOver}
           />
         )}
         <PostCommentComponent />
@@ -146,6 +156,9 @@ export const SingleMoviePage = () => {
                   comment={comment}
                   authUserId={user?.id}
                   movieId={movie?.id}
+                  checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+                  mouseOver={mouseOver}
+                  setMouseOver={setMouseOver}
                 />
               )
           )

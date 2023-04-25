@@ -1,7 +1,7 @@
 import { Typography, Grid, Box, ListItem, Container } from '@mui/material';
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import useMovies from 'app/hooks/useMovies';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { UserContext } from 'app/context/UserContext';
 import { isObjOfType } from 'app/utils/typeCheckers';
@@ -11,14 +11,7 @@ import useWatchList from 'app/hooks/useWatchList';
 import { IUser } from 'app/types/IUser';
 import useWatchedMovie from 'app/hooks/useWatchedMovie';
 import { MessageComponent } from 'app/components/MessageComponent';
-
-function checkIfMouseIsOverCard(
-  mousedOverMovieId: string,
-  currentMovieId: string
-): boolean {
-  if (mousedOverMovieId === currentMovieId) return true;
-  return false;
-}
+import useHighlightCard from 'app/hooks/useHighlightCard';
 
 export const WatchListPage = () => {
   useAuthGuard(true);
@@ -27,7 +20,8 @@ export const WatchListPage = () => {
   const { watchedMovie } = useWatchedMovie();
   const { user } = useContext(UserContext);
   const { setLoading } = useContext(LoadingContext);
-  const [mouseOver, setMouseOver] = useState<string>('');
+  const { checkIfMouseIsOverCard, mouseOver, setMouseOver } =
+    useHighlightCard();
 
   const {
     data: movies,

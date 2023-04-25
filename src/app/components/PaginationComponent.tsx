@@ -15,13 +15,12 @@ export const PaginationComponent = ({ count }: Props) => {
 
   return (
     <Stack
-      spacing={2}
       sx={{
         justifyContent: 'center',
         display: 'flex',
-        alignItems: 'left',
-        marginBottom: '2rem',
-        marginTop: '3rem',
+        alignItems: 'center',
+        marginBottom: '5rem',
+        marginTop: '4rem',
       }}
     >
       <Pagination count={count} page={page} onChange={handleChange} />
