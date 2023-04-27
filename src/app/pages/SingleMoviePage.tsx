@@ -11,7 +11,7 @@ import { UserContext } from 'app/context/UserContext';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
 import { LoadMoreComponent } from 'app/components/LoadMoreComponent';
 import { PostCommentComponent } from 'app/components/PostCommentComponent';
-import { isObjOfType } from 'app/utils/typeCheckers';
+import { isObjOfType, isPrimitiveType } from 'app/utils/typeCheckers';
 import { IMovie, IMovieStrippedDown } from 'app/types/IMovies';
 import { IUser } from 'app/types/IUser';
 import { ICommentPaginated } from 'app/types/IComment';
@@ -52,7 +52,6 @@ async function handleGetRelatedMovies(movie: IMovie, id: string) {
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
-
   const { id } = useParams();
   const [relatedMovies, setRelatedMovies] = useState<
     IMovieStrippedDown[] | null
@@ -100,7 +99,8 @@ export const SingleMoviePage = () => {
   useEffect(() => {
     reloadSingleMovie();
     refetchComments();
-    relatedMovies?.filter((movie) => id !== movie.id);
+    isPrimitiveType(id, 'string') &&
+      relatedMovies?.filter((movie) => id !== movie.id);
   }, [id]);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export const SingleMoviePage = () => {
   }, [reloadCommentsEvent]);
 
   useEffect(() => {
-    if (typeof id === 'string' && isObjOfType<IMovie>(movie)) {
+    if (isPrimitiveType(id, 'string') && isObjOfType<IMovie>(movie)) {
       handleGetRelatedMovies(movie, id).then((movies) => {
         isObjOfType<IMovieStrippedDown[]>(movies) &&
           setRelatedMovies(() => movies);
@@ -160,11 +160,11 @@ export const SingleMoviePage = () => {
             setMouseOver={setMouseOver}
           />
         )}
-        {typeof id === 'string' && (
+        {isObjOfType<IUser>(user) && (
           <PostCommentComponent
             mouseOverBool={mouseOverBool}
             setMouseOverBool={setMouseOverBool}
-            movieId={id}
+            user={user}
           />
         )}
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
