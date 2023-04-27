@@ -181,3 +181,19 @@ export function isErrorResponse(arg: unknown): arg is IError {
     isError(arg.errors)
   );
 }
+
+export function isPrimitiveType(
+  arg: unknown,
+  type:
+    | 'string'
+    | 'number'
+    | 'bigint'
+    | 'boolean'
+    | 'undefined'
+    | 'symbol'
+    | 'null'
+    | 'object'
+): boolean {
+  if (typeof arg === type) return true;
+  return false;
+}

@@ -38,6 +38,18 @@ async function getRelatedMovies(genres: string) {
   }
 }
 
+async function handleGetRelatedMovies(movie: IMovie, id: string) {
+  const formattedGenres = formatGenres(movie);
+  const response = await getRelatedMovies(formattedGenres);
+  if (isObjOfType<IMovieStrippedDown[]>(response)) {
+    const filteredData = response.filter((genre) => genre.id !== id);
+    if (filteredData.length !== 0) return filteredData;
+
+    return null;
+  }
+  return null;
+}
+
 export const SingleMoviePage = () => {
   useAuthGuard(true);
 
@@ -67,8 +79,13 @@ export const SingleMoviePage = () => {
     commentLimit
   );
 
-  const { mouseOver, setMouseOver, checkIfMouseIsOverCard } =
-    useHighlightCard();
+  const {
+    mouseOver,
+    setMouseOver,
+    checkIfMouseIsOnObject,
+    mouseOverBool,
+    setMouseOverBool,
+  } = useHighlightCard();
 
   useEffect(() => {
     if (search.length > 0) setSearch('');
@@ -82,6 +99,8 @@ export const SingleMoviePage = () => {
 
   useEffect(() => {
     reloadSingleMovie();
+    refetchComments();
+    relatedMovies?.filter((movie) => id !== movie.id);
   }, [id]);
 
   useEffect(() => {
@@ -96,16 +115,13 @@ export const SingleMoviePage = () => {
   }, [reloadCommentsEvent]);
 
   useEffect(() => {
-    if (isObjOfType<IMovie>(movie)) {
-      const formattedGenres = formatGenres(movie);
-      getRelatedMovies(formattedGenres).then((data) => {
-        if (isObjOfType<IMovieStrippedDown[]>(data)) {
-          const filteredData = data.filter((genre) => genre.id !== id);
-          if (filteredData.length !== 0) setRelatedMovies(filteredData);
-        }
+    if (typeof id === 'string' && isObjOfType<IMovie>(movie)) {
+      handleGetRelatedMovies(movie, id).then((movies) => {
+        isObjOfType<IMovieStrippedDown[]>(movies) &&
+          setRelatedMovies(() => movies);
       });
     }
-  }, [movie]);
+  }, [movie, id]);
 
   return (
     <Container component="main" maxWidth="xl">
@@ -119,7 +135,7 @@ export const SingleMoviePage = () => {
           <ListMoviesComponent
             movies={relatedMovies}
             caption="Related movies:"
-            checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+            checkIfMouseIsOverCard={checkIfMouseIsOnObject}
             mouseOver={mouseOver}
             setMouseOver={setMouseOver}
           />
@@ -139,12 +155,18 @@ export const SingleMoviePage = () => {
             trunctate={undefined}
             showMovieDesc={undefined}
             checkIfDescShow={undefined}
-            checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+            checkIfMouseIsOverCard={checkIfMouseIsOnObject}
             mouseOver={mouseOver}
             setMouseOver={setMouseOver}
           />
         )}
-        <PostCommentComponent />
+        {typeof id === 'string' && (
+          <PostCommentComponent
+            mouseOverBool={mouseOverBool}
+            setMouseOverBool={setMouseOverBool}
+            movieId={id}
+          />
+        )}
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
         commentsPaginated.comments.length > 0 ? (
           commentsPaginated.comments.map(
@@ -156,7 +178,7 @@ export const SingleMoviePage = () => {
                   comment={comment}
                   authUserId={user?.id}
                   movieId={movie?.id}
-                  checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+                  checkIfMouseIsOverCard={checkIfMouseIsOnObject}
                   mouseOver={mouseOver}
                   setMouseOver={setMouseOver}
                 />

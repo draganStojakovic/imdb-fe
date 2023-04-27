@@ -6,16 +6,24 @@ import { useContext, useState } from 'react';
 import { UserContext } from 'app/context/UserContext';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import { ICommentDraft, ICommentResponse } from 'app/types/IComment';
-import { useLocation } from 'react-router-dom';
 import { commentsService } from 'app/services/comments.service';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
 
-export const PostCommentComponent = () => {
+type Props = {
+  mouseOverBool: boolean;
+  setMouseOverBool: React.Dispatch<React.SetStateAction<boolean>>;
+  movieId: string;
+};
+
+export const PostCommentComponent = ({
+  mouseOverBool,
+  setMouseOverBool,
+  movieId,
+}: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useContext(UserContext);
   const { setReloadCommentsEvent } = useContext(EventContext);
-  const location = useLocation();
 
   const {
     register,
@@ -27,7 +35,7 @@ export const PostCommentComponent = () => {
     defaultValues: {
       content: '',
       userId: user?.id as string,
-      movieId: location.pathname.split('/')[2],
+      movieId: movieId,
     },
   });
 
@@ -58,9 +66,11 @@ export const PostCommentComponent = () => {
         sx={{
           marginTop: 5,
           marginBottom: 5,
-          boxShadow: 3,
+          boxShadow: mouseOverBool ? 12 : 3,
         }}
         style={{ backgroundColor: '#fbfbfb' }}
+        onMouseOver={() => setMouseOverBool(() => true)}
+        onMouseLeave={() => setMouseOverBool(() => false)}
       >
         <CardContent>
           <Grid container spacing={2}>

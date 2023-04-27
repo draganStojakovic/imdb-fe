@@ -34,7 +34,7 @@ export const MoviesPage = () => {
   const { setLoading } = useContext(LoadingContext);
   const { user } = useContext(UserContext);
 
-  const { mouseOver, setMouseOver, checkIfMouseIsOverCard } =
+  const { mouseOver, setMouseOver, checkIfMouseIsOnObject } =
     useHighlightCard();
 
   const {
@@ -97,7 +97,7 @@ export const MoviesPage = () => {
             <ListMoviesComponent
               movies={popularMovies}
               caption="Popular movies:"
-              checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+              checkIfMouseIsOverCard={checkIfMouseIsOnObject}
               mouseOver={mouseOver}
               setMouseOver={setMouseOver}
             />
@@ -121,7 +121,7 @@ export const MoviesPage = () => {
               trunctate={trunctate}
               showMovieDesc={showMovieDesc}
               checkIfDescShow={checkIfDescShow}
-              checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+              checkIfMouseIsOverCard={checkIfMouseIsOnObject}
               mouseOver={mouseOver}
               setMouseOver={setMouseOver}
             />

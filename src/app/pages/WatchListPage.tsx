@@ -20,7 +20,7 @@ export const WatchListPage = () => {
   const { watchedMovie } = useWatchedMovie();
   const { user } = useContext(UserContext);
   const { setLoading } = useContext(LoadingContext);
-  const { checkIfMouseIsOverCard, mouseOver, setMouseOver } =
+  const { checkIfMouseIsOnObject, mouseOver, setMouseOver } =
     useHighlightCard();
 
   const {
@@ -70,7 +70,7 @@ export const WatchListPage = () => {
                     watchedMovie={watchedMovie}
                     setMouseOver={setMouseOver}
                     mouseOver={mouseOver}
-                    checkIfMouseIsOverCard={checkIfMouseIsOverCard}
+                    checkIfMouseIsOverCard={checkIfMouseIsOnObject}
                   />
                 </ListItem>
               </Grid>
