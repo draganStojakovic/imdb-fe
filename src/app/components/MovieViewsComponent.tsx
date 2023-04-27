@@ -2,15 +2,14 @@ import { Button } from '@mui/material';
 import { useMutation } from 'react-query';
 import { moviesService } from 'app/services/movies.service';
 import { useEffect } from 'react';
-import useCheckLocation from 'app/hooks/useCheckLocation';
 
 type Props = {
-  movieId: string | undefined;
-  views: string | undefined;
+  movieId: string;
+  views: string;
+  currentPath: boolean;
 };
 
-export const MovieViewsComponent = ({ movieId, views }: Props) => {
-  const singleMoviePage = useCheckLocation(`/movies/${movieId}`);
+export const MovieViewsComponent = ({ movieId, views, currentPath }: Props) => {
   const { mutate } = useMutation(moviesService.IncrementMovieViews);
 
   async function incrementView(data: string) {
@@ -18,8 +17,8 @@ export const MovieViewsComponent = ({ movieId, views }: Props) => {
   }
 
   useEffect(() => {
-    singleMoviePage && incrementView(movieId as string);
-  }, [movieId]);
+    currentPath && incrementView(movieId);
+  }, [movieId, currentPath]);
 
   return (
     <Button

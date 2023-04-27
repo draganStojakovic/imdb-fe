@@ -23,7 +23,7 @@ export const ListMoviesComponent = ({
   return (
     <Box sx={{ m: 2 }}>
       <Typography variant="h5">{caption}</Typography>
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} sx={{ marginTop: '1rem' }}>
         <List
           style={{
             display: 'flex',

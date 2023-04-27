@@ -81,7 +81,7 @@ export const MovieDetailsComponent = ({
   const isMoused = checkIfMouseIsOverCard(mouseOver, movieId);
 
   useEffect(() => {
-    if (currentPath) window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentPath) window.scrollTo(0, 0);
   }, [currentPath]);
 
   return (
@@ -150,7 +150,11 @@ export const MovieDetailsComponent = ({
                   </Grid>
                   <Grid item xs={2}>
                     <Box display="flex" justifyContent="flex-end">
-                      <MovieViewsComponent movieId={movieId} views={views} />
+                      <MovieViewsComponent
+                        movieId={movieId}
+                        views={views}
+                        currentPath={currentPath}
+                      />
                     </Box>
                   </Grid>
                 </Grid>
