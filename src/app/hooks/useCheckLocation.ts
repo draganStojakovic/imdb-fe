@@ -1,9 +1,8 @@
 import { useLocation } from 'react-router-dom';
 
-function useCheckLocation(path: string) {
+function useCheckLocation(path: string): boolean {
   const location = useLocation();
-  if (path === location.pathname) return true;
-  return false;
+  return path === location.pathname;
 }
 
 export default useCheckLocation;

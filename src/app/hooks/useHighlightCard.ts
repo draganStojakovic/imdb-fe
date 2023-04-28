@@ -8,8 +8,7 @@ export default function useHighlightCard() {
     objectId: string,
     currentObjectId: string
   ): boolean {
-    if (objectId === currentObjectId) return true;
-    return false;
+    return objectId === currentObjectId;
   }
 
   return {

@@ -2,36 +2,28 @@ import { Grid, Card, CardContent, Box, Button, TextField } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { EventContext } from 'app/context/EventContext';
 import { useMutation } from 'react-query';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import { ICommentDraft, ICommentResponse } from 'app/types/IComment';
 import { commentsService } from 'app/services/comments.service';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
-import { useLocation } from 'react-router-dom';
-import { IUser } from 'app/types/IUser';
 
 type Props = {
   mouseOverBool: boolean;
   setMouseOverBool: React.Dispatch<React.SetStateAction<boolean>>;
-  user: IUser;
+  userId: string;
+  movieId: string;
 };
 
 export const PostCommentComponent = ({
   mouseOverBool,
   setMouseOverBool,
-  user,
+  userId,
+  movieId,
 }: Props) => {
-  const location = useLocation();
-  const [movieIdFromPathname, setMovieIdFromPathname] = useState(
-    location.pathname.split('/')[2]
-  );
   const [loading, setLoading] = useState<boolean>(false);
   const { setReloadCommentsEvent } = useContext(EventContext);
-
-  useEffect(() => {
-    setMovieIdFromPathname(() => location.pathname.split('/')[2]);
-  }, [location.key]);
 
   const {
     register,
@@ -42,8 +34,8 @@ export const PostCommentComponent = ({
   } = useForm<ICommentDraft>({
     defaultValues: {
       content: '',
-      userId: user.id,
-      movieId: movieIdFromPathname,
+      userId: userId,
+      movieId: movieId,
     },
   });
 

@@ -6,7 +6,7 @@ export const ROUTES = {
   MOVIES_CREATE: '/movies/create',
   MOVIES_CREATE_MANUAL: '/movies/create-manual',
   WATCH_LIST: '/watchlist',
-};
+} as const;
 
 export const QUERRY_KEYS = {
   MOVIES: 'movies',
@@ -18,4 +18,4 @@ export const QUERRY_KEYS = {
   POPULAR: 'popular',
   RELATED: 'related',
   OMDB: 'omdb',
-};
+} as const;

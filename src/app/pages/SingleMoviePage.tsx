@@ -160,11 +160,12 @@ export const SingleMoviePage = () => {
             setMouseOver={setMouseOver}
           />
         )}
-        {isObjOfType<IUser>(user) && (
+        {isObjOfType<IUser>(user) && isPrimitiveType(id, 'string') && (
           <PostCommentComponent
             mouseOverBool={mouseOverBool}
             setMouseOverBool={setMouseOverBool}
-            user={user}
+            userId={user.id}
+            movieId={id}
           />
         )}
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
