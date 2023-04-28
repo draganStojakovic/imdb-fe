@@ -8,6 +8,7 @@ import { ICommentDraft, ICommentResponse } from 'app/types/IComment';
 import { commentsService } from 'app/services/comments.service';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
+import { useEffect } from 'react';
 
 type Props = {
   mouseOverBool: boolean;
@@ -38,6 +39,14 @@ export const PostCommentComponent = ({
       movieId: movieId,
     },
   });
+
+  useEffect(() => {
+    reset({
+      content: '',
+      userId: userId,
+      movieId: movieId,
+    });
+  }, [movieId, reset, userId]);
 
   const { mutate } = useMutation(commentsService.postComment, {
     onSuccess: (data: AxiosResponse<ICommentResponse>) => {

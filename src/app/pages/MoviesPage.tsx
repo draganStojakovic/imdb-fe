@@ -61,13 +61,11 @@ export const MoviesPage = () => {
   }
 
   function showMovieDesc(movieId: string) {
-    const isShown = checkIfDescShow(movieId);
-    if (isShown) {
-      const newListOfShowDescs = showDesc.filter((id) => id !== movieId);
-      setShowDesc(newListOfShowDescs);
+    if (checkIfDescShow(movieId)) {
+      setShowDesc((prevState) => prevState.filter((id) => id !== movieId));
       return;
     }
-    setShowDesc([...showDesc, movieId]);
+    setShowDesc((prevState) => [...prevState, movieId]);
   }
 
   return (
