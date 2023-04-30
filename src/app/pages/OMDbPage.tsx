@@ -67,7 +67,7 @@ export const OMDbPage = () => {
       setOmdbErrorMsg(() => null);
 
       searchTerm.includes(' ') &&
-        setSearchTerm(() => searchTerm.replace(/ /g, '+'));
+        setSearchTerm((prevState) => prevState.replace(/ /g, '+'));
 
       getOMDbMovie(searchTerm).then((data) => {
         if (isOMDbError(data)) {

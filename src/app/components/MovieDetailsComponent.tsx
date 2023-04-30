@@ -16,7 +16,6 @@ import { MovieViewsComponent } from './MovieViewsComponent';
 import { WatchedMoviesComponent } from './WatchedMoviesComponent';
 import { isObjOfType } from 'app/utils/typeCheckers';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import useCheckLocation from 'app/hooks/useCheckLocation';
 import { WatchListComponent } from './WatchListComponent';
 import { ListItemsChipComponent } from './ListItemsChipComponent';
@@ -79,10 +78,6 @@ export const MovieDetailsComponent = ({
   const isOnWatchList = checkIfMoviesIsOnWatchList(movieId, authUser);
   const currentPath = useCheckLocation(`/movies/${movieId}`);
   const isMoused = checkIfMouseIsOverCard(mouseOver, movieId);
-
-  useEffect(() => {
-    if (currentPath) window.scrollTo(0, 0);
-  }, [currentPath]);
 
   return (
     <Card

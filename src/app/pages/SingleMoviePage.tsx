@@ -87,6 +87,7 @@ export const SingleMoviePage = () => {
   } = useHighlightCard();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (search.length > 0) setSearch('');
     if (genres.length > 0) setGenres('');
 

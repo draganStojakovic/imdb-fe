@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export default function useHighlightCard() {
   const [mouseOver, setMouseOver] = useState<string>('');
   const [mouseOverBool, setMouseOverBool] = useState<boolean>(false);
 
-  function checkIfMouseIsOnObject(
-    objectId: string,
-    currentObjectId: string
-  ): boolean {
-    return objectId === currentObjectId;
-  }
+  const checkIfMouseIsOnObject = useCallback(
+    (objectId: string, currentObjectId: string): boolean => {
+      return objectId === currentObjectId;
+    },
+    []
+  );
 
   return {
     checkIfMouseIsOnObject,

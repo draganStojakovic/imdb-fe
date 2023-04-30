@@ -1,5 +1,5 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState, useCallback } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { UserContext } from 'app/context/UserContext';
 import { PaginationComponent } from 'app/components/PaginationComponent';
@@ -15,14 +15,6 @@ import useMovies from 'app/hooks/useMovies';
 import { IUser } from 'app/types/IUser';
 import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
 import useHighlightCard from 'app/hooks/useHighlightCard';
-
-function trunctate(sentences: string) {
-  if (sentences.length > 30) {
-    const trunctated = sentences.split('.');
-    return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
-  }
-  return sentences;
-}
 
 export const MoviesPage = () => {
   useAuthGuard(true);
@@ -53,20 +45,34 @@ export const MoviesPage = () => {
     setLoading(isLoading);
   }, [isLoading]);
 
-  function checkIfDescShow(movieId: string) {
-    for (let i = 0; i < showDesc.length; i++) {
-      if (showDesc[i] === movieId) return true;
+  const trunctate = useCallback((sentences: string) => {
+    if (sentences.length > 30) {
+      const trunctated = sentences.split('.');
+      return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
     }
-    return false;
-  }
+    return sentences;
+  }, []);
 
-  function showMovieDesc(movieId: string) {
-    if (checkIfDescShow(movieId)) {
-      setShowDesc((prevState) => prevState.filter((id) => id !== movieId));
-      return;
-    }
-    setShowDesc((prevState) => [...prevState, movieId]);
-  }
+  const checkIfDescShow = useCallback(
+    (movieId: string) => {
+      for (let i = 0; i < showDesc.length; i++) {
+        if (showDesc[i] === movieId) return true;
+      }
+      return false;
+    },
+    [showDesc]
+  );
+
+  const showMovieDesc = useCallback(
+    (movieId: string) => {
+      if (checkIfDescShow(movieId)) {
+        setShowDesc((prevState) => prevState.filter((id) => id !== movieId));
+        return;
+      }
+      setShowDesc((prevState) => [...prevState, movieId]);
+    },
+    [checkIfDescShow, setShowDesc]
+  );
 
   return (
     <Container component="main" maxWidth="xl">
