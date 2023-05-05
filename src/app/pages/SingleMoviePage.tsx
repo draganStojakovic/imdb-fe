@@ -87,7 +87,6 @@ export const SingleMoviePage = () => {
   } = useHighlightCard();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (search.length > 0) setSearch('');
     if (genres.length > 0) setGenres('');
 
@@ -98,6 +97,7 @@ export const SingleMoviePage = () => {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     reloadSingleMovie();
     refetchComments();
     isPrimitiveType(id, 'string') &&
@@ -136,9 +136,6 @@ export const SingleMoviePage = () => {
           <ListMoviesComponent
             movies={relatedMovies}
             caption="Related movies:"
-            checkIfMouseIsOverCard={checkIfMouseIsOnObject}
-            mouseOver={mouseOver}
-            setMouseOver={setMouseOver}
           />
         )}
         {isObjOfType<IMovie>(movie) && isObjOfType<IUser>(user) && (

@@ -31,7 +31,7 @@ export interface IVoteMoviePayload {
 }
 
 export interface IMovieWatchList {
-  _id: string;
+  id: string;
   title: string;
   coverImage: string;
 }

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { ROUTES } from 'app/utils/static';
 import { MoviesPage } from 'app/pages/MoviesPage';
 import { LogInPage } from 'app/pages/LogInPage';
@@ -11,6 +11,7 @@ import { OMDbPage } from 'app/pages/OMDbPage';
 const Router = () => {
   return (
     <Routes>
+      <Route path={ROUTES.ROOT} element={<Navigate to={ROUTES.LOGIN} />} />
       <Route path={ROUTES.MOVIES} element={<MoviesPage />} />
       <Route path={ROUTES.MOVIE_DETAILS} element={<SingleMoviePage />} />
       <Route path={ROUTES.MOVIES_CREATE} element={<OMDbPage />} />
