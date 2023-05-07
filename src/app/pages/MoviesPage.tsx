@@ -101,9 +101,6 @@ export const MoviesPage = () => {
             <ListMoviesComponent
               movies={popularMovies}
               caption="Popular movies:"
-              checkIfMouseIsOverCard={checkIfMouseIsOnObject}
-              mouseOver={mouseOver}
-              setMouseOver={setMouseOver}
             />
           )}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&

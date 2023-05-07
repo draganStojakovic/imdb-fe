@@ -59,11 +59,11 @@ export const WatchListPage = () => {
           isObjOfType<IMovieWatchList[]>(movies) &&
           movies.length !== 0 ? (
             movies.map((movie) => (
-              <Grid item xs={2} sm={4} md={4} key={movie._id}>
+              <Grid item xs={2} sm={4} md={4} key={movie.id}>
                 <ListItem>
                   <SimpleMovieCardComponent
                     authUser={user}
-                    movieId={movie._id}
+                    movieId={movie.id}
                     title={movie.title}
                     coverImage={movie.coverImage}
                     addOrRemoveFromWatchList={addOrRemoveFromWatchList}

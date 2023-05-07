@@ -1,13 +1,9 @@
 import { useState } from 'react';
-
-interface IError {
-  param?: string;
-  msg: string
-}
+import { IError } from 'app/types/IError';
 
 const useErrors = () => {
   const [error, setError] = useState<IError | null>(null);
-  
+
   return { error, setError };
 };
 

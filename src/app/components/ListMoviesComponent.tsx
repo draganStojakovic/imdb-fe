@@ -5,21 +5,9 @@ import { Link } from 'react-router-dom';
 type Props = {
   movies: IMovieStrippedDown[];
   caption: string;
-  checkIfMouseIsOverCard: (
-    mousedOverMovieId: string,
-    currentMovieId: string
-  ) => boolean;
-  mouseOver: string;
-  setMouseOver: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const ListMoviesComponent = ({
-  movies,
-  caption,
-  checkIfMouseIsOverCard,
-  mouseOver,
-  setMouseOver,
-}: Props) => {
+export const ListMoviesComponent = ({ movies, caption }: Props) => {
   return (
     <Box sx={{ m: 2 }}>
       <Typography variant="h5">{caption}</Typography>
@@ -43,13 +31,8 @@ export const ListMoviesComponent = ({
                   component="img"
                   sx={{
                     height: 200,
-                    boxShadow: checkIfMouseIsOverCard(mouseOver, movie.id)
-                      ? 12
-                      : 3,
                   }}
                   src={movie.coverImage}
-                  onMouseOver={() => setMouseOver(() => movie.id)}
-                  onMouseLeave={() => setMouseOver(() => '')}
                 />
               </Link>
             </ListItem>

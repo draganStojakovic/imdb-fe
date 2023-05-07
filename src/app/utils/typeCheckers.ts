@@ -8,6 +8,7 @@ import {
   IMovie,
 } from 'app/types/IMovies';
 import { IError, IErrors } from 'app/types/IError';
+import { IPoster, IPosterDelete } from 'app/types/IPoster';
 
 export function isObjOfType<T>(obj: unknown): obj is T {
   return !!obj;
@@ -152,7 +153,7 @@ export function isOMDbError(arg: unknown): arg is IOMDbError {
   );
 }
 
-export function isErrors(arg: unknown): arg is IErrors {
+export function isErrors(arg: unknown): arg is IError {
   return (
     !!arg &&
     typeof arg === 'object' &&
@@ -186,4 +187,28 @@ export function isPrimitiveType<
   T extends string | number | bigint | boolean | undefined | symbol | null
 >(arg: unknown, type: T): arg is T {
   return typeof arg === typeof type;
+}
+
+export function isPoster(arg: unknown): arg is IPoster {
+  return (
+    !!arg &&
+    typeof arg === 'object' &&
+    'id' in arg &&
+    typeof arg.id === 'string' &&
+    'thumbnail' in arg &&
+    typeof arg.thumbnail === 'string' &&
+    'fullSize' in arg &&
+    typeof arg.fullSize === 'string'
+  );
+}
+
+export function isPosterDelete(arg: unknown): arg is IPosterDelete {
+  return (
+    !!arg &&
+    typeof arg === 'object' &&
+    'id' in arg &&
+    typeof arg.id === 'string' &&
+    'message' in arg &&
+    typeof arg.message === 'string'
+  );
 }

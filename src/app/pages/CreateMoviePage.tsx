@@ -2,7 +2,7 @@ import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { IMovie, IMovieDraft } from 'app/types/IMovies';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
 import { moviesService } from 'app/services/movies.service';
 import { notficationManager } from 'app/utils/NotificationManager';
@@ -10,7 +10,9 @@ import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
 import useGenres from 'app/hooks/useGenres';
 import { IGenre } from 'app/types/IGenre';
-import { isObjOfType } from 'app/utils/typeCheckers';
+import { isObjOfType, isPoster } from 'app/utils/typeCheckers';
+import { UploadComponent } from 'app/components/UploadComponent';
+import useErrors from 'app/hooks/useErrors';
 
 import {
   Container,
@@ -22,9 +24,12 @@ import {
   Stack,
   Autocomplete,
 } from '@mui/material';
+import { IPoster } from 'app/types/IPoster';
 
 export const CreateMoviePage = () => {
   useAuthGuard(true);
+  const [poster, setPoster] = useState<IPoster | null>(null);
+  const { error, setError: setErrors } = useErrors();
 
   const { getGenres } = useGenres();
   const { setLoading } = useContext(LoadingContext);
@@ -51,6 +56,8 @@ export const CreateMoviePage = () => {
         setLoading(false);
         notficationManager.success('Succefully added a movie');
         reset();
+        setPoster(null);
+        setErrors(null);
       }
     },
     onError: (error: AxiosError<IError>) => {
@@ -72,6 +79,10 @@ export const CreateMoviePage = () => {
     setLoading(true);
     mutate(movie);
   };
+
+  useEffect(() => {
+    isPoster(poster) && setValue('coverImage', poster.id);
+  }, [poster, setValue]);
 
   return (
     <Container component="main" maxWidth="xl">
@@ -117,19 +128,6 @@ export const CreateMoviePage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Cover Image"
-                  {...register('coverImage', {
-                    required: 'Cover Image is required',
-                  })}
-                  helperText={
-                    errors.coverImage ? errors.coverImage.message : ''
-                  }
-                  error={errors.coverImage ? true : false}
-                />
-              </Grid>
-              <Grid item xs={12}>
                 <Stack spacing={3} sx={{ width: 500 }}>
                   <Autocomplete
                     multiple
@@ -151,6 +149,14 @@ export const CreateMoviePage = () => {
                     )}
                   />
                 </Stack>
+              </Grid>
+              <Grid item xs={12}>
+                <UploadComponent
+                  setPoster={setPoster}
+                  setErrors={setErrors}
+                  error={error}
+                  poster={poster}
+                />
               </Grid>
             </Grid>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
