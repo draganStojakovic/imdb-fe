@@ -70,14 +70,11 @@ export const OMDbPage = () => {
         setSearchTerm((prevState) => prevState.replace(/ /g, '+'));
 
       getOMDbMovie(searchTerm).then((data) => {
-        if (isOMDbError(data)) {
-          setOmdbErrorMsg(() => data);
-          setLoading(false);
-        }
+        setLoading(false);
+        isOMDbError(data) && setOmdbErrorMsg(() => data);
         if (isOMDbResponse(data) && isGenres(genres)) {
           const omdb = sanitizeOMDbResponse(data, genres);
           isObjOfType<IOMDb>(omdb) && setOmdbMovie(() => omdb);
-          setLoading(false);
         }
       });
     }

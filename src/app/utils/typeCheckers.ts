@@ -212,3 +212,7 @@ export function isPosterDelete(arg: unknown): arg is IPosterDelete {
     typeof arg.message === 'string'
   );
 }
+
+export function isBuffer<T>(obj: unknown): obj is T {
+  return obj instanceof Buffer || obj instanceof ArrayBuffer;
+}

@@ -6,7 +6,7 @@ import {
   CardActions,
   Button,
   Divider,
-  Grid,
+  Box,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { checkIfMovieWatched } from './MovieDetailsComponent';
@@ -61,20 +61,23 @@ export const SimpleMovieCardComponent = ({
           component="img"
           alt={`${title} - movie cover`}
           image={coverImage}
-          height="350"
+          height="400"
         />
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={10}>
-              <Typography variant="h5">{title}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              {isWatched && '✅'}
-            </Grid>
-          </Grid>
+          <Typography variant="h5">{title}</Typography>
         </CardContent>
       </Link>
       <Divider />
+      {isWatched && (
+        <Box>
+          <CardContent>
+            <Typography variant="body1">
+              {"You've watched this movie!"}
+            </Typography>
+          </CardContent>
+          <Divider />
+        </Box>
+      )}
       <CardActions>
         <Button
           variant="contained"
@@ -88,7 +91,7 @@ export const SimpleMovieCardComponent = ({
           size="small"
           onClick={() => watchedMovie(movieId)}
         >
-          {isWatched ? 'Mark not watched' : 'Mark watched'}
+          {isWatched ? 'Unmark watched' : 'Mark watched'}
         </Button>
       </CardActions>
     </Card>

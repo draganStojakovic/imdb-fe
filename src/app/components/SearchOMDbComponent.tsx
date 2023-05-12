@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
 import { useDebouncedEffect } from 'app/hooks/useDebouncedEffect';
-import { isObjOfType } from 'app/utils/typeCheckers';
+import { isPrimitiveType } from 'app/utils/typeCheckers';
 import { useState, useEffect } from 'react';
 
 type Props = {
@@ -13,7 +13,7 @@ export const SearchOMDbComponent = ({ setSearchTerm }: Props) => {
   const debouncedSearchTerm = useDebouncedEffect(searchedTerm, 750);
 
   useEffect(() => {
-    if (isObjOfType<string>(debouncedSearchTerm))
+    if (isPrimitiveType(debouncedSearchTerm, 'string'))
       setSearchTerm(() => debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 

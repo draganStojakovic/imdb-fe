@@ -46,9 +46,13 @@ export const MoviesPage = () => {
   }, [isLoading]);
 
   const trunctate = useCallback((sentences: string) => {
-    if (sentences.length > 30) {
-      const trunctated = sentences.split('.');
-      return String(trunctated[0] + trunctated[1] + trunctated[2] + '...');
+    if (sentences.length > 120) {
+      const splitted = sentences.split('');
+      let trunctated = '';
+      for (let i = 0; i < 120; i++) {
+        trunctated += splitted[i];
+      }
+      return trunctated + '...';
     }
     return sentences;
   }, []);
