@@ -169,7 +169,7 @@ export function isErrors(arg: unknown): arg is IError {
 }
 
 function isError(arg: any): arg is IErrors[] {
-  return arg.every(isError);
+  return arg.every(isErrors);
 }
 
 export function isErrorResponse(arg: unknown): arg is IError {

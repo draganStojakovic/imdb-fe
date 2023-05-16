@@ -14,7 +14,7 @@ export const SearchOMDbComponent = ({ setSearchTerm }: Props) => {
 
   useEffect(() => {
     if (isPrimitiveType(debouncedSearchTerm, 'string'))
-      setSearchTerm(() => debouncedSearchTerm);
+      setSearchTerm(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
   return (

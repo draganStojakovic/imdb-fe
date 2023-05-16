@@ -1,82 +1,27 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
-import { useState, useEffect, useContext } from 'react';
-import { moviesService } from 'app/services/movies.service';
+import { useState, useEffect } from 'react';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { SearchOMDbComponent } from 'app/components/SearchOMDbComponent';
-import {
-  isGenres,
-  isOMDbError,
-  isOMDbResponse,
-  isObjOfType,
-} from 'app/utils/typeCheckers';
-import { IOMDb, IMovieOMdb, IOMDbError } from 'app/types/IMovies';
+import { isOMDbError, isObjOfType } from 'app/utils/typeCheckers';
+import { IMovieOMdb } from 'app/types/IMovies';
 import { OMDbMovieDetails } from 'app/components/OMDbMovieDetails';
-import useGenres from 'app/hooks/useGenres';
-import { IGenre } from 'app/types/IGenre';
 import { MessageComponent } from 'app/components/MessageComponent';
-import { LoadingContext } from 'app/context/LoadingContext';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'app/utils/static';
-
-function sanitizeOMDbResponse(
-  movie: IOMDb,
-  genresFromDB: IGenre[]
-): IMovieOMdb | null {
-  const genreLowerCase = movie.Genre.toLowerCase().split(', ');
-
-  const newGenres = genresFromDB
-    .map((genre) => {
-      if (genreLowerCase.includes(genre.name)) return genre;
-    })
-    .filter((data) => data);
-
-  if (isGenres(newGenres))
-    return {
-      title: movie.Title,
-      description: movie.Plot,
-      coverImage: movie.Poster,
-      genres: newGenres,
-    };
-
-  return null;
-}
-
-async function getOMDbMovie(movieTitle: string) {
-  try {
-    return await moviesService.GetOMDbMovie(movieTitle);
-  } catch (e) {
-    console.log(e);
-  }
-}
+import useGetOMDbMovie from 'app/hooks/useGetOMDbMovie';
 
 export const OMDbPage = () => {
   useAuthGuard(true);
-  const { getGenres } = useGenres();
+
   const [searchTerm, setSearchTerm] = useState('');
-  const [omdbMovie, setOmdbMovie] = useState<IMovieOMdb | null>(null);
-  const [omdbErrorMsg, setOmdbErrorMsg] = useState<IOMDbError | null>(null);
-
-  const { loading, setLoading } = useContext(LoadingContext);
-
-  const genres = getGenres();
+  const { data: movie, error, nullifyState } = useGetOMDbMovie(searchTerm);
 
   useEffect(() => {
     if (searchTerm.length !== 0) {
-      setLoading(true);
-      setOmdbMovie(() => null);
-      setOmdbErrorMsg(() => null);
+      nullifyState();
 
       searchTerm.includes(' ') &&
         setSearchTerm((prevState) => prevState.replace(/ /g, '+'));
-
-      getOMDbMovie(searchTerm).then((data) => {
-        setLoading(false);
-        isOMDbError(data) && setOmdbErrorMsg(() => data);
-        if (isOMDbResponse(data) && isGenres(genres)) {
-          const omdb = sanitizeOMDbResponse(data, genres);
-          isObjOfType<IOMDb>(omdb) && setOmdbMovie(() => omdb);
-        }
-      });
     }
   }, [searchTerm]);
 
@@ -84,8 +29,8 @@ export const OMDbPage = () => {
     <Container component="main" maxWidth="xl">
       <Box
         sx={{
-          marginTop: 8,
-          marginBottom: 8,
+          marginTop: '3rem',
+          marginBottom: '1rem',
         }}
       >
         <Grid container spacing={2}>
@@ -94,20 +39,22 @@ export const OMDbPage = () => {
           </Grid>
           <Grid item xs={10}>
             <SearchOMDbComponent setSearchTerm={setSearchTerm} />
-            <Link
-              to={ROUTES.MOVIES_CREATE_MANUAL}
-              style={{ textDecoration: 'none', color: 'blue' }}
-            >
-              Enter movie details manually
-            </Link>
+            <Box sx={{ marginTop: '1rem' }}>
+              <Link
+                to={ROUTES.MOVIES_CREATE_MANUAL}
+                style={{ textDecoration: 'none', color: 'blue' }}
+              >
+                Enter movie details manually
+              </Link>
+            </Box>
           </Grid>
         </Grid>
-        {isObjOfType<IMovieOMdb>(omdbMovie) && !loading && (
-          <OMDbMovieDetails omdbMovie={omdbMovie} />
+        {isObjOfType<IMovieOMdb>(movie) && (
+          <OMDbMovieDetails omdbMovie={movie} />
         )}
-        {isOMDbError(omdbErrorMsg) &&
-          omdbErrorMsg.Response === 'False' &&
-          !loading && <MessageComponent message={omdbErrorMsg.Error} />}
+        {isOMDbError(error) && error.Response === 'False' && (
+          <MessageComponent message={error.Error} />
+        )}
       </Box>
     </Container>
   );
