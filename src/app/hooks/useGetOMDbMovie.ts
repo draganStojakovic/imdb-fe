@@ -3,15 +3,11 @@ import { IMovieOMdb, IOMDb, IOMDbError } from 'app/types/IMovies';
 import { IGenre } from 'app/types/IGenre';
 import { isGenres } from 'app/utils/typeCheckers';
 import { useEffect, useState } from 'react';
-import useGetGenresAlt from './useGetGenresAlt';
-import {
-  isOMDbResponse,
-  isOMDbError,
-  isObjOfType,
-} from 'app/utils/typeCheckers';
+import useGetGenres from './useGetGenres';
+import { isOMDbResponse, isOMDbError } from 'app/utils/typeCheckers';
 
 export default function useGetOMDbMovie(searchTerm: string) {
-  const genres = useGetGenresAlt();
+  const genres = useGetGenres();
 
   const [data, setData] = useState<IMovieOMdb | null>(null);
   const [error, setError] = useState<IOMDbError | null>(null);
@@ -54,7 +50,7 @@ export default function useGetOMDbMovie(searchTerm: string) {
           setError(data);
         } else if (isOMDbResponse(data) && isGenres(genres)) {
           const omdb = sanitizeOMDbResponse(data, genres);
-          isObjOfType<IOMDb>(omdb) && setData(omdb);
+          omdb && setData(omdb);
         }
       });
     }

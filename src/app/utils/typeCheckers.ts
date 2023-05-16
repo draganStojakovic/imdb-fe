@@ -37,11 +37,11 @@ function isRating(arg: unknown): arg is IRating {
 }
 
 export function isGenres(arg: any): arg is IGenre[] {
-  return arg.every(isGenre);
+  return Array.isArray(arg) && arg.every(isGenre);
 }
 
 function isOmdbRating(arg: any): arg is IRating[] {
-  return arg.every(isRating);
+  return Array.isArray(arg) && arg.every(isRating);
 }
 
 export function isIMovie(arg: unknown): arg is IMovie {
@@ -169,7 +169,7 @@ export function isErrors(arg: unknown): arg is IError {
 }
 
 function isError(arg: any): arg is IErrors[] {
-  return arg.every(isErrors);
+  return Array.isArray(arg) && arg.every(isErrors);
 }
 
 export function isErrorResponse(arg: unknown): arg is IError {

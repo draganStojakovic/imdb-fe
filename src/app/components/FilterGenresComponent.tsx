@@ -1,16 +1,17 @@
-import useGenres from 'app/hooks/useGenres';
 import { List, ListItem, Button } from '@mui/material';
 import { useContext } from 'react';
 import { MovieParamsContext } from 'app/context/MovieParamsContext';
+import useGetGenres from 'app/hooks/useGetGenres';
+import { isGenres } from 'app/utils/typeCheckers';
 
-function isButtonClicked(genres: string, value: string) {
-  if (genres.includes(value)) return true;
-  return false;
+function isButtonClicked(genres: string, value: string): boolean {
+  return genres.includes(value);
 }
 
 export const FilterGenresComponent = () => {
-  const { getGenres } = useGenres();
   const { genres, setGenres, setPage } = useContext(MovieParamsContext);
+
+  const dbGenres = useGetGenres();
 
   function handleAddGenre(e: React.ChangeEvent<unknown>) {
     const value = (e.target as HTMLButtonElement).value;
@@ -21,6 +22,7 @@ export const FilterGenresComponent = () => {
       return;
     }
     const newGenres = genres + `,${value}`;
+
     setGenres(newGenres);
   }
 
@@ -54,8 +56,8 @@ export const FilterGenresComponent = () => {
         overflow: 'auto',
       }}
     >
-      {getGenres() &&
-        getGenres()?.map((genre) => (
+      {isGenres(dbGenres) &&
+        dbGenres.map((genre) => (
           <ListItem key={genre.id}>
             <Button
               type="button"

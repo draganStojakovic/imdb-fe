@@ -8,11 +8,10 @@ import { moviesService } from 'app/services/movies.service';
 import { notficationManager } from 'app/utils/NotificationManager';
 import { AxiosResponse, AxiosError } from 'axios';
 import { IError } from 'app/types/IError';
-import useGenres from 'app/hooks/useGenres';
-import { IGenre } from 'app/types/IGenre';
-import { isObjOfType, isPoster } from 'app/utils/typeCheckers';
+import { isGenres, isObjOfType, isPoster } from 'app/utils/typeCheckers';
 import { UploadComponent } from 'app/components/UploadComponent';
 import useErrors from 'app/hooks/useErrors';
+import useGetGenres from 'app/hooks/useGetGenres';
 
 import {
   Container,
@@ -31,8 +30,9 @@ export const CreateMoviePage = () => {
   const [poster, setPoster] = useState<IPoster | null>(null);
   const { error, setError: setErrors } = useErrors();
 
-  const { getGenres } = useGenres();
   const { setLoading } = useContext(LoadingContext);
+
+  const genres = useGetGenres();
 
   const {
     register,
@@ -131,7 +131,7 @@ export const CreateMoviePage = () => {
                 <Stack spacing={3} sx={{ width: 500 }}>
                   <Autocomplete
                     multiple
-                    options={getGenres() ? (getGenres() as IGenre[]) : []}
+                    options={isGenres(genres) ? genres : []}
                     getOptionLabel={(genres) => genres.name}
                     onChange={(e, values) =>
                       setValue(
