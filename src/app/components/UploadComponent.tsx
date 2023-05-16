@@ -52,7 +52,7 @@ export const UploadComponent = ({
             onChange={(e) => uploadImage(e)}
           />
           <Button
-            disabled={isPoster(poster) ? true : false}
+            disabled={isPoster(poster)}
             onClick={() =>
               uploadInputRef.current && uploadInputRef.current.click()
             }
