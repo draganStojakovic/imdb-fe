@@ -13,7 +13,7 @@ const buttonStyle = {
   color: 'black',
 };
 
-export const HeaderBar = ({ header, mutate }: Props) => {
+export const Navigation = ({ header, mutate }: Props) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

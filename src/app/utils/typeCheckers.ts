@@ -153,7 +153,7 @@ export function isOMDbError(arg: unknown): arg is IOMDbError {
   );
 }
 
-export function isErrors(arg: unknown): arg is IError {
+export function isError(arg: unknown): arg is IError {
   return (
     !!arg &&
     typeof arg === 'object' &&
@@ -168,8 +168,8 @@ export function isErrors(arg: unknown): arg is IError {
   );
 }
 
-function isError(arg: any): arg is IErrors[] {
-  return Array.isArray(arg) && arg.every(isErrors);
+export function isErrors(arg: any): arg is IErrors {
+  return Array.isArray(arg) && arg.every(isError);
 }
 
 export function isErrorResponse(arg: unknown): arg is IError {

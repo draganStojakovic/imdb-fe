@@ -39,7 +39,7 @@ export const LogInPage = () => {
 
   const { setLoading, loading } = useContext(LoadingContext);
 
-  const { login } = useContext(UserContext); // kontekst poziva hook
+  const { login } = useContext(UserContext);
 
   const { mutate } = useMutation(authService.LogIn, {
     onSuccess: (data: AxiosResponse<IUser>) => {

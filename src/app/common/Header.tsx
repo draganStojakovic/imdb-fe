@@ -1,29 +1,13 @@
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
-import { useMutation } from 'react-query';
-import { authService } from 'app/services/auth.service';
-import { HeaderBar } from 'app/components/HeaderBarComponent';
+import { Navigation } from 'app/components/NavigationComponent';
 import { APP_BAR_AUTH, APP_BAR_GUEST } from 'app/utils/static';
+import useLogOutUser from 'app/hooks/useLogOutUser';
 
 export const Header = () => {
-  const { user, logout } = useContext(UserContext);
+  const { user, mutate } = useLogOutUser();
 
-  const { mutate } = useMutation(authService.LogOut, {
-    onSuccess: () => {
-      logout();
-    },
-    onError: () => {
-      logout();
-    },
-  });
-
-  return (
-    <>
-      {user ? (
-        <HeaderBar header={APP_BAR_AUTH} mutate={mutate} />
-      ) : (
-        <HeaderBar header={APP_BAR_GUEST} mutate={mutate} />
-      )}
-    </>
-  );
+  if (user) {
+    return <Navigation header={APP_BAR_AUTH} mutate={mutate} />;
+  } else {
+    return <Navigation header={APP_BAR_GUEST} mutate={mutate} />;
+  }
 };

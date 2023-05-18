@@ -1,18 +1,14 @@
 import useAuthGuard from 'app/hooks/useAuthGuard';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useMutation } from 'react-query';
-import { IMovie, IMovieDraft } from 'app/types/IMovies';
+import { IMovieDraft } from 'app/types/IMovies';
 import { useContext, useState, useEffect } from 'react';
 import { LoadingContext } from 'app/context/LoadingContext';
-import { moviesService } from 'app/services/movies.service';
 import { notficationManager } from 'app/utils/NotificationManager';
-import { AxiosResponse, AxiosError } from 'axios';
-import { IError } from 'app/types/IError';
-import { isGenres, isObjOfType, isPoster } from 'app/utils/typeCheckers';
+import { isGenres, isPoster, isPrimitiveType } from 'app/utils/typeCheckers';
 import { UploadComponent } from 'app/components/UploadComponent';
-import useErrors from 'app/hooks/useErrors';
 import useGetGenres from 'app/hooks/useGetGenres';
-
+import useCreateNewMovie from 'app/hooks/useCreateNewMovie';
+import { IPoster } from 'app/types/IPoster';
 import {
   Container,
   Box,
@@ -23,15 +19,17 @@ import {
   Stack,
   Autocomplete,
 } from '@mui/material';
-import { IPoster } from 'app/types/IPoster';
 
 export const CreateMoviePage = () => {
   useAuthGuard(true);
+  const {
+    success,
+    mutate,
+    error: createError,
+    clearSuccess,
+  } = useCreateNewMovie();
   const [poster, setPoster] = useState<IPoster | null>(null);
-  const { error, setError: setErrors } = useErrors();
-
   const { setLoading } = useContext(LoadingContext);
-
   const genres = useGetGenres();
 
   const {
@@ -50,35 +48,33 @@ export const CreateMoviePage = () => {
     },
   });
 
-  const { mutate } = useMutation(moviesService.CreateMovie, {
-    onSuccess: (data: AxiosResponse<IMovie>) => {
-      if (isObjOfType<IMovie>(data)) {
-        setLoading(false);
-        notficationManager.success('Succefully added a movie');
-        reset();
-        setPoster(null);
-        setErrors(null);
-      }
-    },
-    onError: (error: AxiosError<IError>) => {
-      error?.response?.data?.errors?.forEach((error) => {
-        if (
-          error.param === 'title' ||
-          error.param === 'description' ||
-          error.param === 'coverImage' ||
-          error.param === 'genres'
-        ) {
-          setError(error.param, { message: error.msg });
-        }
-      });
-      setLoading(false);
-    },
-  });
-
   const onSubmit: SubmitHandler<IMovieDraft> = async (movie) => {
     setLoading(true);
     mutate(movie);
   };
+
+  useEffect(() => {
+    setLoading(false);
+    if (success === true && isPrimitiveType(createError, null)) {
+      notficationManager.success('Succefully added a movie');
+      reset();
+      setPoster(null);
+    } else if (success === false) {
+      if (createError) {
+        createError?.forEach((error) => {
+          if (
+            error.param === 'title' ||
+            error.param === 'description' ||
+            error.param === 'coverImage' ||
+            error.param === 'genres'
+          ) {
+            setError(error.param, { message: error.msg });
+          }
+        });
+      }
+    }
+    clearSuccess();
+  }, [success]);
 
   useEffect(() => {
     isPoster(poster) && setValue('coverImage', poster.id);
@@ -151,12 +147,7 @@ export const CreateMoviePage = () => {
                 </Stack>
               </Grid>
               <Grid item xs={12}>
-                <UploadComponent
-                  setPoster={setPoster}
-                  setErrors={setErrors}
-                  error={error}
-                  poster={poster}
-                />
+                <UploadComponent setPoster={setPoster} poster={poster} />
               </Grid>
             </Grid>
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
