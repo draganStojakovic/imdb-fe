@@ -1,6 +1,7 @@
 import { Typography, Box, ListItem, Stack, List } from '@mui/material';
 import { IMovieStrippedDown } from 'app/types/IMovies';
 import { Link } from 'react-router-dom';
+import { DynamicShadow } from './DynamicShadowComponent';
 
 type Props = {
   movies: IMovieStrippedDown[];
@@ -27,13 +28,15 @@ export const ListMoviesComponent = ({ movies, caption }: Props) => {
                 to={`/movies/${movie.id}`}
                 style={{ textDecoration: 'none', color: 'black' }}
               >
-                <Box
-                  component="img"
-                  sx={{
-                    height: 200,
-                  }}
-                  src={movie.coverImage}
-                />
+                <DynamicShadow objectId={movie.id}>
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 200,
+                    }}
+                    src={movie.coverImage}
+                  />
+                </DynamicShadow>
               </Link>
             </ListItem>
           ))}

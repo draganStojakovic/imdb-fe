@@ -33,12 +33,6 @@ type Props = {
   trunctate: undefined | ((sentences: string) => string);
   showMovieDesc: undefined | ((movieId: string) => void);
   checkIfDescShow: undefined | ((movieId: string) => boolean);
-  checkIfMouseIsOverCard: (
-    mousedOverMovieId: string,
-    currentMovieId: string
-  ) => boolean;
-  mouseOver: string;
-  setMouseOver: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export function checkIfMovieWatched(movieId: string, user: IUser) {
@@ -69,24 +63,16 @@ export const MovieDetailsComponent = ({
   trunctate,
   showMovieDesc,
   checkIfDescShow,
-  checkIfMouseIsOverCard,
-  mouseOver,
-  setMouseOver,
 }: Props) => {
   const isWatched = checkIfMovieWatched(movieId, authUser);
   const isOnWatchList = checkIfMoviesIsOnWatchList(movieId, authUser);
-  const isMoused = checkIfMouseIsOverCard(mouseOver, movieId);
 
   return (
     <Card
-      raised
       sx={{
         marginTop: 5,
         marginBottom: 5,
-        boxShadow: isMoused ? 12 : 3,
       }}
-      onMouseOver={() => setMouseOver(() => movieId)}
-      onMouseLeave={() => setMouseOver(() => '')}
     >
       <Grid container spacing={2}>
         <Grid item xs={4}>

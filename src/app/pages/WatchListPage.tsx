@@ -11,7 +11,7 @@ import useWatchList from 'app/hooks/useWatchList';
 import { IUser } from 'app/types/IUser';
 import useWatchedMovie from 'app/hooks/useWatchedMovie';
 import { MessageComponent } from 'app/components/MessageComponent';
-import useHighlightCard from 'app/hooks/useHighlightCard';
+import { DynamicShadow } from 'app/components/DynamicShadowComponent';
 
 export const WatchListPage = () => {
   useAuthGuard(true);
@@ -20,8 +20,6 @@ export const WatchListPage = () => {
   const { watchedMovie } = useWatchedMovie();
   const { user } = useContext(UserContext);
   const { setLoading } = useContext(LoadingContext);
-  const { checkIfMouseIsOnObject, mouseOver, setMouseOver } =
-    useHighlightCard();
 
   const {
     data: movies,
@@ -61,22 +59,23 @@ export const WatchListPage = () => {
             movies.map((movie) => (
               <Grid item xs={2} sm={4} md={4} key={movie.id}>
                 <ListItem>
-                  <SimpleMovieCardComponent
-                    authUser={user}
-                    movieId={movie.id}
-                    title={movie.title}
-                    coverImage={movie.coverImage}
-                    addOrRemoveFromWatchList={addOrRemoveFromWatchList}
-                    watchedMovie={watchedMovie}
-                    setMouseOver={setMouseOver}
-                    mouseOver={mouseOver}
-                    checkIfMouseIsOverCard={checkIfMouseIsOnObject}
-                  />
+                  <DynamicShadow objectId={movie.id}>
+                    <SimpleMovieCardComponent
+                      authUser={user}
+                      movieId={movie.id}
+                      title={movie.title}
+                      coverImage={movie.coverImage}
+                      addOrRemoveFromWatchList={addOrRemoveFromWatchList}
+                      watchedMovie={watchedMovie}
+                    />
+                  </DynamicShadow>
                 </ListItem>
               </Grid>
             ))
           ) : (
-            <MessageComponent message={'Watch list is empty'} />
+            <Box sx={{ marginTop: '3rem' }}>
+              <MessageComponent message={'Watch list is empty'} />
+            </Box>
           )}
         </Grid>
       </Box>

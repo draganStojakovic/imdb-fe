@@ -14,7 +14,6 @@ import { MovieDetailsComponent } from 'app/components/MovieDetailsComponent';
 import useMovies from 'app/hooks/useMovies';
 import { IUser } from 'app/types/IUser';
 import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
-import useHighlightCard from 'app/hooks/useHighlightCard';
 
 export const MoviesPage = () => {
   useAuthGuard(true);
@@ -25,9 +24,6 @@ export const MoviesPage = () => {
   const { search, genres, page } = useContext(MovieParamsContext);
   const { setLoading } = useContext(LoadingContext);
   const { user } = useContext(UserContext);
-
-  const { mouseOver, setMouseOver, checkIfMouseIsOnObject } =
-    useHighlightCard();
 
   const {
     data: moviesPaginated,
@@ -126,9 +122,6 @@ export const MoviesPage = () => {
               trunctate={trunctate}
               showMovieDesc={showMovieDesc}
               checkIfDescShow={checkIfDescShow}
-              checkIfMouseIsOverCard={checkIfMouseIsOnObject}
-              mouseOver={mouseOver}
-              setMouseOver={setMouseOver}
             />
           ))}
         {isObjOfType<IMoviePaginated>(moviesPaginated) &&

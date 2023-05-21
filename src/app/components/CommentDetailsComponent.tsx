@@ -16,21 +16,12 @@ type Props = {
   comment: IComment;
   authUserId: string;
   movieId: string;
-  checkIfMouseIsOverCard: (
-    mousedOverMovieId: string,
-    currentMovieId: string
-  ) => boolean;
-  mouseOver: string;
-  setMouseOver: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const CommentDetailsComponent = ({
   comment,
   authUserId,
   movieId,
-  checkIfMouseIsOverCard,
-  mouseOver,
-  setMouseOver,
 }: Props) => {
   const { onSubmit, handleSubmit } = useDeleteComment(
     comment._id,
@@ -38,18 +29,8 @@ export const CommentDetailsComponent = ({
     authUserId
   );
 
-  const isMoused = checkIfMouseIsOverCard(mouseOver, comment._id);
-
   return (
-    <Card
-      sx={{
-        marginBottom: 5,
-        boxShadow: isMoused ? 12 : 3,
-      }}
-      style={{ backgroundColor: '#fbfbfb' }}
-      onMouseOver={() => setMouseOver(() => comment._id)}
-      onMouseLeave={() => setMouseOver(() => '')}
-    >
+    <Card sx={{ marginBottom: 5 }} style={{ backgroundColor: '#fbfbfb' }}>
       <Stack spacing={0}>
         <ListItem>
           <Typography component={'span'} variant={'body1'}>

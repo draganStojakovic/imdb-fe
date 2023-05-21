@@ -53,7 +53,9 @@ export const OMDbPage = () => {
           <OMDbMovieDetails omdbMovie={movie} />
         )}
         {isOMDbError(error) && error.Response === 'False' && (
-          <MessageComponent message={error.Error} />
+          <Box sx={{ marginTop: '3rem' }}>
+            <MessageComponent message={error.Error} />
+          </Box>
         )}
       </Box>
     </Container>

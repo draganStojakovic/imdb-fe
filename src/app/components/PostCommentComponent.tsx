@@ -11,18 +11,11 @@ import { IError } from 'app/types/IError';
 import { useEffect } from 'react';
 
 type Props = {
-  mouseOverBool: boolean;
-  setMouseOverBool: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
   movieId: string;
 };
 
-export const PostCommentComponent = ({
-  mouseOverBool,
-  setMouseOverBool,
-  userId,
-  movieId,
-}: Props) => {
+export const PostCommentComponent = ({ userId, movieId }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { setReloadCommentsEvent } = useContext(EventContext);
 
@@ -75,11 +68,8 @@ export const PostCommentComponent = ({
         sx={{
           marginTop: 5,
           marginBottom: 5,
-          boxShadow: mouseOverBool ? 12 : 3,
         }}
         style={{ backgroundColor: '#fbfbfb' }}
-        onMouseOver={() => setMouseOverBool(() => true)}
-        onMouseLeave={() => setMouseOverBool(() => false)}
       >
         <CardContent>
           <Grid container spacing={2}>

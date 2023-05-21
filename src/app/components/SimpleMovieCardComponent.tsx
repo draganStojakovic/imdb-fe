@@ -19,12 +19,6 @@ type Props = {
   coverImage: string;
   addOrRemoveFromWatchList: (data: string) => Promise<void>;
   watchedMovie: (data: string) => Promise<void>;
-  setMouseOver: React.Dispatch<React.SetStateAction<string>>;
-  mouseOver: string;
-  checkIfMouseIsOverCard: (
-    mousedOverMovieId: string,
-    currentMovieId: string
-  ) => boolean;
 };
 
 export const SimpleMovieCardComponent = ({
@@ -34,24 +28,16 @@ export const SimpleMovieCardComponent = ({
   coverImage,
   addOrRemoveFromWatchList,
   watchedMovie,
-  setMouseOver,
-  mouseOver,
-  checkIfMouseIsOverCard,
 }: Props) => {
   const isWatched = checkIfMovieWatched(movieId, authUser);
-  const isMoused = checkIfMouseIsOverCard(mouseOver, movieId);
 
   return (
     <Card
-      raised
       sx={{
         maxWidth: 350,
         margin: '0 auto',
         padding: '0.1em',
-        boxShadow: isMoused ? 12 : 3,
       }}
-      onMouseOver={() => setMouseOver(() => movieId)}
-      onMouseLeave={() => setMouseOver(() => '')}
     >
       <Link
         to={`/movies/${movieId}`}

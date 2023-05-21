@@ -17,8 +17,8 @@ import { IUser } from 'app/types/IUser';
 import { ICommentPaginated } from 'app/types/IComment';
 import { EventContext } from 'app/context/EventContext';
 import { ListMoviesComponent } from 'app/components/ListMoviesComponent';
-import useHighlightCard from 'app/hooks/useHighlightCard';
 import useGetRelatedMovies from 'app/hooks/useGetRelatedMovies';
+import { DynamicShadow } from 'app/components/DynamicShadowComponent';
 
 export const SingleMoviePage = () => {
   useAuthGuard(true);
@@ -46,14 +46,6 @@ export const SingleMoviePage = () => {
   );
 
   const { data: relatedMovies } = useGetRelatedMovies(movie, id);
-
-  const {
-    mouseOver,
-    setMouseOver,
-    checkIfMouseIsOnObject,
-    mouseOverBool,
-    setMouseOverBool,
-  } = useHighlightCard();
 
   useEffect(() => {
     if (search.length > 0) setSearch('');
@@ -97,32 +89,28 @@ export const SingleMoviePage = () => {
           />
         )}
         {isObjOfType<IMovie>(movie) && isObjOfType<IUser>(user) && (
-          <MovieDetailsComponent
-            movieId={movie.id}
-            authUser={user}
-            title={movie.title}
-            description={movie.description}
-            coverImage={movie.coverImage}
-            genres={movie.genres}
-            likes={movie.likes}
-            dislikes={movie.dislikes}
-            views={movie.views}
-            multiView={false}
-            trunctate={undefined}
-            showMovieDesc={undefined}
-            checkIfDescShow={undefined}
-            checkIfMouseIsOverCard={checkIfMouseIsOnObject}
-            mouseOver={mouseOver}
-            setMouseOver={setMouseOver}
-          />
+          <DynamicShadow objectId={movie.id}>
+            <MovieDetailsComponent
+              movieId={movie.id}
+              authUser={user}
+              title={movie.title}
+              description={movie.description}
+              coverImage={movie.coverImage}
+              genres={movie.genres}
+              likes={movie.likes}
+              dislikes={movie.dislikes}
+              views={movie.views}
+              multiView={false}
+              trunctate={undefined}
+              showMovieDesc={undefined}
+              checkIfDescShow={undefined}
+            />
+          </DynamicShadow>
         )}
         {isObjOfType<IUser>(user) && isPrimitiveType(id, 'string') && (
-          <PostCommentComponent
-            mouseOverBool={mouseOverBool}
-            setMouseOverBool={setMouseOverBool}
-            userId={user.id}
-            movieId={id}
-          />
+          <DynamicShadow objectId={'comment'}>
+            <PostCommentComponent userId={user.id} movieId={id} />
+          </DynamicShadow>
         )}
         {isObjOfType<ICommentPaginated>(commentsPaginated) &&
         commentsPaginated.comments.length > 0 ? (
@@ -130,15 +118,13 @@ export const SingleMoviePage = () => {
             (comment) =>
               isObjOfType<IUser>(user) &&
               isObjOfType<IMovie>(movie) && (
-                <CommentDetailsComponent
-                  key={comment._id}
-                  comment={comment}
-                  authUserId={user?.id}
-                  movieId={movie?.id}
-                  checkIfMouseIsOverCard={checkIfMouseIsOnObject}
-                  mouseOver={mouseOver}
-                  setMouseOver={setMouseOver}
-                />
+                <DynamicShadow key={comment._id} objectId={comment._id}>
+                  <CommentDetailsComponent
+                    comment={comment}
+                    authUserId={user?.id}
+                    movieId={movie?.id}
+                  />
+                </DynamicShadow>
               )
           )
         ) : (
